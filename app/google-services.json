@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "309178862366",
+    "project_id": "gamespurchase-b1f3d",
+    "storage_bucket": "gamespurchase-b1f3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309178862366:android:107684052809e07512170f",
+        "android_client_info": {
+          "package_name": "com.gamespurchase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309178862366-jrl8c082kpt9brdnl5rin4m3ddpauqsu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8CclE96j3IhN0FXNi7Z2wDKJWN3SK4Ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309178862366-jrl8c082kpt9brdnl5rin4m3ddpauqsu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

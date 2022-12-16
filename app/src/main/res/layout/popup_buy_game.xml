@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/custom_shape_popup">
+
+    <AutoCompleteTextView
+        android:id="@+id/name_text"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_centerHorizontal="true"
+        android:padding="0dp"
+        android:paddingStart="15dp"
+        android:hint="Nome Gioco"
+        android:completionThreshold="3" />
+
+    <AutoCompleteTextView
+        android:id="@+id/saga_text"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_centerHorizontal="true"
+        android:padding="0dp"
+        android:paddingStart="15dp"
+        android:hint="@string/sagaGame"
+        android:completionThreshold="3"
+        android:layout_below="@+id/name_text"/>
+
+    <RelativeLayout
+        android:id="@+id/spinners_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/saga_text" >
+
+        <Spinner
+            android:id="@+id/console_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contextClickable="true"
+            android:entries="@array/Console"
+            android:prompt="@string/consoleDefault"
+            android:spinnerMode="dialog" />
+
+        <Spinner
+            android:id="@+id/priority_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/console_spinner"
+            android:entries="@array/Priority"
+            android:prompt="@string/priorityDefault"
+            android:spinnerMode="dialog"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/transit_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinners_relative_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:buttonTint="#000000"
+        android:text="In Transito? " />
+
+    <ImageButton
+        android:id="@+id/add_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/transit_checkbox"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_shape_aggiungi_button"
+        android:text="Aggiungi"
+        android:onClick="onClickAddBuyGame"/>
+
+    <TextView
+        android:id="@+id/add_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/add_button"
+        android:layout_alignTop="@+id/add_button"
+        android:layout_alignEnd="@+id/add_button"
+        android:layout_alignBottom="@+id/add_button"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/add"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+</RelativeLayout>

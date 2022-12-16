@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/custom_shape"
+    app:circularflow_radiusInDP="10dp">>
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/priority3_image"
+        android:autoSizeMaxTextSize="50sp"
+        android:autoSizeMinTextSize="5sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="1"
+        android:text="Nome"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/priority1_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@drawable/star_icon" />
+
+    <ImageView
+        android:id="@+id/priority2_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_toStartOf="@+id/priority1_image"
+        app:srcCompat="@drawable/star_icon" />
+
+    <ImageView
+        android:id="@+id/priority3_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_toStartOf="@+id/priority2_image"
+        app:srcCompat="@drawable/star_icon" />
+
+    <TextView
+        android:id="@+id/saga_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_text"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="1"
+        android:text="Saga"
+        android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/platform_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@id/priority1_image"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@id/not_transit_image"
+        app:srcCompat="@drawable/icon_ps4" />
+
+    <ImageView
+        android:id="@+id/transit_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@id/priority1_image"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        app:srcCompat="@drawable/icon_transit" />
+
+    <ImageView
+        android:id="@+id/not_transit_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@id/priority1_image"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        app:srcCompat="@drawable/icon_not_transit" />
+
+</RelativeLayout>

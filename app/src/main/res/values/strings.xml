@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">GamesPurchase</string>
+    <string name="addDBCompleted">Aggiungere Gioco Completato</string>
+    <string name="addDBNoCompleted">Aggiungere Gioco Non Completato</string>
+    <string name="removeOnly">Cancellare Gioco</string>
+    <string name="notEmpty">Non può essere vuoto</string>
+    <string name="notNotSelected">Seleziona un item</string>
+    <string name="consoleDefault">Console</string>
+    <string name="priorityDefault">Priority</string>
+    <string name="sagaGame">Saga Gioco</string>
+    <string name="nameGame">Nome Gioco</string>
+    <string name="finish">Finito?</string>
+    <string name="buy">Acquistato?</string>
+    <string name="add">Aggiungi</string>
+    <string name="remove">Rimuovi</string>
+    <string name="nullifyAction">Annulla</string>
+    <string-array name="Buyed">
+        <item>Acquistati</item>
+        <item>Non Acquistati</item>
+    </string-array>
+    <string-array name="Finished">
+        <item>Completati</item>
+        <item>Non Completati</item>
+    </string-array>
+    <string-array name="Priority">
+        <item>HIGH</item>
+        <item>MEDIUM</item>
+        <item>LOW</item>
+    </string-array>
+    <string-array name="Console">
+        <item>Digital</item>
+        <item>PC</item>
+        <item>PS5</item>
+        <item>PS4</item>
+        <item>PS3</item>
+        <item>PS2</item>
+        <item>Switch</item>
+        <item>3DS</item>
+        <item>NDS</item>
+        <item>WII</item>
+        <item>GBA</item>
+        <item>GBC</item>
+        <item>PSP</item>
+        <item>WIIU</item>
+        <item>PS1</item>
+        <item>PSVita</item>
+        <item>GB</item>
+        <item>GameCube</item>
+        <item>Xbox360</item>
+        <item>XboxOne</item>
+        <item>XboxSeriesX</item>
+    </string-array>
+</resources>

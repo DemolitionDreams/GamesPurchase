@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/custom_shape_popup" >
+
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="Ciao"
+        android:textAlignment="center" />
+
+    <RelativeLayout
+        android:id="@+id/checkboxs_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/edit_text"
+        android:layout_marginTop="10dp" >
+
+        <CheckBox
+            android:id="@+id/finished_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:buttonTint="#000000"
+            android:text="Finito" />
+
+        <CheckBox
+            android:id="@+id/not_finished_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/finished_checkbox"
+            android:buttonTint="#000000"
+            android:text="Non Finito" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/add_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/checkboxs_relative_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_shape_aggiungi_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/add_button"
+        android:layout_alignBottom="@+id/add_button"
+        android:layout_alignStart="@+id/add_button"
+        android:layout_alignEnd="@+id/add_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/add"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/remove_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/add_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_shape_aggiungi_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/remove_button"
+        android:layout_alignBottom="@+id/remove_button"
+        android:layout_alignStart="@+id/remove_button"
+        android:layout_alignEnd="@+id/remove_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/remove"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/nullify_button"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/remove_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_shape_aggiungi_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/nullify_button"
+        android:layout_alignBottom="@+id/nullify_button"
+        android:layout_alignStart="@+id/nullify_button"
+        android:layout_alignEnd="@+id/nullify_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/nullifyAction"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+
+</RelativeLayout>
