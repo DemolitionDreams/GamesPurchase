@@ -1,30 +1,20 @@
 package com.gamespurchase.entities;
 
-public class ScheduleGame {
+import java.time.LocalTime;
+import java.util.HashMap;
 
-    // day - time
-    private String id;
+public class ScheduleGame {
 
     private String day;
 
-    private String time;
-
-    private String name;
+    private HashMap<LocalTime, String> timeAndName;
 
     public ScheduleGame() {
     }
 
-    public ScheduleGame(String id, String day, String time, String name) {
-        this.id = id;
+    public ScheduleGame(String day, HashMap<LocalTime, String> timeAndName) {
         this.day = day;
-        this.time = time;
-        this.name = name;
-    }
-
-    public String getId() {return id; }
-
-    public void setId(String id) {
-        this.id = id;
+        this.timeAndName = timeAndName;
     }
 
     public String getDay() {
@@ -35,19 +25,11 @@ public class ScheduleGame {
         this.day = day;
     }
 
-    public String getTime() {
-        return time;
+    public HashMap<LocalTime, String> getTimeAndName() {
+        return timeAndName;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setTimeAndName(HashMap<LocalTime, String> timeAndName) {
+        this.timeAndName = timeAndName;
     }
 }

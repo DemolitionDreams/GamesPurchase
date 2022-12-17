@@ -29,7 +29,8 @@ public class ScheduleActivity extends AppCompatActivity {
         scheduleGame.setName(name);
         Queries.insertUpdateScheduleDB(scheduleGame);
     }
-/*
+
+    /*
     private void populateDayTable(){
         // findByView
         // getText()
