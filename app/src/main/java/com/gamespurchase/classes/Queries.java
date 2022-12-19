@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ScheduleGame;
+import com.gamespurchase.entities.TimeGame;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,18 +25,25 @@ public class Queries {
     private static DatabaseReference buyDBReference;
     private static DatabaseReference databaseDBReference;
     private static DatabaseReference scheduleDBReference;
+    private static DatabaseReference timeDBReference;
 
     public Queries() {
         // Crea tabella nel DB scelto
         buyDBReference = DB_INSTANCE.getReference("GamesToBuy");
         databaseDBReference = DB_INSTANCE.getReference("GamesToDatabase");
         scheduleDBReference = DB_INSTANCE.getReference("GamesToSchedule");
+        timeDBReference = DB_INSTANCE.getReference("TimeGame");
     }
 
     // INSERT/UPDATE
     public static void insertUpdateScheduleDB(@NonNull ScheduleGame scheduleGame) {
         scheduleDBReference.child(scheduleGame.getDay()).setValue(scheduleGame);
-    // TODO:    Log.i("GamesPurchase", "Aggiunto: " + scheduleGame.getName() + " (" + scheduleGame.getId() + ") per " + scheduleGame.getDay() + " alle " + scheduleGame.getTime());
+        Log.i("GamesPurchase", "Aggiornata schedulazione di: " + scheduleGame.getDay() + ": " + scheduleGame.getPositionAndGame());
+    }
+
+    public static void insertUpdateTimeDB(@NonNull TimeGame timeGame) {
+        buyDBReference.child(timeGame.getId()).setValue(timeGame);
+        Log.i("GamesPurchase", "Aggiunto orario: " + timeGame.getHour() + " (" + timeGame.getId() + ")");
     }
 
     public static void insertUpdateBuyDB(@NonNull BuyGame buyGame) {
@@ -165,13 +173,12 @@ public class Queries {
                 if (valueToCompare instanceof String) {
                     if (invokeGetterSetter.reflectionMethodForStringScheduleGame(Objects.requireNonNull(scheduleGame), fieldToCompare, (String) valueToCompare)) {
                         scheduleGameList.add(scheduleGame);
-                        // TODO: Log.i("GamesPurchase", "Filtrato: " + scheduleGame.getName() + " (" + scheduleGame.getId() + ") per " + scheduleGame.getDay() + " alle " + scheduleGame.getTime());
+                        Log.i("GamesPurchase", "Filtrata schedulazione di: " + scheduleGame.getDay() + ": " + scheduleGame.getPositionAndGame());
                     }
                 } else {
                     if (invokeGetterSetter.reflectionMethodScheduleGame(Objects.requireNonNull(scheduleGame), fieldToCompare, valueToCompare)) {
                         scheduleGameList.add(scheduleGame);
-                        // TODO: Log.i("GamesPurchase", "Filtrato: " + scheduleGame.getName() + " (" + scheduleGame.getId() + ") per " + scheduleGame.getDay() + " alle " + scheduleGame.getTime());
-                    }
+                        Log.i("GamesPurchase", "Filtrata schedulazione di: " + scheduleGame.getDay() + ": " + scheduleGame.getPositionAndGame());                    }
                 }
             }
 
@@ -294,7 +301,7 @@ public class Queries {
     public static void deleteBuyDB(ScheduleGame scheduleGame) {
 
         scheduleDBReference.child(scheduleGame.getDay()).removeValue();
-        Log.i("GamesPurchase", "Cancellato giorno dallo ScheduleDB: " + scheduleGame.getDay());
+        Log.i("GamesPurchase", "Cancellata schedulazione di: " + scheduleGame.getDay());
     }
 
     public static void deleteBuyDB(BuyGame buyGame) {

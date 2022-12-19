@@ -1,20 +1,19 @@
 package com.gamespurchase.entities;
 
-import java.time.LocalTime;
 import java.util.HashMap;
 
 public class ScheduleGame {
 
     private String day;
 
-    private HashMap<LocalTime, String> timeAndName;
+    private HashMap<Integer, ProgressGame> positionAndGame;
 
     public ScheduleGame() {
     }
 
-    public ScheduleGame(String day, HashMap<LocalTime, String> timeAndName) {
+    public ScheduleGame(String day, HashMap<Integer, ProgressGame> positionAndGame) {
         this.day = day;
-        this.timeAndName = timeAndName;
+        this.positionAndGame = positionAndGame;
     }
 
     public String getDay() {
@@ -25,11 +24,11 @@ public class ScheduleGame {
         this.day = day;
     }
 
-    public HashMap<LocalTime, String> getTimeAndName() {
-        return timeAndName;
+    public HashMap<Integer, ProgressGame> getPositionAndGame() {
+        return positionAndGame;
     }
 
-    public void setTimeAndName(HashMap<LocalTime, String> timeAndName) {
-        this.timeAndName = timeAndName;
+    public void setPositionAndGame(HashMap<Integer, ProgressGame> positionAndGame) {
+        this.positionAndGame = positionAndGame;
     }
 }

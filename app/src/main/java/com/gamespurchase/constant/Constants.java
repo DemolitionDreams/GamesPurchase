@@ -2,8 +2,8 @@ package com.gamespurchase.constant;
 
 import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.SagheGame;
-import com.gamespurchase.entities.ScheduleGame;
 import com.gamespurchase.entities.SerieGame;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Constants {
     private static List<BuyGame> gameBuyList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
-    private static List<ScheduleGame> scheduleGameList;
+    private static List<ProgressGame> gameProgressList;
     private static List<DatabaseGame> gameDatabaseList;
 
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
@@ -64,18 +64,12 @@ public class Constants {
         gameBuyList = list;
     }
 
-    public static List<ScheduleGame> getScheduleGameList(){
-
-        if(scheduleGameList == null){
-
-            scheduleGameList = new ArrayList<>();
-        }
-        return scheduleGameList;
+    public static List<ProgressGame> getGameProgressList() {
+        return gameProgressList;
     }
 
-    public static void setScheduleGameList(List<ScheduleGame> list){
-
-        scheduleGameList = list;
+    public static void setGameProgressList(List<ProgressGame> gameProgressList) {
+        Constants.gameProgressList = gameProgressList;
     }
 
     public static List<SerieGame> getGameSerieList(){
