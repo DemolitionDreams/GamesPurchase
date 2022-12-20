@@ -52,14 +52,8 @@ import java.util.stream.Collectors;
 public class DatabaseActivity extends AppCompatActivity {
 
     Dialog dialog;
-    Queries queries = new Queries();
     GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter;
     ViewGroup rootView;
-
-    // Richiama Queries.SELECT_ALL
-    private List<DatabaseGame> retrieveGamesList() {
-        return queries.selectDatabaseDB("id");
-    }
 
     // Richiama Queries.DELETE
     public void removedItemFromDatabaseDBAndCode(DatabaseGame databaseGame){

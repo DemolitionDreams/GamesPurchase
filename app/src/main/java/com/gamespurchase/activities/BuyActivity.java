@@ -54,14 +54,8 @@ import java.util.stream.Collectors;
 public class BuyActivity extends AppCompatActivity {
 
     Dialog dialog;
-    Queries queries = new Queries();
     GameBuyRecyclerAdapter gameBuyRecyclerAdapter;
     ViewGroup rootView;
-
-    // Richiama Queries.SELECT_ALL
-    private List<BuyGame> retrieveGamesList() {
-        return queries.selectBuyDB("id");
-    }
 
     // Richiama Queries.DELETE
     public void removedItemFromBuyDBAndCode(BuyGame buyGame) {

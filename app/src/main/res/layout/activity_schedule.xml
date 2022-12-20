@@ -7,145 +7,305 @@
     tools:context=".activities.ScheduleActivity">
 
     <ImageButton
-        android:id="@+id/schedule_button"
-        android:layout_width="50dp"
+        android:id="@+id/day_button"
+        android:layout_width="140dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/custom_shape_circle"
-        android:onClick="onClickAddScheduleGame" />
-
-    <AutoCompleteTextView
-        android:id="@+id/day_text"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_below="@+id/schedule_button"
-        android:completionThreshold="3"
-        android:hint="Giorno"
-        android:padding="0dp"
-        android:paddingStart="15dp" />
-
-    <AutoCompleteTextView
-        android:id="@+id/time_text"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:completionThreshold="3"
-        android:layout_below="@+id/day_text"
-        android:hint="Orario di Inizio"
-        android:padding="0dp"
-        android:paddingStart="15dp" />
-
-    <AutoCompleteTextView
-        android:id="@+id/name_text"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:completionThreshold="3"
-        android:layout_below="@id/time_text"
-        android:hint="Nome Gioco"
-        android:padding="0dp"
-        android:paddingStart="15dp" />
+        android:background="@drawable/custom_shape_day" />
 
     <RelativeLayout
+        android:id="@+id/time_relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_text"
-        android:layout_marginTop="40dp"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@+id/day_button"
+        android:layout_marginTop="40dp">
 
-        <ImageButton
-            android:id="@+id/saga_button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/custom_shape_main" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/saga_button"
-            android:layout_alignTop="@+id/saga_button"
-            android:layout_alignEnd="@+id/saga_button"
-            android:layout_alignBottom="@+id/saga_button"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="Saghe"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/work_in_progress"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/zero_time_button"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignTop="@+id/saga_button"
-            android:layout_alignEnd="@+id/saga_button"
-            android:layout_alignBottom="@+id/saga_button"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/icon_work_in_progress" />
-
-        <ImageButton
-            android:id="@+id/database_button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_below="@+id/saga_button"
-            android:background="@drawable/custom_shape_main" />
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/database_button"
-            android:layout_alignTop="@+id/database_button"
-            android:layout_alignEnd="@+id/database_button"
-            android:layout_alignBottom="@+id/database_button"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="Collezione"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Zero"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
 
-        <ImageButton
-            android:id="@+id/buy_button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/database_button"
-            android:background="@drawable/custom_shape_main" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/one_time_button"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/buy_button"
-            android:layout_alignTop="@+id/buy_button"
-            android:layout_alignEnd="@+id/buy_button"
-            android:layout_alignBottom="@+id/buy_button"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="Lista degli Acquisti"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:layout_below="@+id/zero_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="One"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/two_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/one_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Two"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/three_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/two_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Three"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/four_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/three_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Four"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/five_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/four_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Five"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/six_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/five_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Six"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/seven_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/six_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Seven"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/eight_time_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seven_time_button"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:text="Eight"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@drawable/custom_shape_time" />
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/game_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/day_button"
+        android:layout_marginTop="40dp"
+        android:layout_toEndOf="@+id/time_relative_layout">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/zero_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Zero"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/one_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/zero_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="One"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/two_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/one_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Two"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/three_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/two_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Three"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/four_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/three_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Four"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/five_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/four_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Five"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/six_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/five_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Six"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/seven_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/six_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Seven"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/eight_game_button"
+            android:layout_width="1800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seven_game_button"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_schedule"
+            android:text="Eight"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 </RelativeLayout>

@@ -37,12 +37,12 @@ public class Queries {
 
     // INSERT/UPDATE
     public static void insertUpdateScheduleDB(@NonNull ScheduleGame scheduleGame) {
-        scheduleDBReference.child(scheduleGame.getDay()).setValue(scheduleGame);
+        scheduleDBReference.child(scheduleGame.getDayCode()).setValue(scheduleGame);
         Log.i("GamesPurchase", "Aggiornata schedulazione di: " + scheduleGame.getDay() + ": " + scheduleGame.getPositionAndGame());
     }
 
     public static void insertUpdateTimeDB(@NonNull TimeGame timeGame) {
-        buyDBReference.child(timeGame.getId()).setValue(timeGame);
+        timeDBReference.child(timeGame.getId()).setValue(timeGame);
         Log.i("GamesPurchase", "Aggiunto orario: " + timeGame.getHour() + " (" + timeGame.getId() + ")");
     }
 

@@ -1,6 +1,12 @@
 package com.gamespurchase.activities;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,67 +17,40 @@ import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.ScheduleGame;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ScheduleActivity extends AppCompatActivity {
 
-    Queries queries = new Queries();
+    Dialog dialog;
 
     public void insertScheduleGameInScheduleDBAndCode(String day, Integer position, ProgressGame progressGame){
 
         ScheduleGame scheduleGame = new ScheduleGame();
-        scheduleGame.setDay(day);
-
         List<ScheduleGame> scheduleGameList = Queries.filterScheduleDB("day", "day", day);
         if(!scheduleGameList.isEmpty()) {
             scheduleGameList.get(0).getPositionAndGame().put(position, progressGame);
+
+            scheduleGame.setDayCode(scheduleGameList.get(0).getDayCode());
+            scheduleGame.setDay(day);
             scheduleGame.setPositionAndGame(scheduleGameList.get(0).getPositionAndGame());
         }
-
         Queries.insertUpdateScheduleDB(scheduleGame);
     }
 
-    /*
-    private void populateDayTable(){
-        // findByView
-        // getText()
-        List<ScheduleGame> scheduleGameList = Constants.getScheduleGameList().stream().filter(x -> x.getDay().equals()).collect(Collectors.toList());
-        scheduleGameList = scheduleGameList.stream().sorted(Comparator.comparing(ScheduleGame::getTime)).collect(Collectors.toList());
+    private View createPopUp(int id) {
+        dialog = new Dialog(ScheduleActivity.this);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(id, null);
+        dialog.setContentView(popupView);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-    }*/
-
-    private String convertDay(String day){
-        String dayCode = "";
-
-        switch (day){
-            case "Lunedi":
-                dayCode = "mon";
-                break;
-            case "Martedi":
-                dayCode = "tue";
-                break;
-            case "Mercoledi":
-                dayCode = "wed";
-                break;
-            case "Giovedi":
-                dayCode = "thu";
-                break;
-            case "Venerdi":
-                dayCode = "fri";
-                break;
-            case "Sabato":
-                dayCode = "sat";
-                break;
-            case "Domenica":
-                dayCode = "sun";
-                break;
-            default:
-        }
-        return dayCode;
+        return popupView;
     }
 
-    public void setGlobalVariables(String day){
-        List<ScheduleGame> scheduleGameList = Queries.filterScheduleDB("day", "day", day);
+    public void setGlobalVariables(String dayCode){
+        List<ScheduleGame> scheduleGameList = Queries.filterScheduleDB("dayCode", "dayCode", dayCode);
         List<ProgressGame> progressGameList = new ArrayList(scheduleGameList.get(0).getPositionAndGame().values());
         Constants.setGameProgressList(progressGameList);
     }
@@ -81,7 +60,9 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         getSupportActionBar().hide();
-        setGlobalVariables("Lunedi");
+        Date date = new Date();
+
+        setGlobalVariables(date.toString().toLowerCase(Locale.ROOT).substring(0, 3));
     }
 }
 

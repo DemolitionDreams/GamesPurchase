@@ -7,6 +7,7 @@ import com.gamespurchase.entities.SagheGame;
 import com.gamespurchase.entities.SerieGame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Constants {
     public static int maxIdSagheList;
     public static int maxIdDatabaseList;
 
+    private static List<String> dayList = Arrays.asList("mon", "tue", "wed", "thu", "fri", "sat", "sun");
     private static List<BuyGame> gameBuyList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;

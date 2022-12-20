@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 public class ScheduleGame {
 
+    private String dayCode;
+
     private String day;
 
     private HashMap<Integer, ProgressGame> positionAndGame;
@@ -11,9 +13,18 @@ public class ScheduleGame {
     public ScheduleGame() {
     }
 
-    public ScheduleGame(String day, HashMap<Integer, ProgressGame> positionAndGame) {
+    public ScheduleGame(String dayCode, String day, HashMap<Integer, ProgressGame> positionAndGame) {
+        this.dayCode = dayCode;
         this.day = day;
         this.positionAndGame = positionAndGame;
+    }
+
+    public String getDayCode() {
+        return dayCode;
+    }
+
+    public void setDayCode(String dayCode) {
+        this.dayCode = dayCode;
     }
 
     public String getDay() {
