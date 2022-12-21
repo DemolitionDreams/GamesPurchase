@@ -4,27 +4,27 @@ import java.util.HashMap;
 
 public class ScheduleGame {
 
-    private String dayCode;
+    private String id;
 
     private String day;
 
-    private HashMap<Integer, ProgressGame> positionAndGame;
+    private HashMap<String, ProgressGame> positionAndGame;
 
-    public ScheduleGame() {
+    public ScheduleGame(){
     }
 
-    public ScheduleGame(String dayCode, String day, HashMap<Integer, ProgressGame> positionAndGame) {
-        this.dayCode = dayCode;
+    public ScheduleGame(String id, String day, HashMap<String, ProgressGame> positionAndGame) {
+        this.id = id;
         this.day = day;
         this.positionAndGame = positionAndGame;
     }
 
-    public String getDayCode() {
-        return dayCode;
+    public String getId() {
+        return id;
     }
 
-    public void setDayCode(String dayCode) {
-        this.dayCode = dayCode;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDay() {
@@ -35,11 +35,11 @@ public class ScheduleGame {
         this.day = day;
     }
 
-    public HashMap<Integer, ProgressGame> getPositionAndGame() {
+    public HashMap<String, ProgressGame> getPositionAndGame() {
         return positionAndGame;
     }
 
-    public void setPositionAndGame(HashMap<Integer, ProgressGame> positionAndGame) {
+    public void setPositionAndGame(HashMap<String, ProgressGame> positionAndGame) {
         this.positionAndGame = positionAndGame;
     }
 }

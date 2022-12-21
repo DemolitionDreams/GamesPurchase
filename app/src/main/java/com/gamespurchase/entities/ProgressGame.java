@@ -1,10 +1,8 @@
 package com.gamespurchase.entities;
 
-import java.time.LocalDate;
-
 public class ProgressGame {
 
-    private LocalDate startDate;
+    private String startDate;
 
     private int currentProgress;
 
@@ -19,7 +17,7 @@ public class ProgressGame {
     public ProgressGame() {
     }
 
-    public ProgressGame(LocalDate startDate, int currentProgress, int total, String percentage, String name, Boolean buyed) {
+    public ProgressGame(String startDate, int currentProgress, int total, String percentage, String name, Boolean buyed) {
         this.startDate = startDate;
         this.currentProgress = currentProgress;
         this.total = total;
@@ -28,11 +26,11 @@ public class ProgressGame {
         this.buyed = buyed;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -48,9 +46,7 @@ public class ProgressGame {
         return total;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
+    public void setTotal(int total) { this.total = total; }
 
     public String getPercentage() {
         return percentage;

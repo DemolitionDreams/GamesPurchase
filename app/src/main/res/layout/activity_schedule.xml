@@ -6,13 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".activities.ScheduleActivity">
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/day_button"
         android:layout_width="140dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMinTextSize="1sp"
+        android:autoSizeTextType="uniform"
+        android:text="Day"
+        android:textStyle="bold"
+        android:textAlignment="center"
         android:background="@drawable/custom_shape_day" />
 
     <RelativeLayout
@@ -20,12 +26,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/day_button"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="20dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/zero_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginStart="15dp"
             android:autoSizeMaxTextSize="12sp"
             android:autoSizeMinTextSize="1sp"
@@ -38,22 +44,22 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/one_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/zero_time_button"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
             android:autoSizeMaxTextSize="12sp"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_time"
             android:text="One"
-            android:textStyle="bold"
             android:textAlignment="center"
-            android:background="@drawable/custom_shape_time" />
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/two_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/one_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -68,7 +74,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/three_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/two_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -83,7 +89,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/four_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/three_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -98,7 +104,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/five_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/four_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -113,7 +119,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/six_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/five_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -128,7 +134,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/seven_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/six_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -143,7 +149,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/eight_time_button"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/seven_time_button"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
@@ -162,13 +168,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/day_button"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/time_relative_layout">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/zero_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:autoSizeMaxTextSize="12sp"
@@ -182,7 +188,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/one_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/zero_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -198,7 +204,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/two_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/one_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -214,7 +220,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/three_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/two_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -230,7 +236,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/four_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/three_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -246,7 +252,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/five_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/four_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -262,7 +268,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/six_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/five_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -278,7 +284,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/seven_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/six_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
@@ -294,7 +300,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/eight_game_button"
             android:layout_width="1800dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/seven_game_button"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"

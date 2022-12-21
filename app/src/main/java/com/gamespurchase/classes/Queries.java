@@ -37,7 +37,7 @@ public class Queries {
 
     // INSERT/UPDATE
     public static void insertUpdateScheduleDB(@NonNull ScheduleGame scheduleGame) {
-        scheduleDBReference.child(scheduleGame.getDayCode()).setValue(scheduleGame);
+        scheduleDBReference.child(scheduleGame.getId()).setValue(scheduleGame);
         Log.i("GamesPurchase", "Aggiornata schedulazione di: " + scheduleGame.getDay() + ": " + scheduleGame.getPositionAndGame());
     }
 

@@ -26,7 +26,7 @@ public class Constants {
     public static int maxIdSagheList;
     public static int maxIdDatabaseList;
 
-    private static List<String> dayList = Arrays.asList("mon", "tue", "wed", "thu", "fri", "sat", "sun");
+    private static List<String> dayCodeList = Arrays.asList("mon", "tue", "wed", "thu", "fri", "sat", "sun");
     private static List<BuyGame> gameBuyList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
@@ -35,6 +35,10 @@ public class Constants {
 
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
+
+    public static List<String> getDayCodeList() {
+        return dayCodeList;
+    }
 
     public static HashMap<String, Integer> getCounterBuyGame() {
         return counterBuyGame;
