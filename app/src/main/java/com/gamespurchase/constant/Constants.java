@@ -1,5 +1,7 @@
 package com.gamespurchase.constant;
 
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
@@ -12,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Constants {
+
+    public static String actualDayCode = "";
+    public static String actualDay = "";
 
     public static String sortBuyGame = "ASC";
     public static String sortSagheGame = "ASC";
@@ -27,6 +32,8 @@ public class Constants {
     public static int maxIdDatabaseList;
 
     private static List<String> dayCodeList = Arrays.asList("mon", "tue", "wed", "thu", "fri", "sat", "sun");
+    private static List<AppCompatButton> timeButtonList;
+    private static List<AppCompatButton> gameButtonList;
     private static List<BuyGame> gameBuyList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
@@ -36,8 +43,40 @@ public class Constants {
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
 
+    public static String getActualDayCode() {
+        return actualDayCode;
+    }
+
+    public static void setActualDayCode(String actualDayCode) {
+        Constants.actualDayCode = actualDayCode;
+    }
+
+    public static String getActualDay() {
+        return actualDay;
+    }
+
+    public static void setActualDay(String actualDay) {
+        Constants.actualDay = actualDay;
+    }
+
     public static List<String> getDayCodeList() {
         return dayCodeList;
+    }
+
+    public static List<AppCompatButton> getTimeButtonList() {
+        return timeButtonList;
+    }
+
+    public static void setTimeButtonList(List<AppCompatButton> timeButtonList) {
+        Constants.timeButtonList = timeButtonList;
+    }
+
+    public static List<AppCompatButton> getGameButtonList() {
+        return gameButtonList;
+    }
+
+    public static void setGameButtonList(List<AppCompatButton> gameButtonList) {
+        Constants.gameButtonList = gameButtonList;
     }
 
     public static HashMap<String, Integer> getCounterBuyGame() {

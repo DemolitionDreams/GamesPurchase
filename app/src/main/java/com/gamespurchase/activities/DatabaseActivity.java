@@ -105,7 +105,7 @@ public class DatabaseActivity extends AppCompatActivity {
         }, 500);
     }
 
-    public static void insertBuyGameInDatabaseDBAndCode(Integer position, DatabaseGame databaseGame) {
+    public static void insertOtherGameInDatabaseDBAndCode(Integer position, DatabaseGame databaseGame) {
 
         Optional<DatabaseGame> optGame = Constants.getGameDatabaseList().stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
         if (optGame.isPresent()) {

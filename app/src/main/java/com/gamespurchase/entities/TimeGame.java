@@ -1,17 +1,15 @@
 package com.gamespurchase.entities;
 
-import java.time.LocalTime;
-
 public class TimeGame {
 
     private String id;
 
-    private LocalTime hour;
+    private String hour;
 
     public TimeGame() {
     }
 
-    public TimeGame(String id, LocalTime time) {
+    public TimeGame(String id, String time) {
         this.id = id;
         this.hour = time;
     }
@@ -24,11 +22,11 @@ public class TimeGame {
         this.id = id;
     }
 
-    public LocalTime getHour() {
+    public String getHour() {
         return hour;
     }
 
-    public void setHour(LocalTime hour) {
+    public void setHour(String hour) {
         this.hour = hour;
     }
 }

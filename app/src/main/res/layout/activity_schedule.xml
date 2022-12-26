@@ -30,19 +30,21 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/zero_time_button"
+            android:tag="0"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="15dp"
             android:autoSizeMaxTextSize="12sp"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_time"
             android:text="Zero"
-            android:textStyle="bold"
             android:textAlignment="center"
-            android:background="@drawable/custom_shape_time" />
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/one_time_button"
+            android:tag="1"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/zero_time_button"
@@ -58,6 +60,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/two_time_button"
+            android:tag="2"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/one_time_button"
@@ -73,6 +76,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/three_time_button"
+            android:tag="3"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/two_time_button"
@@ -88,6 +92,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/four_time_button"
+            android:tag="4"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/three_time_button"
@@ -103,6 +108,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/five_time_button"
+            android:tag="5"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/four_time_button"
@@ -118,6 +124,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/six_time_button"
+            android:tag="6"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/five_time_button"
@@ -133,6 +140,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/seven_time_button"
+            android:tag="7"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/six_time_button"
@@ -148,6 +156,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/eight_time_button"
+            android:tag="8"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/seven_time_button"
@@ -172,7 +181,7 @@
         android:layout_toEndOf="@+id/time_relative_layout">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/zero_game_button"
+            android:id="@+id/ID0"
             android:layout_width="1800dp"
             android:layout_height="50dp"
             android:layout_marginStart="25dp"
@@ -181,15 +190,17 @@
             android:autoSizeMinTextSize="1sp"
             android:autoSizeTextType="uniform"
             android:background="@drawable/custom_shape_schedule"
+            android:tag="ID0"
             android:text="Zero"
             android:textAlignment="center"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/one_game_button"
+            android:id="@+id/ID1"
+            android:tag="ID1"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/zero_game_button"
+            android:layout_below="@+id/ID0"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -202,10 +213,11 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/two_game_button"
+            android:id="@+id/ID2"
+            android:tag="ID2"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/one_game_button"
+            android:layout_below="@+id/ID1"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -218,10 +230,11 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/three_game_button"
+            android:id="@+id/ID3"
+            android:tag="ID3"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/two_game_button"
+            android:layout_below="@+id/ID2"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -234,10 +247,11 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/four_game_button"
+            android:id="@+id/ID4"
+            android:tag="ID4"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/three_game_button"
+            android:layout_below="@+id/ID3"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -250,10 +264,11 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/five_game_button"
+            android:id="@+id/ID5"
+            android:tag="ID5"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/four_game_button"
+            android:layout_below="@+id/ID4"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -266,10 +281,11 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/six_game_button"
+            android:id="@+id/ID6"
+            android:tag="ID6"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/five_game_button"
+            android:layout_below="@+id/ID5"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -282,10 +298,11 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/seven_game_button"
+            android:id="@+id/ID7"
+            android:tag="ID7"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/six_game_button"
+            android:layout_below="@+id/ID6"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
@@ -298,13 +315,14 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/eight_game_button"
+            android:id="@+id/ID8"
+            android:tag="ID8"
             android:layout_width="1800dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/seven_game_button"
+            android:layout_below="@+id/ID7"
             android:layout_marginStart="25dp"
-            android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
             android:autoSizeMaxTextSize="12sp"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeTextType="uniform"

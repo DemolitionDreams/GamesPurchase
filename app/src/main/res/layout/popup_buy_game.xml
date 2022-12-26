@@ -10,14 +10,14 @@
         android:id="@+id/name_text"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_centerHorizontal="true"
-        android:padding="0dp"
-        android:paddingStart="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:completionThreshold="3"
         android:hint="Nome Gioco"
-        android:completionThreshold="3" />
+        android:padding="0dp"
+        android:paddingStart="15dp" />
 
     <AutoCompleteTextView
         android:id="@+id/saga_text"
@@ -81,8 +81,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/custom_shape_aggiungi_button"
-        android:text="Aggiungi"
-        android:onClick="onClickAddBuyGame"/>
+        android:text="Aggiungi" />
 
     <TextView
         android:id="@+id/add_text_view"

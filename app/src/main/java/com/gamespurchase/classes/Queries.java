@@ -57,6 +57,40 @@ public class Queries {
     }
 
     // SELECT ALL
+    public static List<TimeGame> selectTimeDB(String orderElement) {
+
+        List<TimeGame> timeGameList = new ArrayList<>();
+        timeDBReference.orderByChild(orderElement).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+
+                TimeGame timeGame = dataSnapshot.getValue(TimeGame.class);
+                timeGameList.add(timeGame);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return timeGameList;
+    }
+
     public static List<ScheduleGame> selectScheduleDB(String orderElement) {
 
         List<ScheduleGame> scheduleGameList = new ArrayList<>();

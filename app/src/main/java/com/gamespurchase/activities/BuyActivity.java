@@ -108,6 +108,23 @@ public class BuyActivity extends AppCompatActivity {
         }, 500);
     }
 
+    public static void insertOtherGameInDatabaseDBAndCode(Integer position, BuyGame buyGame) {
+
+        Optional<BuyGame> optGame = Constants.getGameBuyList().stream().filter(x -> x.getName().equals(buyGame.getName())).findAny();
+        if (optGame.isPresent()) {
+            buyGame.setId(optGame.get().getId());
+        } else {
+            Constants.maxIdBuyList++;
+            buyGame.setId(String.valueOf(Constants.maxIdBuyList));
+        }
+        Queries.insertUpdateBuyDB(buyGame);
+        if(position != null) {
+            Constants.getGameBuyList().set(position, buyGame);
+        } else{
+            Constants.getGameBuyList().add(buyGame);
+        }
+    }
+
     // Divide i giochi in base alla saga
     private void classifyGame(List<BuyGame> buyGameList) {
         TreeMap<String, List<String>> classifyMap = new TreeMap<>();
@@ -136,7 +153,7 @@ public class BuyActivity extends AppCompatActivity {
         databaseGame.setBuyed(Boolean.TRUE);
         databaseGame.setFinished(finished);
 
-        DatabaseActivity.insertBuyGameInDatabaseDBAndCode(null, databaseGame);
+        DatabaseActivity.insertOtherGameInDatabaseDBAndCode(null, databaseGame);
     }
 
     public void onClick(View view) {
