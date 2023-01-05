@@ -169,6 +169,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void callStartActivity(View view) {
+        Intent intent = new Intent(this, StartActivity.class);
+        startActivity(intent);
+    }
+
     public void callDatabaseActivity(View view) {
         Intent intent = new Intent(this, DatabaseActivity.class);
         startActivity(intent);

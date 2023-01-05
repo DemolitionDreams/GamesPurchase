@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.ScheduleGame;
 import com.gamespurchase.entities.TimeGame;
 import com.google.firebase.database.ChildEventListener;
@@ -25,6 +26,7 @@ public class Queries {
     private static DatabaseReference buyDBReference;
     private static DatabaseReference databaseDBReference;
     private static DatabaseReference scheduleDBReference;
+    private static DatabaseReference startDBReference;
     private static DatabaseReference timeDBReference;
 
     public Queries() {
@@ -32,6 +34,7 @@ public class Queries {
         buyDBReference = DB_INSTANCE.getReference("GamesToBuy");
         databaseDBReference = DB_INSTANCE.getReference("GamesToDatabase");
         scheduleDBReference = DB_INSTANCE.getReference("GamesToSchedule");
+        startDBReference = DB_INSTANCE.getReference("GamesToStart");
         timeDBReference = DB_INSTANCE.getReference("TimeGame");
     }
 
@@ -54,6 +57,10 @@ public class Queries {
     public static void insertUpdateDatabaseDB(@NonNull DatabaseGame databaseGame) {
         databaseDBReference.child(databaseGame.getId()).setValue(databaseGame);
         Log.i("GamesPurchase", "Aggiunto: " + databaseGame.getName() + " (" + databaseGame.getPlatform() + ")" + " con ID " + databaseGame.getId() + ", appartenente alla saga " + databaseGame.getSaga() + ". " + "Finito? (" + databaseGame.getFinished() + ") - Acquistato? (" + databaseGame.getBuyed() + ")");
+    }
+
+    public static void insertUpdateStartDB(@NonNull ProgressGame progressGame){
+        startDBReference.child(progressGame.getName()).setValue(progressGame);
     }
 
     // SELECT ALL
@@ -94,7 +101,7 @@ public class Queries {
     public static List<ScheduleGame> selectScheduleDB(String orderElement) {
 
         List<ScheduleGame> scheduleGameList = new ArrayList<>();
-        buyDBReference.orderByChild(orderElement).addChildEventListener(new ChildEventListener() {
+        scheduleDBReference.orderByChild(orderElement).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
 
@@ -123,6 +130,40 @@ public class Queries {
             }
         });
         return scheduleGameList;
+    }
+
+    public static List<ProgressGame> selectStartDB(String orderElement) {
+
+        List<ProgressGame> progressGameList = new ArrayList<>();
+        startDBReference.orderByChild(orderElement).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+
+                ProgressGame progressGame = dataSnapshot.getValue(ProgressGame.class);
+                progressGameList.add(progressGame);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return progressGameList;
     }
 
     public static List<BuyGame> selectBuyDB(String orderElement) {
@@ -239,6 +280,51 @@ public class Queries {
         return scheduleGameList;
     }
 
+    public static <T> List<ProgressGame> filterStartDB(String orderElement, String fieldToCompare, T valueToCompare) {
+
+        List<ProgressGame> progressGameList = new ArrayList<>();
+        InvokeGetterSetter invokeGetterSetter = new InvokeGetterSetter();
+        startDBReference.orderByChild(orderElement).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
+
+                ProgressGame progressGame = dataSnapshot.getValue(ProgressGame.class);
+
+                if (valueToCompare instanceof String) {
+                    if (invokeGetterSetter.reflectionMethodForStringProgressGame(Objects.requireNonNull(progressGame), fieldToCompare, (String) valueToCompare)) {
+                        progressGameList.add(progressGame);
+                        Log.i("GamesPurchase", "Filtrato " + progressGame.getName() + " della saga " + progressGame.getSaga());
+                    }
+                } else {
+                    if (invokeGetterSetter.reflectionMethodProgressGame(Objects.requireNonNull(progressGame), fieldToCompare, valueToCompare)) {
+                        progressGameList.add(progressGame);
+                        Log.i("GamesPurchase", "Filtrato " + progressGame.getName() + " della saga " + progressGame.getSaga());                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return progressGameList;
+    }
+
     public static <T> List<BuyGame> filterBuyDB(String orderElement, String fieldToCompare, T valueToCompare) {
 
         List<BuyGame> buyGameList = new ArrayList<>();
@@ -332,10 +418,16 @@ public class Queries {
     }
 
     // DELETE
-    public static void deleteBuyDB(ScheduleGame scheduleGame) {
+    public static void deleteScheduleDB(ScheduleGame scheduleGame) {
 
         scheduleDBReference.child(scheduleGame.getDay()).removeValue();
         Log.i("GamesPurchase", "Cancellata schedulazione di: " + scheduleGame.getDay());
+    }
+
+    public static void deleteStartDB(ProgressGame progressGame) {
+
+        scheduleDBReference.child(progressGame.getName()).removeValue();
+        Log.i("GamesPurchase", "Cancellato elemento dallo startDB: " + progressGame.getName());
     }
 
     public static void deleteBuyDB(BuyGame buyGame) {

@@ -17,8 +17,7 @@ public class BuyGame {
     public BuyGame() {
     }
 
-    public BuyGame(String id, String name, String saga, String platform, String priority, Boolean checkInTransit) {
-        this.id = id;
+    public BuyGame(String name, String saga, String platform, String priority, Boolean checkInTransit) {
         this.name = name;
         this.saga = saga;
         this.platform = platform;

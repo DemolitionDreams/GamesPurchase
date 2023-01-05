@@ -17,8 +17,7 @@ public class DatabaseGame {
     public DatabaseGame() {
     }
 
-    public DatabaseGame(String id, String name, String saga, String platform, Boolean buyed, Boolean finished) {
-        this.id = id;
+    public DatabaseGame(String name, String saga, String platform, Boolean buyed, Boolean finished) {
         this.name = name;
         this.saga = saga;
         this.platform = platform;

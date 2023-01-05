@@ -7,6 +7,7 @@
     <string name="notNotSelected">Seleziona un item</string>
     <string name="consoleDefault">Console</string>
     <string name="priorityDefault">Priority</string>
+    <string name="labelDefault">AAA</string>
     <string name="sagaGame">Saga Gioco</string>
     <string name="nameGame">Nome Gioco</string>
     <string name="finish">Finito?</string>
@@ -49,5 +50,34 @@
         <item>Xbox360</item>
         <item>XboxOne</item>
         <item>XboxSeriesX</item>
+    </string-array>
+    <string-array name="Label">
+        <item>Try AAA</item>
+        <item>Try AA</item>
+        <item>AAA</item>
+        <item>AA</item>
+        <item>A</item>
+        <item>DLC</item>
+        <item>Old</item>
+        <item>PS5</item>
+        <item>PS4</item>
+        <item>PS3</item>
+        <item>PS2</item>
+        <item>PS1</item>
+        <item>PSP</item>
+        <item>PSVita</item>
+        <item>Switch</item>
+        <item>WII</item>
+        <item>WIIU</item>
+        <item>3DS</item>
+        <item>NDS</item>
+        <item>GBA</item>
+        <item>GBC</item>
+        <item>GB</item>
+        <item>Xbox360</item>
+        <item>XboxOne</item>
+        <item>XboxSeriesX</item>
+        <item>Still</item>
+        <item>GraphicAdventure</item>
     </string-array>
 </resources>

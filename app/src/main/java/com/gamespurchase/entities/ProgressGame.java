@@ -6,6 +6,8 @@ public class ProgressGame {
 
     private int total;
 
+    private int hour;
+
     private String startDate;
 
     private String name;
@@ -20,17 +22,21 @@ public class ProgressGame {
 
     private Boolean checkInTransit;
 
+    private String label;
+
     public ProgressGame() {
     }
 
-    public ProgressGame(int currentProgress, int total, String startDate, String name, String saga, String platform, String priority, Boolean buyed, Boolean checkInTransit) {
+    public ProgressGame(int currentProgress, int total, int hour, String startDate, String name, String saga, String platform, String priority, String label, Boolean buyed, Boolean checkInTransit) {
         this.currentProgress = currentProgress;
         this.total = total;
+        this.hour = hour;
         this.startDate = startDate;
         this.name = name;
         this.saga = saga;
         this.platform = platform;
         this.priority = priority;
+        this.label = label;
         this.buyed = buyed;
         this.checkInTransit = checkInTransit;
     }
@@ -49,6 +55,14 @@ public class ProgressGame {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
     }
 
     public String getStartDate() {
@@ -106,4 +120,9 @@ public class ProgressGame {
     public void setCheckInTransit(Boolean checkInTransit) {
         this.checkInTransit = checkInTransit;
     }
+
+    public String getLabel() { return label; }
+
+    public void setLabel(String label) { this.label = label; }
+
 }

@@ -67,10 +67,36 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/hour_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/data_text"
+            android:text="Ore Necessarie: "
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/hour_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/data_text"
+            android:layout_marginBottom="10dp"
+            android:layout_alignBaseline="@+id/hour_text"
+            android:layout_toEndOf="@id/hour_text"
+            android:background="@color/transparent"
+            android:hint="0"
+            android:inputType="number" />
+
+        <TextView
             android:id="@+id/progress_text"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_below="@+id/data_text"
+            android:layout_below="@+id/hour_text"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:text="Progresso / Totale: "
@@ -82,7 +108,7 @@
             android:id="@+id/actual_edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/data_text"
+            android:layout_below="@+id/hour_text"
             android:layout_alignBaseline="@+id/slash_text"
             android:layout_toEndOf="@id/progress_text"
             android:background="@color/transparent"
@@ -93,7 +119,7 @@
             android:id="@+id/slash_text"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_below="@+id/data_text"
+            android:layout_below="@+id/hour_text"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/actual_edit_text"
             android:text=" / "
@@ -105,7 +131,7 @@
             android:id="@+id/total_edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/data_text"
+            android:layout_below="@+id/hour_text"
             android:layout_alignBaseline="@+id/slash_text"
             android:layout_toEndOf="@id/slash_text"
             android:background="@color/transparent"
@@ -140,6 +166,16 @@
             android:spinnerMode="dialog"
             android:textAlignment="center" />
 
+        <Spinner
+            android:id="@+id/label_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/priority_spinner"
+            android:entries="@array/Label"
+            android:prompt="@string/labelDefault"
+            android:spinnerMode="dialog"
+            android:textAlignment="center" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -168,54 +204,29 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/button_relative_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/update_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/checkbox_relative_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_shape_aggiungi_button" />
 
-        <ImageButton
-            android:id="@+id/update_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/custom_shape_aggiungi_button" />
+    <TextView
+        android:id="@+id/update_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/update_button"
+        android:layout_alignTop="@+id/update_button"
+        android:layout_alignEnd="@+id/update_button"
+        android:layout_alignBottom="@+id/update_button"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Aggiorna"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/update_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/update_button"
-            android:layout_alignTop="@+id/update_button"
-            android:layout_alignEnd="@+id/update_button"
-            android:layout_alignBottom="@+id/update_button"
-            android:gravity="center"
-            android:text="Aggiorna"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/reset_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/update_button"
-            android:background="@drawable/custom_shape_aggiungi_button" />
-
-        <TextView
-            android:id="@+id/reset_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/reset_button"
-            android:layout_alignTop="@+id/reset_button"
-            android:layout_alignEnd="@+id/reset_button"
-            android:layout_alignBottom="@+id/reset_button"
-            android:gravity="center"
-            android:text="Reset"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-    </RelativeLayout>
 </RelativeLayout>

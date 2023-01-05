@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.ScheduleGame;
 
 import java.lang.reflect.Method;
@@ -22,6 +23,26 @@ public class InvokeGetterSetter {
             if (method.getName().contains("get") && method.getName().toLowerCase(Locale.ROOT).contains(parameterName.toLowerCase(Locale.ROOT))) {
                 try {
                     return Objects.requireNonNull(method.invoke(scheduleGame)).equals(compareObject);
+                } catch (Exception e) {
+
+                    Log.e("GamesPurchase", "Errore Reflection Getter ScheduleGame");
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public <T> boolean reflectionMethodProgressGame(ProgressGame progressGame, String parameterName, T compareObject) {
+
+        Class<? extends ProgressGame> c = progressGame.getClass();
+        Method[] methods = c.getDeclaredMethods();
+        for (Method method : methods) {
+
+            if (method.getName().contains("get") && method.getName().toLowerCase(Locale.ROOT).contains(parameterName.toLowerCase(Locale.ROOT))) {
+                try {
+                    return Objects.requireNonNull(method.invoke(progressGame)).equals(compareObject);
                 } catch (Exception e) {
 
                     Log.e("GamesPurchase", "Errore Reflection Getter ScheduleGame");
@@ -83,6 +104,28 @@ public class InvokeGetterSetter {
                 try {
 
                     String methodToString = (String) method.invoke(scheduleGame);
+                    return Objects.requireNonNull(methodToString).toLowerCase(Locale.ROOT).contains(compareObject.toLowerCase(Locale.ROOT));
+                } catch (Exception e) {
+
+                    Log.e("GamesPurchase", "Errore Reflection Getter ScheduleGame");
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public <T> boolean reflectionMethodForStringProgressGame(ProgressGame progressGame, String parameterName, String compareObject) {
+
+        Class<? extends ProgressGame> c = progressGame.getClass();
+        Method[] methods = c.getDeclaredMethods();
+        for (Method method : methods) {
+
+            if (method.getName().contains("get") && method.getName().toLowerCase(Locale.ROOT).contains(parameterName.toLowerCase(Locale.ROOT))) {
+                try {
+
+                    String methodToString = (String) method.invoke(progressGame);
                     return Objects.requireNonNull(methodToString).toLowerCase(Locale.ROOT).contains(compareObject.toLowerCase(Locale.ROOT));
                 } catch (Exception e) {
 
