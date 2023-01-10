@@ -8,27 +8,28 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
 import com.gamespurchase.adapter.GameStartRecyclerAdapter;
-import com.gamespurchase.adapter.NothingSelectedSpinnerAdapter;
 import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.ProgressGame;
@@ -39,6 +40,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,21 +62,141 @@ public class StartActivity extends AppCompatActivity {
 
     // Richiama Queries.INSERT
     public static void insertNewGameStartDBAndCode(Integer position, ProgressGame progressGame, View view) {
-
+        Optional<ProgressGame> optGame = Constants.getGameStartList().stream().filter(x -> x.getName().equals(progressGame.getName())).findAny();
+        if (optGame.isPresent()) {
+            progressGame.setId(optGame.get().getId());
+            Log.i("GamesPurchase", "ID Aggiornato " + progressGame.getLabel());
+        } else {
+            Constants.maxIdStartList++;
+            progressGame.setId(String.valueOf(Constants.maxIdStartList));
+            Log.i("GamesPurchase", "ID Aggiunto " + progressGame.getLabel());
+        }
         Queries.insertUpdateStartDB(progressGame);
         List<ProgressGame> progressGameList = Queries.filterStartDB("name", "label", progressGame.getLabel());
+        Log.i("GamesPurchase", "Label filtrata " + progressGame.getLabel());
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             Constants.getStartGameMap().put(progressGame.getLabel(), progressGameList);
+            Log.i("GamesPurchase", "Label modificato " + progressGame.getLabel());
+            Constants.setGameStartList(Constants.getStartGameMap().get(progressGame.getLabel()));
         }, 100);
+    }
+
+    public void onClickOpenAddStartGamePopup(View view) {
+
+        View popupView = createPopUp(R.layout.popup_start_game);
+        addAutoCompleteVoice(popupView, R.id.saga_text);
+        TextView addButton = popupView.findViewById(R.id.update_text_view);
+        addButton.setText("Aggiungi");
+        Spinner labelSpinner = popupView.findViewById(R.id.label_spinner);
+        int labelPosition = Arrays.stream(getResources().getStringArray(R.array.Label)).collect(Collectors.toList()).indexOf(Constants.getActualList());
+        labelSpinner.setSelection(labelPosition);
+        popupView.findViewById(R.id.update_button).setOnClickListener(v -> onClickAddStartGame(popupView));
+        dialog.show();
+    }
+
+    public void addAutoCompleteVoice(View view, int id){
+        AutoCompleteTextView sagaAutoComplete = view.findViewById(id);
+        List<String> autoCompleteVoice = new ArrayList<>();
+        Constants.getGameDatabaseList().forEach(g -> {
+            if (!autoCompleteVoice.contains(g.getSaga())) {
+                autoCompleteVoice.add(g.getSaga());
+            }
+        });
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, autoCompleteVoice);
+        sagaAutoComplete.setAdapter(arrayAdapter);
+    }
+
+    public void onClickAddStartGame(View popupView) {
+
+        AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
+        String name = checkIfAutoCompleteTextIsNull(nameText);
+        if (name.isEmpty()) {
+            nameText.setError(getResources().getString(R.string.notEmpty));
+        }
+
+        AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
+        String saga = checkIfAutoCompleteTextIsNull(sagaText);
+        if (saga.isEmpty()) {
+            sagaText.setError(getResources().getString(R.string.notEmpty));
+        }
+
+        EditText dataText = popupView.findViewById(R.id.data_edit_text);
+        String data = checkIfEditTextIsNull(dataText, "TBS");
+
+        EditText hourText = popupView.findViewById(R.id.hour_edit_text);
+        String hour = checkIfEditTextIsNull(hourText, "0");
+
+        EditText actualText = popupView.findViewById(R.id.actual_edit_text);
+        String actual = checkIfEditTextIsNull(actualText, "0");
+
+        EditText totalText = popupView.findViewById(R.id.total_edit_text);
+        String total = checkIfEditTextIsNull(totalText, "1");
+
+        Spinner platformSpinner = popupView.findViewById(R.id.console_spinner);
+        String platform = checkIfSpinnerIsNull(platformSpinner);
+        if (platform.isEmpty()) {
+            ((TextView) platformSpinner.getSelectedView()).setError(getResources().getString(R.string.notNotSelected));
+        }
+
+        Spinner prioritySpinner = popupView.findViewById(R.id.priority_spinner);
+        String priority = checkIfSpinnerIsNull(prioritySpinner);
+        if (priority.isEmpty()) {
+            ((TextView) prioritySpinner.getSelectedView()).setError(getResources().getString(R.string.notNotSelected));
+        }
+
+        //TODO: testare
+        Spinner labelSpinner = popupView.findViewById(R.id.label_spinner);
+        String label = labelSpinner.getSelectedItem().toString();
+
+        CheckBox buyedCheckbox = popupView.findViewById(R.id.buyed_checkbox);
+        CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
+
+        if (!name.isEmpty() && !saga.isEmpty() && !platform.isEmpty()) {
+            ProgressGame progressGame = new ProgressGame(Integer.parseInt(actual), Integer.parseInt(total), Integer.parseInt(hour), data, name, saga, platform, priority, label, buyedCheckbox.isChecked(), transitCheckbox.isChecked());
+            insertNewGameStartDBAndCode(null, progressGame, rootView);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                gameStartRecyclerAdapter.updateData(Constants.getGameStartList().stream()
+                        .sorted(Comparator.comparing(ProgressGame::getName)).collect(Collectors.toList()));
+                selectListByLabel(progressGame.getLabel());
+            }, 100);
+            dialog.dismiss();
+        }
+    }
+
+    private String checkIfEditTextIsNull(EditText textInputEditText, String value) {
+        if (textInputEditText != null && textInputEditText.getText() != null && !textInputEditText.getText().toString().equals("")) {
+            return textInputEditText.getText().toString();
+        } else {
+            return value;
+        }
+    }
+
+    private String checkIfAutoCompleteTextIsNull(AutoCompleteTextView textInputEditText) {
+        if (textInputEditText != null && textInputEditText.getText() != null) {
+            return textInputEditText.getText().toString();
+        } else {
+
+            return "";
+        }
+    }
+
+    private String checkIfSpinnerIsNull(Spinner spinner) {
+
+        if (spinner != null && spinner.getSelectedItem() != null) {
+            return spinner.getSelectedItem().toString();
+        } else {
+            return "";
+        }
     }
 
     public void onClickSearch(View view) {
 
         ImageView orderButton = findViewById(R.id.sort_button);
         orderButton.setVisibility(View.INVISIBLE);
-        ImageView returnButton = findViewById(R.id.return_button);
+        AppCompatButton returnButton = findViewById(R.id.return_button);
         returnButton.setVisibility(View.VISIBLE);
         ImageView closeButton = findViewById(R.id.close_button);
         closeButton.setVisibility(View.INVISIBLE);
@@ -90,8 +212,11 @@ public class StartActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<ProgressGame> filterList = Constants.getGameStartList().stream().filter(x -> x.getName().substring(0, textInputLayout.getEditText().getText().toString().length() - 1).equals(textInputLayout.getEditText().getText().toString())).collect(Collectors.toList());
+                List<ProgressGame> filterList = Constants.getGameStartList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(textInputLayout.getEditText().getText().toString().toLowerCase(Locale.ROOT))).collect(Collectors.toList());
                 createRecyclerAdapter(filterList);
+                EditText header = rootView.findViewById(R.id.name_text);
+                String newHeader = Constants.getActualList() + " (" + filterList.size() + (filterList.size() == 1 ? " Gioco)" : " Giochi)");
+                header.setText(newHeader);
             }
 
             @Override
@@ -101,9 +226,9 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void onClickReturn(View view) {
-        setContentView(R.layout.activity_database);
-        createRecyclerAdapter(Constants.getGameStartList());
+        setContentView(R.layout.activity_start);
         setFilterAndSortButton();
+        selectListByLabel(Constants.getActualList());
     }
 
     public void onClickClose(View view) {
@@ -137,43 +262,18 @@ public class StartActivity extends AppCompatActivity {
         }
     });
 
-    public void onClickPopupDismiss(int position, ProgressGame progressGame, View view){
+    public void onClickPopupDismiss(int position, ProgressGame progressGame, View view) {
         insertNewGameStartDBAndCode(position, progressGame, view);
+        selectListByLabel(progressGame.getLabel());
         gameStartRecyclerAdapter.notifyItemChanged(position);
         dialog.dismiss();
     }
 
-    public void onClickOnlyRemove(ProgressGame progressGame, int position){
+    public void onClickOnlyRemove(ProgressGame progressGame, int position) {
         removedItemFromStartDBAndCode(progressGame);
+        selectListByLabel(progressGame.getLabel());
         gameStartRecyclerAdapter.notifyItemRemoved(position);
         dialog.dismiss();
-    }
-
-    private String checkIfEditTextIsNull(AutoCompleteTextView textInputEditText) {
-        if (textInputEditText != null && textInputEditText.getText() != null) {
-            return textInputEditText.getText().toString();
-        } else {
-
-            return "";
-        }
-    }
-
-    private String checkIfSpinnerIsNull(Spinner spinner) {
-
-        if (spinner != null && spinner.getSelectedItem() != null) {
-            return spinner.getSelectedItem().toString();
-        } else {
-            return "";
-        }
-    }
-
-    // Aggiunge allo spinner le possibly scelte e il valore di default
-    private void setEntriesAndDefaultToSpinner(int arrayString, int spinnerLayout, int spinner, View view) {
-        List<String> itemList = Arrays.stream(getResources().getStringArray(arrayString)).collect(Collectors.toList());
-        SpinnerAdapter spinnerAdapter = new ArrayAdapter<>(this, spinnerLayout, itemList);
-        Spinner consoleSpinner = view.findViewById(spinner);
-        consoleSpinner.setAdapter(spinnerAdapter);
-        consoleSpinner.setAdapter(new NothingSelectedSpinnerAdapter(spinnerAdapter, spinnerLayout, this));
     }
 
     // Creazione Pop Up
@@ -200,18 +300,6 @@ public class StartActivity extends AppCompatActivity {
         Constants.setGameStartList(gameStartList);
         createRecyclerAdapter(Constants.getGameStartList());
         sortButton.setImageResource(id);
-    }
-
-    public void addAutoCompleteVoice(View view, int id) {
-        AutoCompleteTextView sagaAutoComplete = view.findViewById(id);
-        List<String> autoCompleteVoice = new ArrayList<>();
-        Constants.getGameDatabaseList().forEach(g -> {
-            if (!autoCompleteVoice.contains(g.getSaga())) {
-                autoCompleteVoice.add(g.getSaga());
-            }
-        });
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, autoCompleteVoice);
-        sagaAutoComplete.setAdapter(arrayAdapter);
     }
 
     private void setFilterAndSortButton() {
@@ -241,12 +329,14 @@ public class StartActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public void onClickChangeRightLabelList(View v){
+    public void onClickChangeRightLabelList(View v) {
         Constants.setActualList(changeLabel(Boolean.TRUE));
+        selectListByLabel(Constants.getActualList());
     }
 
-    public void onClickChangeLeftLabelList(View v){
+    public void onClickChangeLeftLabelList(View v) {
         Constants.setActualList(changeLabel(Boolean.FALSE));
+        selectListByLabel(Constants.getActualList());
     }
 
     private static String changeLabel(Boolean sum) {
@@ -257,29 +347,42 @@ public class StartActivity extends AppCompatActivity {
         if (sum) {
             newLabel = (oldLabel == Constants.getListGameList().size() - 1) ? labelList.get(0) : labelList.get(oldLabel + 1);
         } else {
-            newLabel = (oldLabel == 0) ? labelList.get(6) : labelList.get(oldLabel - 1);
+            newLabel = (oldLabel == 0) ? labelList.get(Constants.getListGameList().size() - 1) : labelList.get(oldLabel - 1);
         }
         return newLabel;
     }
 
     public void setGlobalVariables() {
-        Constants.setSortListGame("DESC");
-        Constants.setActualList("AAA");
-        Constants.setStartGameMap(selectAllStartDB());
-        List<ProgressGame> startGameList = Constants.getStartGameMap().get(Constants.getActualList());
-        EditText header = rootView.findViewById(R.id.name_text);
+        HashMap<String, List<ProgressGame>> startDB = selectAllStartDB();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+
+            Constants.setStartGameMap(startDB);
+            selectListByLabel(Constants.getActualList());
+
+        }, 100);
+    }
+
+    public void selectListByLabel(String label) {
+        List<ProgressGame> startGameList = Constants.getStartGameMap().get(label);
         Constants.setGameStartList(startGameList);
-        String newHeader = "Lista " + Constants.getActualList() + " di " + Constants.getGameStartList().size() + " giochi";
-        header.setText(newHeader);
+        Constants.setCounterStartGame(Constants.getGameStartList() == null ? 0 : Constants.getGameStartList().size());
+        TextView labelHeader = rootView.findViewById(R.id.label_text);
+        TextView numberHeader = rootView.findViewById(R.id.number_text);
+        int dimension = Constants.getCounterStartGame();
+        labelHeader.setText(label);
+        numberHeader.setText(new StringBuilder().append(dimension).append(1 == dimension ? " Gioco" : " Giochi").toString());
         createRecyclerAdapter(Constants.getGameStartList());
     }
 
     public HashMap<String, List<ProgressGame>> selectAllStartDB() {
         HashMap<String, List<ProgressGame>> startGameMap = new HashMap<>();
-        List<ProgressGame> startGameList = Queries.selectStartDB("name");
+        List<ProgressGame> progressGameList = Queries.selectStartDB("name");
+
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            startGameList.forEach(x -> {
+            Constants.setTotalGameStartList(progressGameList);
+            Constants.getTotalGameStartList().forEach(x -> {
                 List<ProgressGame> tempStartGameList = new ArrayList<>();
                 if (startGameMap.containsKey(x.getLabel())) {
                     tempStartGameList = startGameMap.get(x.getLabel());
@@ -297,6 +400,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         rootView = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
+        Constants.setSortListGame("DESC");
+        Constants.setActualList("AAA");
         setGlobalVariables();
         setFilterAndSortButton();
         getSupportActionBar().hide();

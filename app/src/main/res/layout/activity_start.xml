@@ -28,16 +28,14 @@
         app:srcCompat="@drawable/icon_sort_asc"
         app:tint="@color/black" />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/return_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_toStartOf="@id/close_button"
-        android:backgroundTint="#00FFFFFF"
+        android:background="@drawable/icon_return"
         android:onClick="onClickReturn"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/icon_return"
-        app:tint="@color/black" />
+        android:visibility="invisible" />
 
     <ImageButton
         android:id="@+id/close_button"
@@ -53,45 +51,64 @@
         android:id="@+id/search_input"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:layout_alignTop="@+id/search_button"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/search_button"
-        android:layout_alignTop="@+id/search_button"
         android:visibility="invisible"
         app:errorEnabled="false"
-        app:hintEnabled="false" >
+        app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding = "0dp"
+            android:padding="0dp"
             android:textSize="25sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/name_text"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/header_relative_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search_input"
-        android:text="Lista --- di n giochi"
-        android:textAlignment="center"
-        android:textStyle="bold" />
+        android:layout_below="@id/search_input"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/label_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="Label"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/number_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/label_text"
+            android:layout_marginStart="10dp"
+            android:text="N"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/game_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/move_relative_layout"
-        android:layout_below="@id/name_text"
+        android:layout_below="@id/header_relative_layout"
         android:translationZ="1dp" />
 
     <RelativeLayout
         android:id="@+id/move_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
-        android:stretchColumns="*"
-        android:layout_alignParentBottom="true">
+        android:stretchColumns="*">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/move_left_button"
@@ -108,7 +125,7 @@
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/icon_add"
-            android:onClick="onClickOpenAddDatabaseGamePopup" />
+            android:onClick="onClickOpenAddStartGamePopup" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/move_right_button"

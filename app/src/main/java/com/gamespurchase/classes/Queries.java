@@ -23,20 +23,11 @@ import java.util.Objects;
 public class Queries {
 
     private static final FirebaseDatabase DB_INSTANCE = FirebaseDatabase.getInstance("https://gamespurchase-b1f3d-default-rtdb.europe-west1.firebasedatabase.app/");
-    private static DatabaseReference buyDBReference;
-    private static DatabaseReference databaseDBReference;
-    private static DatabaseReference scheduleDBReference;
-    private static DatabaseReference startDBReference;
-    private static DatabaseReference timeDBReference;
-
-    public Queries() {
-        // Crea tabella nel DB scelto
-        buyDBReference = DB_INSTANCE.getReference("GamesToBuy");
-        databaseDBReference = DB_INSTANCE.getReference("GamesToDatabase");
-        scheduleDBReference = DB_INSTANCE.getReference("GamesToSchedule");
-        startDBReference = DB_INSTANCE.getReference("GamesToStart");
-        timeDBReference = DB_INSTANCE.getReference("TimeGame");
-    }
+    private static DatabaseReference buyDBReference = DB_INSTANCE.getReference("GamesToBuy");
+    private static DatabaseReference databaseDBReference = DB_INSTANCE.getReference("GamesToDatabase");
+    private static DatabaseReference scheduleDBReference = DB_INSTANCE.getReference("GamesToSchedule");
+    private static DatabaseReference startDBReference = DB_INSTANCE.getReference("GamesToStart");
+    private static DatabaseReference timeDBReference = DB_INSTANCE.getReference("TimeGame");
 
     // INSERT/UPDATE
     public static void insertUpdateScheduleDB(@NonNull ScheduleGame scheduleGame) {
@@ -60,7 +51,7 @@ public class Queries {
     }
 
     public static void insertUpdateStartDB(@NonNull ProgressGame progressGame){
-        startDBReference.child(progressGame.getName()).setValue(progressGame);
+        startDBReference.child(progressGame.getId()).setValue(progressGame);
     }
 
     // SELECT ALL
@@ -426,8 +417,8 @@ public class Queries {
 
     public static void deleteStartDB(ProgressGame progressGame) {
 
-        scheduleDBReference.child(progressGame.getName()).removeValue();
-        Log.i("GamesPurchase", "Cancellato elemento dallo startDB: " + progressGame.getName());
+        startDBReference.child(progressGame.getId()).removeValue();
+        Log.i("GamesPurchase", "Cancellato elemento dallo startDB: " + progressGame.getId());
     }
 
     public static void deleteBuyDB(BuyGame buyGame) {

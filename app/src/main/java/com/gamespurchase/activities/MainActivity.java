@@ -14,6 +14,7 @@ import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.ProgressGame;
 import com.google.android.gms.common.util.CollectionUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -32,14 +33,13 @@ public class MainActivity extends AppCompatActivity {
 
     AssetManager assetManager;
     Workbook workbook;
-    Queries queries = new Queries();
 
     private void uploadExcelData() {
 
         InputStream inputStream = null;
         POIFSFileSystem fileSystem;
         assetManager = this.getAssets();
-        String filename = "Excel_Collezione_Old.xls";
+        String filename = "Collezioneg.xls";
         Queries queries = new Queries();
 
         try {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("GamesPurchase", "Trovata eccezione: {}", e);
         }
 
-        List<DatabaseGame> databaseGameList = new ArrayList<>();
+        List<ProgressGame> progressGameList = new ArrayList<>();
 
         // Recupera il foglio con indice scelto
         Sheet sheet = workbook.getSheetAt(0);
@@ -59,19 +59,28 @@ public class MainActivity extends AppCompatActivity {
         // Carica nel workbook le righe e le colonne
         for (Row row : sheet) {
 
-            DatabaseGame databaseGame = new DatabaseGame();
+            ProgressGame pg = new ProgressGame();
+            try{
 
-            databaseGame.setId(String.valueOf(counter));
-            databaseGame.setName(row.getCell(0).getStringCellValue());
-            databaseGame.setSaga(row.getCell(1).getStringCellValue());
-            databaseGame.setPlatform(row.getCell(2).getStringCellValue());
-            databaseGame.setFinished(row.getCell(3).getNumericCellValue() == 1);
-            databaseGame.setBuyed(true);
-
-            Queries.insertUpdateDatabaseDB(databaseGame);
-            databaseGameList.add(databaseGame);
-
+            pg.setId(String.valueOf(counter));
+            pg.setName(row.getCell(0).getStringCellValue());
+            Log.i("GamesPurchase", "Nome " + pg.getName());
+            pg.setLabel(row.getCell(1).getStringCellValue());
+            pg.setCurrentProgress((int)row.getCell(2).getNumericCellValue());
+            pg.setTotal((int)row.getCell(3).getNumericCellValue());
+            pg.setHour((int)row.getCell(4).getNumericCellValue());
+            pg.setStartDate(row.getCell(5).getStringCellValue());
+            pg.setSaga(row.getCell(6).getStringCellValue());
+            pg.setPlatform(row.getCell(7).getStringCellValue());
+            pg.setPriority(row.getCell(8).getStringCellValue());
+            pg.setBuyed(row.getCell(9).getNumericCellValue() == 1);
+            pg.setCheckInTransit(row.getCell(10).getNumericCellValue() == 1);
+            } catch (Exception e){
+                break;
+            }
+            Queries.insertUpdateStartDB(pg);
             counter++;
+            progressGameList.add(pg);
         }
 
         try {
@@ -92,20 +101,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setGlobalVariables() {
-        List<BuyGame> buyGameList = queries.selectBuyDB("id");
+        List<ProgressGame> startGameList = Queries.selectStartDB("id");
+        Constants.setGameStartList(startGameList);
+        List<BuyGame> buyGameList = Queries.selectBuyDB("id");
         Constants.setGameBuyList(buyGameList);
-        List<DatabaseGame> databaseGameList = queries.selectDatabaseDB("id");
+        List<DatabaseGame> databaseGameList = Queries.selectDatabaseDB("id");
         Constants.setGameDatabaseList(databaseGameList);
         fillMaps(Constants.getCounterBuyGame(), Constants.getCounterDatabaseGame());
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
+            Constants.maxIdStartList = Integer.parseInt(startGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
             Constants.maxIdBuyList = Integer.parseInt(buyGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
             Constants.maxIdDatabaseList = Integer.parseInt(databaseGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
         }, 3000);
     }
 
-    private static void fillMaps(HashMap<String, Integer> counterBuyGame, HashMap<String, Integer> counterDatabaseGame){
+    private static void  fillMaps(HashMap<String, Integer> counterBuyGame, HashMap<String, Integer> counterDatabaseGame){
 
         counterBuyGame.put("Totale", 0);
         counterBuyGame.put("Transito", 0);

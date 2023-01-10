@@ -146,13 +146,7 @@ public class BuyActivity extends AppCompatActivity {
     // Aggiunge il BuyGame cancellato al DatabaseDB
     public void addDeleteItemToDatabaseDB(BuyGame buyGame, Boolean finished) {
 
-        DatabaseGame databaseGame = new DatabaseGame();
-        databaseGame.setName(buyGame.getName());
-        databaseGame.setSaga(buyGame.getSaga());
-        databaseGame.setPlatform(buyGame.getPlatform());
-        databaseGame.setBuyed(Boolean.TRUE);
-        databaseGame.setFinished(finished);
-
+        DatabaseGame databaseGame = new DatabaseGame(buyGame.getName(), buyGame.getSaga(), buyGame.getPlatform(), Boolean.TRUE, finished);
         DatabaseActivity.insertOtherGameInDatabaseDBAndCode(null, databaseGame);
     }
 
@@ -284,12 +278,7 @@ public class BuyActivity extends AppCompatActivity {
         CheckBox inTransitCheckBox = popupView.findViewById(R.id.transit_checkbox);
 
         if (!name.isEmpty() && !saga.isEmpty() && !platform.isEmpty() && !priority.isEmpty()) {
-            BuyGame buyGame = new BuyGame();
-            buyGame.setName(name);
-            buyGame.setSaga(saga);
-            buyGame.setPlatform(platform);
-            buyGame.setPriority(priority);
-            buyGame.setCheckInTransit(inTransitCheckBox.isChecked());
+            BuyGame buyGame = new BuyGame(name, saga, platform, priority, inTransitCheckBox.isChecked());
             insertNewGameBuyDBAndCode(null, buyGame, rootView);
             List<BuyGame> buyGameListSorted = Constants.getGameBuyList();
             buyGameListSorted = buyGameListSorted.stream()

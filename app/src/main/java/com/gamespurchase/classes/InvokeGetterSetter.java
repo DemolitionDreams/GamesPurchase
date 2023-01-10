@@ -121,11 +121,13 @@ public class InvokeGetterSetter {
         Class<? extends ProgressGame> c = progressGame.getClass();
         Method[] methods = c.getDeclaredMethods();
         for (Method method : methods) {
-
             if (method.getName().contains("get") && method.getName().toLowerCase(Locale.ROOT).contains(parameterName.toLowerCase(Locale.ROOT))) {
                 try {
 
                     String methodToString = (String) method.invoke(progressGame);
+                    if(parameterName.equals("label")){
+                        return Objects.requireNonNull(methodToString).toLowerCase(Locale.ROOT).equals(compareObject.toLowerCase(Locale.ROOT));
+                    }
                     return Objects.requireNonNull(methodToString).toLowerCase(Locale.ROOT).contains(compareObject.toLowerCase(Locale.ROOT));
                 } catch (Exception e) {
 

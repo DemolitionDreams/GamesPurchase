@@ -254,11 +254,7 @@ public class DatabaseActivity extends AppCompatActivity {
         CheckBox finishedCheckbox = popupView.findViewById(R.id.finished_checkbox);
 
         if(!name.isEmpty() && !saga.isEmpty() && !platform.isEmpty()){
-            DatabaseGame databaseGame = new DatabaseGame();
-            databaseGame.setName(name);
-            databaseGame.setSaga(saga);
-            databaseGame.setPlatform(platform);
-            databaseGame.setFinished(finishedCheckbox.isChecked());
+            DatabaseGame databaseGame = new DatabaseGame(name, saga, platform, Boolean.TRUE, finishedCheckbox.isChecked());
             insertNewGameDatabaseDBAndCode(null, databaseGame, rootView);
             List<DatabaseGame> databaseGameListSorted = Constants.getGameDatabaseList();
             databaseGameListSorted = databaseGameListSorted.stream()

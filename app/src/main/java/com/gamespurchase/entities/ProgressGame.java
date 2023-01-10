@@ -2,6 +2,8 @@ package com.gamespurchase.entities;
 
 public class ProgressGame {
 
+    private String id;
+
     private int currentProgress;
 
     private int total;
@@ -40,6 +42,10 @@ public class ProgressGame {
         this.buyed = buyed;
         this.checkInTransit = checkInTransit;
     }
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public int getCurrentProgress() {
         return currentProgress;

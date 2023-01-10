@@ -34,17 +34,19 @@ public class Constants {
     public static int maxIdDatabaseList;
 
     private static List<String> dayCodeList = Arrays.asList("mon", "tue", "wed", "thu", "fri", "sat", "sun");
-    private static List<String> listGameList = Arrays.asList("Try AAA", "Try AA", "AAA", "AA", "A", "DLC", "Old", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation One", "PlayStation Portable", "PlayStation Vita", "Nintendo Switch", "Nintendo Wii", "Nintendo Wii U", "Nintendo 3DS", "Nintendo DS", "Game Boy Advance", "Game Boy Color", "Game Boy", "Xbox 360", "XOne", "Xbox One", "Xbox Series X", "Still", "Graphic Adventure");
+    private static List<String> listGameList = Arrays.asList("Try AAA", "Try AA", "AAA", "AA", "A", "Still", "DLC", "Old", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation One", "PlayStation Portable", "PlayStation Vita", "Nintendo Switch", "Nintendo Wii", "Nintendo Wii U", "Nintendo 3DS", "Nintendo DS", "Game Boy Advance", "Game Boy Color", "Game Boy", "Xbox 360", "Xbox One", "Xbox Series X", "Graphic Adventure");
 
     private static List<BuyGame> gameBuyList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
     private static List<ProgressGame> gameStartList;
+    private static List<ProgressGame> totalGameStartList;
     private static List<ProgressGame> gameProgressList;
     private static List<DatabaseGame> gameDatabaseList;
     private static List<AppCompatButton> timeButtonList;
     private static List<AppCompatButton> gameButtonList;
 
+    private static int counterStartGame;
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
     private static HashMap<String, List<ProgressGame>> startGameMap = new HashMap<>();
@@ -209,6 +211,14 @@ public class Constants {
         Constants.gameStartList = gameStartList;
     }
 
+    public static List<ProgressGame> getTotalGameStartList() {
+        return totalGameStartList;
+    }
+
+    public static void setTotalGameStartList(List<ProgressGame> totalGameStartList) {
+        Constants.totalGameStartList = totalGameStartList;
+    }
+
     public static List<ProgressGame> getGameProgressList() {
         return gameProgressList;
     }
@@ -239,6 +249,14 @@ public class Constants {
 
     public static void setGameButtonList(List<AppCompatButton> gameButtonList) {
         Constants.gameButtonList = gameButtonList;
+    }
+
+    public static int getCounterStartGame() {
+        return counterStartGame;
+    }
+
+    public static void setCounterStartGame(int counterStartGame) {
+        Constants.counterStartGame = counterStartGame;
     }
 
     public static HashMap<String, Integer> getCounterBuyGame() {
