@@ -566,7 +566,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 x.getPositionAndGame().keySet().forEach(y -> {
                     if (x.getPositionAndGame().get(y).getName().equals(oldName)) {
                         x.getPositionAndGame().put(y, progressGame);
-                        Log.i("GamesPurchase", "Modificato: " + progressGame.getName() + " " + progressGame.getCurrentProgress());
+                        Log.i("GamesPurchase", "Modificato: " + progressGame.getName() + " " + progressGame.getCurrentProgress() + " " + y);
                     }
                 });
                 insertScheduleGameInScheduleDBAndCode(x.getDay(), x.getId(), x.getPositionAndGame());
