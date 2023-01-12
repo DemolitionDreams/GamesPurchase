@@ -44,6 +44,7 @@
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup.xml" value="0.14285714285714285" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_add_database_game.xml" value="0.1403985507246377" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_buy_game.xml" value="0.264" />
+        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_change_hour.xml" value="0.72" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_database_game.xml" value="0.264" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_delete_database_game.xml" value="0.264" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_filter_buy.xml" value="0.264" />
@@ -60,6 +61,7 @@
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/saga_spinner_default_value.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/saghe_child_item.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/saghe_parent_item.xml" value="0.1" />
+        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/start_spinner_style.xml" value="0.20606884057971014" />
         <entry key="..\:/Users/naant/AppData/Local/Android/Sdk/platforms/android-32/data/res/drawable/custom_shape_alternative.xml" value="0.1515" />
         <entry key="..\:/Users/naant/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/game_database_view.xml" value="0.24592391304347827" />
       </map>

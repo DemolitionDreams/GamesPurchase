@@ -89,6 +89,14 @@ public class StartActivity extends AppCompatActivity {
         addAutoCompleteVoice(popupView, R.id.saga_text);
         TextView addButton = popupView.findViewById(R.id.update_text_view);
         addButton.setText("Aggiungi");
+        TextView dataText = popupView.findViewById(R.id.data_edit_text);
+        dataText.setText("TBS");
+        TextView hourText = popupView.findViewById(R.id.hour_edit_text);
+        hourText.setText("1");
+        TextView actualText = popupView.findViewById(R.id.actual_edit_text);
+        actualText.setText("0");
+        TextView totalText = popupView.findViewById(R.id.total_edit_text);
+        totalText.setText("1");
         Spinner labelSpinner = popupView.findViewById(R.id.label_spinner);
         int labelPosition = Arrays.stream(getResources().getStringArray(R.array.Label)).collect(Collectors.toList()).indexOf(Constants.getActualList());
         labelSpinner.setSelection(labelPosition);
@@ -146,7 +154,6 @@ public class StartActivity extends AppCompatActivity {
             ((TextView) prioritySpinner.getSelectedView()).setError(getResources().getString(R.string.notNotSelected));
         }
 
-        //TODO: testare
         Spinner labelSpinner = popupView.findViewById(R.id.label_spinner);
         String label = labelSpinner.getSelectedItem().toString();
 

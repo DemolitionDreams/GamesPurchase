@@ -59,25 +59,25 @@
         <item>A</item>
         <item>DLC</item>
         <item>Old</item>
-        <item>PS5</item>
-        <item>PS4</item>
-        <item>PS3</item>
-        <item>PS2</item>
-        <item>PS1</item>
-        <item>PSP</item>
-        <item>PSVita</item>
-        <item>Switch</item>
-        <item>WII</item>
-        <item>WIIU</item>
-        <item>3DS</item>
-        <item>NDS</item>
-        <item>GBA</item>
-        <item>GBC</item>
-        <item>GB</item>
-        <item>Xbox360</item>
-        <item>XboxOne</item>
-        <item>XboxSeriesX</item>
+        <item>PlayStation 5</item>
+        <item>PlayStation 4</item>
+        <item>PlayStation 3</item>
+        <item>PlayStation 2</item>
+        <item>PlayStation</item>
+        <item>PlayStation Portable</item>
+        <item>PlayStation Vita</item>
+        <item>Nintendo Switch</item>
+        <item>Nintendo Wii</item>
+        <item>Nintendo Wii U</item>
+        <item>Nintendo 3DS</item>
+        <item>Nintendo NDS</item>
+        <item>Game Boy Advance</item>
+        <item>Game Boy Color</item>
+        <item>Game Boy</item>
+        <item>Xbox 360</item>
+        <item>Xbox One</item>
+        <item>Xbox Series X</item>
         <item>Still</item>
-        <item>GraphicAdventure</item>
+        <item>Graphic Adventure</item>
     </string-array>
 </resources>

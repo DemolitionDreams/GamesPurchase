@@ -60,19 +60,19 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/two_time_button"
-            android:tag="2"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_below="@+id/one_time_button"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
             android:autoSizeMaxTextSize="12sp"
             android:autoSizeMinTextSize="1sp"
             android:autoSizeTextType="uniform"
+            android:background="@drawable/custom_shape_time"
+            android:tag="2"
             android:text="Two"
-            android:textStyle="bold"
             android:textAlignment="center"
-            android:background="@drawable/custom_shape_time" />
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/three_time_button"

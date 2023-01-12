@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:background="@drawable/custom_shape_popup">
+
+    <TextView
+        android:id="@+id/header_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="Nuovo Orario"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+
+    <RelativeLayout
+        android:id="@+id/time_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_below="@id/header_time"
+        android:layout_centerInParent="true">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/more_hour"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="-25dp"
+            android:layout_alignStart="@+id/hour_text_view"
+            android:layout_alignEnd="@+id/hour_text_view"
+            android:background="@drawable/icon_up" />
+
+        <TextView
+            android:id="@+id/hour_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/more_hour"
+            android:text="00"
+            android:textSize="50sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/less_hour"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/hour_text_view"
+            android:layout_alignStart="@+id/hour_text_view"
+            android:layout_alignEnd="@+id/hour_text_view"
+            android:layout_marginTop="-20dp"
+            android:background="@drawable/icon_down" />
+
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/minute_text_view"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/hour_text_view"
+            android:text=":"
+            android:textSize="50sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/more_minute"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="-25dp"
+            android:layout_alignStart="@+id/minute_text_view"
+            android:layout_alignEnd="@+id/minute_text_view"
+            android:background="@drawable/icon_up" />
+
+        <TextView
+            android:id="@+id/minute_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/more_minute"
+            android:layout_toEndOf="@+id/separator"
+            android:text="00"
+            android:textSize="50sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/less_minute"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="-20dp"
+            android:layout_below="@id/minute_text_view"
+            android:layout_alignStart="@+id/minute_text_view"
+            android:layout_alignEnd="@+id/minute_text_view"
+            android:background="@drawable/icon_down" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/change_button"
+        android:layout_width="65dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/time_relative_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_shape_aggiungi_button" />
+
+    <TextView
+        android:id="@+id/add_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/change_button"
+        android:layout_alignTop="@+id/change_button"
+        android:layout_alignEnd="@+id/change_button"
+        android:layout_alignBottom="@+id/change_button"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Cambia"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+</RelativeLayout>

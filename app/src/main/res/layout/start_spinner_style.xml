@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:singleLine="true"
+    android:ellipsize="marquee"
+    android:textAlignment="inherit"
+    android:textSize="11sp"
+    android:textColor="#0D4360"
+    android:text="@string/consoleDefault"
+    android:spinnerMode="dialog"
+    android:backgroundTint="#73B1B0"
+    android:layout_margin="8dp"
+    android:layout_marginTop="16dp"
+    style="custom_spinner"
+    android:padding="10dp" />

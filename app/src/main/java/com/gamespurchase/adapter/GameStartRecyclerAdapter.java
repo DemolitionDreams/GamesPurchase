@@ -7,13 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,10 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
-import com.gamespurchase.activities.DatabaseActivity;
 import com.gamespurchase.activities.StartActivity;
 import com.gamespurchase.classes.Queries;
-import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
 import com.google.firebase.database.annotations.NotNull;
 
@@ -194,5 +190,3 @@ public class GameStartRecyclerAdapter extends RecyclerView.Adapter<GameStartRecy
         return popupView;
     }
 }
-
-
