@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/saga_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/custom_shape_rectangular_big">
+
+        <TextView
+            android:id="@+id/name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5dp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="Nome"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/saga_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/name_text"
+            app:srcCompat="@drawable/icon_pokemon" />
+
+        <TextView
+            android:id="@+id/actual_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/buyed_image"
+            android:layout_marginStart="5dp"
+            android:layout_toStartOf="@+id/slash_text"
+            android:text="0"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/slash_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/buyed_image"
+            android:layout_marginStart="3dp"
+            android:layout_toStartOf="@+id/total_text"
+            android:text="/"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/total_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/buyed_image"
+            android:layout_marginStart="3dp"
+            android:layout_toStartOf="@+id/buyed_image"
+            android:layout_marginEnd="5dp"
+            android:text="1"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/buyed_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/finish_image"
+            android:layout_toRightOf="@id/name_text"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@drawable/icon_ps2" />
+
+        <ImageView
+            android:id="@+id/finish_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toStartOf="@+id/down_image"
+            app:srcCompat="@drawable/icon_finished" />
+
+        <ImageView
+            android:id="@+id/down_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:rotation="-90"
+            app:srcCompat="@drawable/icon_down" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/game_database"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/saga_relative_layout"
+        android:layout_alignStart="@+id/saga_relative_layout"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>

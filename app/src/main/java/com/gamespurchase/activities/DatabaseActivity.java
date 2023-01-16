@@ -1,7 +1,5 @@
 package com.gamespurchase.activities;
 
-import static com.gamespurchase.activities.MainActivity.count;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,115 +21,91 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
 import com.gamespurchase.adapter.GameDatabaseRecyclerAdapter;
+import com.gamespurchase.adapter.GameSagaDatabaseRecyclerAdapter;
 import com.gamespurchase.adapter.NothingSelectedSpinnerAdapter;
 import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
-import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.SagheDatabaseGame;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class DatabaseActivity extends AppCompatActivity {
 
     Dialog dialog;
-    GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter;
     ViewGroup rootView;
+    GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter;
+    GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter;
 
     // Richiama Queries.DELETE
-    public void removedItemFromDatabaseDBAndCode(DatabaseGame databaseGame){
-        Queries.deleteDatabaseDB(databaseGame);
-        Optional<DatabaseGame> optGame = Constants.getGameDatabaseList().stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
-        if(optGame.isPresent()){
-            Constants.getGameDatabaseList().remove(databaseGame);
+    public void removedItemFromDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame) {
+        Queries.deleteDatabaseDB(sagheDatabaseGame);
+
+        Optional<SagheDatabaseGame> optGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().equals(sagheDatabaseGame.getName())).findAny();
+        if (optGame.isPresent()) {
+            Constants.getGameDatabaseList().remove(sagheDatabaseGame);
         }
-        setCounter(rootView, Constants.getGameBuyList(), Constants.getGameDatabaseList());
-    }
-
-    // Richiama Queries.SELECT
-    public static <T> List<DatabaseGame> filterFromDatabaseDBOrCode(String orderElement, String fieldToCompare, T valueToCompare, String name, String where) {
-
-        List<DatabaseGame> filterList = new ArrayList<>();
-
-        if(where.equals("DB")) {
-            filterList = Queries.filterDatabaseDB(orderElement, fieldToCompare, valueToCompare);
-            final int size = filterList.size();
-            Handler handler = new Handler();
-            handler.postDelayed(() -> Log.i("GamesPurchase", "Filtrati " + size + " elementi dal DatabaseDB"), 3000);
-        } else if(where.equals("CODE")){
-            filterList = Constants.getGameDatabaseList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))).sorted(Comparator.comparing(DatabaseGame::getSaga).thenComparing(DatabaseGame::getName)).collect(Collectors.toList());
-            Log.i("GamesPurchase", "Trovati " + filterList.size() + " elementi DatabaseGame");
-        }
-
-        return filterList;
     }
 
     // Richiama Queries.INSERT
-    public static void insertNewGameDatabaseDBAndCode(Integer position, DatabaseGame databaseGame,  View view) {
+    public static void insertNewGameDatabaseDBAndCode(DatabaseGame databaseGame, String saga) {
 
-        Optional<DatabaseGame> optGame = Constants.getGameDatabaseList().stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
-        if (optGame.isPresent()) {
-            databaseGame.setId(optGame.get().getId());
+        SagheDatabaseGame sagheDatabaseGame;
+        Optional<SagheDatabaseGame> optSagheGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().equals(saga)).findAny();
+        if (optSagheGame.isPresent()) {
+            List<DatabaseGame> databaseGameList = optSagheGame.get().getGamesBuy();
+            Optional<DatabaseGame> optGame = databaseGameList.stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
+            if (optGame.isPresent()) {
+                Log.i("GamesPurchase", "Rimosso " + databaseGame.getName());
+                databaseGameList.remove(optGame.get());
+            }
+            databaseGameList.add(databaseGame);
+            databaseGameList.stream()
+                    .sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList());
+            sagheDatabaseGame = optSagheGame.get();
+            Log.i("GamesPurchase", "Aggiunto " + databaseGame.getName() + " alla saga " + sagheDatabaseGame.getName() + "(ID = " + sagheDatabaseGame.getId() +") con " + sagheDatabaseGame.getGamesBuy().size() + " giochi comprati");
         } else {
             Constants.maxIdDatabaseList++;
-            databaseGame.setId(String.valueOf(Constants.maxIdDatabaseList));
+            List<DatabaseGame> buyGames = new ArrayList<>();
+            buyGames.add(databaseGame);
+            List<DatabaseGame> notBuyGames = new ArrayList<>();
+            sagheDatabaseGame = new SagheDatabaseGame(String.valueOf(Constants.getMaxIdDatabaseList()), saga, Boolean.TRUE, databaseGame.getFinished() ? Boolean.TRUE : Boolean.FALSE, buyGames, notBuyGames);
+            Log.i("GamesPurchase", "Inserita nuova saga: " + sagheDatabaseGame.getName() + "(ID = " + sagheDatabaseGame.getId() +") e aggiunto " + databaseGame.getName() + " alla lista buyGames");
         }
-        Queries.insertUpdateDatabaseDB(databaseGame);
-        if(position != null) {
-            Constants.getGameDatabaseList().set(position, databaseGame);
-        } else{
-            Constants.getGameDatabaseList().add(databaseGame);
-        }
+        Queries.insertUpdateDatabaseDB(sagheDatabaseGame);
+        List<SagheDatabaseGame> sagheDatabaseGameList = Queries.selectDatabaseDB("name");
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            setCounter(view, Constants.getGameBuyList(), Constants.getGameDatabaseList());
-        }, 500);
+            Constants.setGameSagheDatabaseList(sagheDatabaseGameList);
+            Constants.setCounterSagheDatabaseGame(sagheDatabaseGameList.size());
+        }, 100);
     }
 
-    public static void insertOtherGameInDatabaseDBAndCode(Integer position, DatabaseGame databaseGame) {
-
-        Optional<DatabaseGame> optGame = Constants.getGameDatabaseList().stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
-        if (optGame.isPresent()) {
-            databaseGame.setId(optGame.get().getId());
-        } else {
-            Constants.maxIdDatabaseList++;
-            databaseGame.setId(String.valueOf(Constants.maxIdDatabaseList));
-        }
-        Queries.insertUpdateDatabaseDB(databaseGame);
-        if(position != null) {
-            Constants.getGameDatabaseList().set(position, databaseGame);
-        } else{
-            Constants.getGameDatabaseList().add(databaseGame);
-        }
-    }
-
-    private void createRecyclerAdapter(List<DatabaseGame> databaseGameList) {
+    private void createRecyclerAdapter(List<SagheDatabaseGame> sagheDatabaseGameList) {
         RecyclerView recyclerView = findViewById(R.id.game_database);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        gameDatabaseRecyclerAdapter = new GameDatabaseRecyclerAdapter(databaseGameList, this, rootView);
+        gameSagaDatabaseRecyclerAdapter = new GameSagaDatabaseRecyclerAdapter(sagheDatabaseGameList, this);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(gameDatabaseRecyclerAdapter);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(gameSagaDatabaseRecyclerAdapter);
+        //TODO: aggiungerlo
+        //itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
 
         ImageView orderButton = findViewById(R.id.sort_button);
         orderButton.setVisibility(View.INVISIBLE);
@@ -154,8 +127,9 @@ public class DatabaseActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<DatabaseGame> filterList = filterFromDatabaseDBOrCode(null, null, null, textInputLayout.getEditText().getText().toString(), "CODE");
-                createRecyclerAdapter(filterList);
+                // TODO: filtrare per il search
+                //List<DatabaseGame> filterList = filterFromDatabaseDBOrCode(null, null, null, textInputLayout.getEditText().getText().toString(), "CODE");
+                //createRecyclerAdapter(filterList);
             }
 
             @Override
@@ -166,14 +140,14 @@ public class DatabaseActivity extends AppCompatActivity {
 
     public void onClickReturn(View view) {
         setContentView(R.layout.activity_database);
-        createRecyclerAdapter(Constants.getGameDatabaseList());
-        setFilterAndSortButton();
+        gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList());
     }
 
     public void onClickClose(View view) {
         finish();
     }
 
+    /*
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT) {
 
         @Override
@@ -200,76 +174,86 @@ public class DatabaseActivity extends AppCompatActivity {
             dialog.show();
         }
     });
-
-    public void onClickPopupDismiss(int position, DatabaseGame databaseGame, View view){
-        insertNewGameDatabaseDBAndCode(position, databaseGame, view);
+*/
+    //TODO: gestire
+    /*
+    public void onClickPopupDismiss(int position, DatabaseGame databaseGame, View view) {
+        insertNewGameDatabaseDBAndCode(databaseGame, );
         gameDatabaseRecyclerAdapter.notifyItemChanged(position);
         dialog.dismiss();
     }
 
-    public void onClickOnlyRemove(DatabaseGame databaseGame, int position){
+    public void onClickOnlyRemove(DatabaseGame databaseGame, int position) {
         removedItemFromDatabaseDBAndCode(databaseGame);
         gameDatabaseRecyclerAdapter.notifyItemRemoved(position);
         dialog.dismiss();
     }
-
-    private String checkIfEditTextIsNull(AutoCompleteTextView textInputEditText){
-        if(textInputEditText != null && textInputEditText.getText() != null) {
+*/
+    private String checkIfEditTextIsNull(AutoCompleteTextView textInputEditText) {
+        if (textInputEditText != null && textInputEditText.getText() != null) {
             return textInputEditText.getText().toString();
-        } else{
+        } else {
 
             return "";
         }
     }
 
-    private String checkIfSpinnerIsNull(Spinner spinner){
+    private String checkIfSpinnerIsNull(Spinner spinner) {
 
-        if(spinner != null && spinner.getSelectedItem() != null) {
+        if (spinner != null && spinner.getSelectedItem() != null) {
             return spinner.getSelectedItem().toString();
-        } else{
+        } else {
             return "";
         }
     }
 
-    public void onClickAddDatabaseGame(View popupView){
+    public void onClickAddDatabaseGame(View popupView) {
 
         AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
         String name = checkIfEditTextIsNull(nameText);
-        if(name.isEmpty()){
+        if (name.isEmpty()) {
             nameText.setError(getResources().getString(R.string.notEmpty));
         }
 
         AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
         String saga = checkIfEditTextIsNull(sagaText);
-        if(saga.isEmpty()){
+        if (saga.isEmpty()) {
             sagaText.setError(getResources().getString(R.string.notEmpty));
         }
 
         Spinner platformSpinner = popupView.findViewById(R.id.console_spinner);
         String platform = checkIfSpinnerIsNull(platformSpinner);
-        if(platform.isEmpty()){
-            ((TextView)platformSpinner.getSelectedView()).setError(getResources().getString(R.string.notNotSelected));
+        if (platform.isEmpty()) {
+            ((TextView) platformSpinner.getSelectedView()).setError(getResources().getString(R.string.notNotSelected));
+        }
+
+        Spinner prioritySpinner = popupView.findViewById(R.id.priority_spinner);
+        String priority = checkIfSpinnerIsNull(prioritySpinner);
+        if (priority.isEmpty()) {
+            ((TextView) prioritySpinner.getSelectedView()).setError(getResources().getString(R.string.notNotSelected));
         }
 
         CheckBox finishedCheckbox = popupView.findViewById(R.id.finished_checkbox);
+        CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
 
-        if(!name.isEmpty() && !saga.isEmpty() && !platform.isEmpty()){
-            DatabaseGame databaseGame = new DatabaseGame(name, saga, platform, Boolean.TRUE, finishedCheckbox.isChecked());
-            insertNewGameDatabaseDBAndCode(null, databaseGame, rootView);
-            List<DatabaseGame> databaseGameListSorted = Constants.getGameDatabaseList();
-            databaseGameListSorted = databaseGameListSorted.stream()
-                    .sorted(Comparator.comparing(DatabaseGame::getSaga).thenComparing(DatabaseGame::getName)).collect(Collectors.toList());
-            Constants.setGameDatabaseList(databaseGameListSorted);
-            createRecyclerAdapter(Constants.getGameDatabaseList());
+        if (!name.isEmpty() && !saga.isEmpty() && !platform.isEmpty() && !priority.isEmpty()) {
+            DatabaseGame databaseGame = new DatabaseGame(name, platform, priority, finishedCheckbox.isChecked(), transitCheckbox.isChecked());
+            insertNewGameDatabaseDBAndCode(databaseGame, saga);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList().stream()
+                        .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
+            }, 100);
             dialog.dismiss();
         }
     }
 
-    public void onClickOpenAddDatabaseGamePopup(View view){
+    public void onClickOpenAddDatabaseGamePopup(View view) {
 
         View popupView = createPopUp(R.layout.popup_database_game);
         addAutoCompleteVoice(popupView, R.id.saga_text);
         setEntriesAndDefaultToSpinner(R.array.Console, R.layout.console_spinner_default_value, R.id.console_spinner, popupView);
+        setEntriesAndDefaultToSpinner(R.array.Priority, R.layout.priority_spinner_default_value, R.id.priority_spinner, popupView);
         popupView.findViewById(R.id.add_button).setOnClickListener(v -> onClickAddDatabaseGame(popupView));
         dialog.show();
     }
@@ -294,22 +278,23 @@ public class DatabaseActivity extends AppCompatActivity {
         return popupView;
     }
 
-    private void setSortOrientation(ImageButton sortButton, String oldOrientation, String newOrientation, int id){
+    private void setSortOrientation(ImageButton sortButton, String oldOrientation, String newOrientation, int id) {
         Constants.sortDatabaseGame = newOrientation;
-        List<DatabaseGame> databaseGameList = Constants.getGameDatabaseList();
-        if(oldOrientation.equals("ASC")){
-            databaseGameList = databaseGameList.stream()
-                    .sorted(Comparator.comparing(DatabaseGame::getSaga).thenComparing(DatabaseGame::getName)).collect(Collectors.toList());
-        } else{
-            databaseGameList = databaseGameList.stream()
-                    .sorted(Comparator.comparing(DatabaseGame::getSaga).reversed().thenComparing(DatabaseGame::getName)).collect(Collectors.toList());
+        List<SagheDatabaseGame> sagheDatabaseGameList = Constants.getGameSagheDatabaseList();
+        if (oldOrientation.equals("ASC")) {
+            sagheDatabaseGameList = sagheDatabaseGameList.stream()
+                    .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList());
+        } else {
+            sagheDatabaseGameList = sagheDatabaseGameList.stream()
+                    .sorted(Comparator.comparing(SagheDatabaseGame::getName).reversed()).collect(Collectors.toList());
         }
-        Constants.setGameDatabaseList(databaseGameList);
-        createRecyclerAdapter(Constants.getGameDatabaseList());
+        Constants.setGameSagheDatabaseList(sagheDatabaseGameList);
+        gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList());
         sortButton.setImageResource(id);
     }
 
-    private List<DatabaseGame> applyFilter(View view){
+    /*
+    private List<DatabaseGame> applyFilter(View view) {
         AutoCompleteTextView sagaFilter = view.findViewById(R.id.saga_filter);
 
         Spinner consoleFilter = view.findViewById(R.id.console_filter);
@@ -317,15 +302,15 @@ public class DatabaseActivity extends AppCompatActivity {
         CheckBox notFinishedFilter = view.findViewById(R.id.not_finished_filter);
 
         List<DatabaseGame> filterList = Constants.getGameDatabaseList();
-        if(sagaFilter.getText() != null) {
+        if (sagaFilter.getText() != null) {
             filterList = filterList.stream().filter(g -> g.getSaga().contains(sagaFilter.getText())).collect(Collectors.toList());
         }
-        if(consoleFilter.getSelectedItem() != null){
+        if (consoleFilter.getSelectedItem() != null) {
             filterList = filterList.stream().filter(g -> g.getPlatform().equals(consoleFilter.getSelectedItem().toString())).collect(Collectors.toList());
         }
-        if(finishedFilter.isChecked() && !notFinishedFilter.isChecked()){
+        if (finishedFilter.isChecked() && !notFinishedFilter.isChecked()) {
             filterList = filterList.stream().filter(g -> g.getFinished().equals(true)).collect(Collectors.toList());
-        } else if(notFinishedFilter.isChecked() && !finishedFilter.isChecked()){
+        } else if (notFinishedFilter.isChecked() && !finishedFilter.isChecked()) {
             filterList = filterList.stream().filter(g -> g.getFinished().equals(false)).collect(Collectors.toList());
         }
         createRecyclerAdapter(filterList);
@@ -333,30 +318,33 @@ public class DatabaseActivity extends AppCompatActivity {
 
         return filterList;
     }
+     */
 
-    public void addAutoCompleteVoice(View view, int id){
+    public void addAutoCompleteVoice(View view, int id) {
         AutoCompleteTextView sagaAutoComplete = view.findViewById(id);
         List<String> autoCompleteVoice = new ArrayList<>();
-        Constants.getGameDatabaseList().forEach(g -> {
-            if (!autoCompleteVoice.contains(g.getSaga())) {
-                autoCompleteVoice.add(g.getSaga());
+        Constants.getGameSagheDatabaseList().forEach(g -> {
+            if (!autoCompleteVoice.contains(g.getName())) {
+                autoCompleteVoice.add(g.getName());
             }
         });
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, autoCompleteVoice);
         sagaAutoComplete.setAdapter(arrayAdapter);
     }
 
-    private void setFilterAndSortButton(){
+    // TODO: implementare sort e filter
+    /*
+    private void setFilterAndSortButton() {
         ImageButton sortButton = findViewById(R.id.sort_button);
         ImageButton filterButton = findViewById(R.id.filter_button);
-        if(Constants.sortDatabaseGame.equals("ASC")) {
+        if (Constants.sortDatabaseGame.equals("ASC")) {
             sortButton.setImageResource(R.drawable.icon_sort_asc);
-        } else{
+        } else {
             sortButton.setImageResource(R.drawable.icon_sort_desc);
         }
         if (Constants.filterDatabaseGame.equals("NO")) {
             filterButton.setImageResource(R.drawable.icon_filter);
-        } else{
+        } else {
             filterButton.setImageResource(R.drawable.icon_no_filter);
         }
 
@@ -404,7 +392,10 @@ public class DatabaseActivity extends AppCompatActivity {
         });
     }
 
-    public static void setCounter(View view, List<BuyGame> buyGameList, List<DatabaseGame> databaseGameList){
+     */
+    // TODO: implementare counter
+    /*
+    public static void setCounter(View view, List<BuyGame> buyGameList, List<DatabaseGame> databaseGameList) {
 
         count(buyGameList, databaseGameList);
 
@@ -419,16 +410,17 @@ public class DatabaseActivity extends AppCompatActivity {
         finishCounter.setText(finishCounter.getText() + Constants.getCounterDatabaseGame().get("Finiti").toString());
         digitalCounter.setText(digitalCounter.getText() + Constants.getCounterDatabaseGame().get("Digitali").toString());
 
-    }
-
-    public void onClickPopupInfoShow(View view){
+    }*/
+/*
+    public void onClickPopupInfoShow(View view) {
         View popupView = createPopUp(R.layout.popup_info_saghe);
         TextView sagheTextView = popupView.findViewById(R.id.saghe_text_view);
         sagheTextView.setText(filterBySaga());
         dialog.show();
     }
+    */
 
-    private String filterBySaga(){
+/*    private String filterBySaga() {
         StringBuilder sb = new StringBuilder();
         TreeMap<String, Integer> mapSaga = new TreeMap<>();
         gameDatabaseRecyclerAdapter.getGameDatabaseList().forEach(x -> {
@@ -441,14 +433,14 @@ public class DatabaseActivity extends AppCompatActivity {
         int counter = 0;
         for (String s : mapSaga.keySet()) {
             sb.append(s).append(" - ").append(mapSaga.get(s));
-            if (counter != mapSaga.size() - 1){
+            if (counter != mapSaga.size() - 1) {
                 sb.append(System.getProperty("line.separator"));
             }
             counter++;
         }
         return sb.toString();
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -457,13 +449,10 @@ public class DatabaseActivity extends AppCompatActivity {
                 .findViewById(android.R.id.content)).getChildAt(0);
         Constants.sortDatabaseGame = "DESC";
         Constants.filterDatabaseGame = "NO";
-        List<DatabaseGame> databaseGameListSorted = Constants.getGameDatabaseList();
-        databaseGameListSorted = databaseGameListSorted.stream()
-                .sorted(Comparator.comparing(DatabaseGame::getSaga).thenComparing(DatabaseGame::getName)).collect(Collectors.toList());
-        Constants.setGameDatabaseList(databaseGameListSorted);
-        createRecyclerAdapter(Constants.getGameDatabaseList());
-        setCounter(rootView, Constants.getGameBuyList(), Constants.getGameDatabaseList());
-        setFilterAndSortButton();
+        createRecyclerAdapter(Constants.getGameSagheDatabaseList().stream()
+                .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
+        Log.i("GamesPurchase", " " + Constants.getGameSagheDatabaseList());
+        //setFilterAndSortButton();
         getSupportActionBar().hide();
     }
 }

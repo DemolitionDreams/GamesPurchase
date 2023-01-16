@@ -12,10 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.gamespurchase.R;
 import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
-import com.gamespurchase.entities.BuyGame;
-import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
-import com.google.android.gms.common.util.CollectionUtils;
+import com.gamespurchase.entities.SagheDatabaseGame;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -60,25 +58,25 @@ public class MainActivity extends AppCompatActivity {
         for (Row row : sheet) {
 
             ProgressGame pg = new ProgressGame();
-            try{
+            try {
 
-            pg.setId(String.valueOf(counter));
-            pg.setName(row.getCell(0).getStringCellValue());
-            Log.i("GamesPurchase", "Nome " + pg.getName());
-            pg.setLabel(row.getCell(1).getStringCellValue());
-            pg.setCurrentProgress((int)row.getCell(2).getNumericCellValue());
-            pg.setTotal((int)row.getCell(3).getNumericCellValue());
-            pg.setHour((int)row.getCell(4).getNumericCellValue());
-            pg.setStartDate(row.getCell(5).getStringCellValue());
-            pg.setSaga(row.getCell(6).getStringCellValue());
-            pg.setPlatform(row.getCell(7).getStringCellValue());
-            pg.setPriority(row.getCell(8).getStringCellValue());
-            pg.setBuyed(row.getCell(9).getNumericCellValue() == 1);
-            pg.setCheckInTransit(row.getCell(10).getNumericCellValue() == 1);
-            } catch (Exception e){
+                pg.setId(String.valueOf(counter));
+                pg.setName(row.getCell(0).getStringCellValue());
+                Log.i("GamesPurchase", "Nome " + pg.getName());
+                pg.setLabel(row.getCell(1).getStringCellValue());
+                pg.setCurrentProgress((int) row.getCell(2).getNumericCellValue());
+                pg.setTotal((int) row.getCell(3).getNumericCellValue());
+                pg.setHour((int) row.getCell(4).getNumericCellValue());
+                pg.setStartDate(row.getCell(5).getStringCellValue());
+                pg.setSaga(row.getCell(6).getStringCellValue());
+                pg.setPlatform(row.getCell(7).getStringCellValue());
+                pg.setPriority(row.getCell(8).getStringCellValue());
+                pg.setBuyed(row.getCell(9).getNumericCellValue() == 1);
+                pg.setCheckInTransit(row.getCell(10).getNumericCellValue() == 1);
+            } catch (Exception e) {
                 break;
             }
-            Queries.insertUpdateStartDB(pg);
+            Queries.insertUpdateProgressDB(pg);
             counter++;
             progressGameList.add(pg);
         }
@@ -101,23 +99,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setGlobalVariables() {
-        List<ProgressGame> startGameList = Queries.selectStartDB("id");
+        List<ProgressGame> startGameList = Queries.selectProgressDB("id");
         Constants.setGameStartList(startGameList);
-        List<BuyGame> buyGameList = Queries.selectBuyDB("id");
-        Constants.setGameBuyList(buyGameList);
-        List<DatabaseGame> databaseGameList = Queries.selectDatabaseDB("id");
-        Constants.setGameDatabaseList(databaseGameList);
-        fillMaps(Constants.getCounterBuyGame(), Constants.getCounterDatabaseGame());
+        //List<BuyGame> buyGameList = Queries.selectBuyDB("id");
+        //Constants.setGameBuyList(buyGameList);
+        List<SagheDatabaseGame> sagheDatabaseGameList = Queries.selectDatabaseDB("name");
+        Constants.setGameSagheDatabaseList(sagheDatabaseGameList);
+        //fillMaps(Constants.getCounterBuyGame(), Constants.getCounterDatabaseGame());
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             Constants.maxIdStartList = Integer.parseInt(startGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
-            Constants.maxIdBuyList = Integer.parseInt(buyGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
-            Constants.maxIdDatabaseList = Integer.parseInt(databaseGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
+            //Constants.maxIdBuyList = Integer.parseInt(buyGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
+            if (!sagheDatabaseGameList.isEmpty()) {
+                Constants.maxIdDatabaseList = Integer.parseInt(sagheDatabaseGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
+            } else {
+                Constants.maxIdStartList = 0;
+            }
         }, 3000);
     }
 
-    private static void  fillMaps(HashMap<String, Integer> counterBuyGame, HashMap<String, Integer> counterDatabaseGame){
+    private static void fillMaps(HashMap<String, Integer> counterBuyGame, HashMap<String, Integer> counterDatabaseGame) {
 
         counterBuyGame.put("Totale", 0);
         counterBuyGame.put("Transito", 0);
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         counterDatabaseGame.put("Finiti", 0);
     }
 
+    /*
     public static void count(List<BuyGame> buyGameList, List<DatabaseGame> databaseGameList) {
 
         fillMaps(Constants.getCounterBuyGame(), Constants.getCounterDatabaseGame());
@@ -161,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i("GamesPurchase", "HashMap Buy:" + Constants.getCounterBuyGame());
         Log.i("GamesPurchase", "HashMap Database:" + Constants.getCounterDatabaseGame());
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         setGlobalVariables();
     }
 
-    public void callSagheActivity(View view){
+    public void callSagheActivity(View view) {
         Intent intent = new Intent(this, SagheActivity.class);
         startActivity(intent);
     }
@@ -182,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void callStartActivity(View view) {
-        Intent intent = new Intent(this, StartActivity.class);
+        Intent intent = new Intent(this, ProgressActivity.class);
         startActivity(intent);
     }
 

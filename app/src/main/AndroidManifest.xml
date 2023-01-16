@@ -30,7 +30,7 @@
             android:name=".activities.BuyActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.StartActivity"
+            android:name=".activities.ProgressActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"

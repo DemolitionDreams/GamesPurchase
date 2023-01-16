@@ -1,59 +1,10 @@
 package com.gamespurchase.activities;
 
-import static com.gamespurchase.activities.MainActivity.count;
-
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.gamespurchase.R;
-import com.gamespurchase.adapter.GameBuyRecyclerAdapter;
-import com.gamespurchase.adapter.NothingSelectedSpinnerAdapter;
-import com.gamespurchase.classes.Queries;
-import com.gamespurchase.constant.Constants;
-import com.gamespurchase.entities.BuyGame;
-import com.gamespurchase.entities.DatabaseGame;
-import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 public class BuyActivity extends AppCompatActivity {
 
-    Dialog dialog;
+   /* Dialog dialog;
     GameBuyRecyclerAdapter gameBuyRecyclerAdapter;
     ViewGroup rootView;
 
@@ -533,5 +484,5 @@ public class BuyActivity extends AppCompatActivity {
         setCounter(rootView, Constants.getGameBuyList(), Constants.getGameDatabaseList());
         setFilterAndSortButton();
         getSupportActionBar().hide();
-    }
+    }*/
 }

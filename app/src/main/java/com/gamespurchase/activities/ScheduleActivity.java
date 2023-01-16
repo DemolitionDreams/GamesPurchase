@@ -32,7 +32,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.gamespurchase.R;
 import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
-import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.ScheduleGame;
@@ -325,7 +324,7 @@ public class ScheduleActivity extends AppCompatActivity {
         Constants.getGameButtonList().forEach(x -> x.setOnLongClickListener(v -> {
             Dialog dialog = new Dialog(this);
             ProgressGame progressGame = Constants.getGameProgressList().get(Integer.parseInt(x.getTag().toString().substring(x.getTag().toString().length() - 1)));
-            View popupView = createPopUp(R.layout.popup_progress_game, dialog);
+            View popupView = createPopUp(R.layout.popup_scheduled_game, dialog);
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
             nameText.setText(progressGame.getName());
             addAutoCompleteVoice(popupView, R.id.name_text);
@@ -335,6 +334,8 @@ public class ScheduleActivity extends AppCompatActivity {
             addAutoCompleteSagaVoice(popupView, R.id.saga_text);
             TextView dataText = popupView.findViewById(R.id.data_edit_text);
             dataText.setText(progressGame.getStartDate());
+            TextView hourText = popupView.findViewById(R.id.hour_edit_text);
+            hourText.setText(String.valueOf(progressGame.getHour()));
             TextView actualText = popupView.findViewById(R.id.actual_edit_text);
             actualText.setText(String.valueOf(progressGame.getCurrentProgress()));
             TextView totalText = popupView.findViewById(R.id.total_edit_text);
@@ -390,9 +391,9 @@ public class ScheduleActivity extends AppCompatActivity {
             ImageButton updateButton = popupView.findViewById(R.id.update_button);
             updateButton.setOnClickListener(w ->
             {
-                ProgressGame newProgressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), 0, dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), "", buyedCheckbox.isChecked(), transitCheckbox.isChecked());
+                ProgressGame newProgressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), "", buyedCheckbox.isChecked(), transitCheckbox.isChecked());
                 insertProgressGameInScheduleDBAndCode(Constants.getActualDay(), x.getTag().toString(), newProgressGame);
-                List<ProgressGame> progressGameList = Queries.filterStartDB("id", "name", newProgressGame.getName());
+                List<ProgressGame> progressGameList = Queries.filterProgressDB("id", "name", newProgressGame.getName());
                 if (!oldName.equals("TBD")) {
                     updateAllProgressGame(newProgressGame, oldName);
                 }
@@ -401,7 +402,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     fillGameButton(rootView);
                     try {
                         newProgressGame.setId(progressGameList.get(0).getId());
-                        Queries.deleteStartDB(newProgressGame);
+                        Queries.deleteProgressDB(newProgressGame);
                     } catch (Exception e) {
                         Log.i("GamesPurchase", "Elemento non presente");
                     }
@@ -411,10 +412,10 @@ public class ScheduleActivity extends AppCompatActivity {
             ImageButton resetButton = popupView.findViewById(R.id.reset_button);
             resetButton.setOnClickListener(w ->
             {
-                ProgressGame oldProgressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), 0, dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), "", buyedCheckbox.isChecked(), transitCheckbox.isChecked());
+                ProgressGame oldProgressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), "", buyedCheckbox.isChecked(), transitCheckbox.isChecked());
                 oldProgressGame.setId(String.valueOf(Constants.getMaxIdStartList() + 1));
                 oldProgressGame.setLabel("Still");
-                Queries.insertUpdateStartDB(oldProgressGame);
+                Queries.insertUpdateProgressDB(oldProgressGame);
                 ProgressGame newProgressGame = new ProgressGame(0, 1, 0, "TBS", "TBD", "", "Digital", "LOW", "", Boolean.FALSE, Boolean.FALSE);
                 insertProgressGameInScheduleDBAndCode(Constants.getActualDay(), x.getTag().toString(), newProgressGame);
                 Handler handler = new Handler();
@@ -424,13 +425,14 @@ public class ScheduleActivity extends AppCompatActivity {
             nameText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    List<ProgressGame> pgList = Queries.filterStartDB("id", "name", nameText.getText().toString());
+                    List<ProgressGame> pgList = Queries.filterProgressDB("id", "name", nameText.getText().toString());
                     Handler handler = new Handler();
                     handler.postDelayed(() -> {
                         if (!pgList.isEmpty()) {
                             nameText.setText(pgList.get(0).getName());
                             sagaText.setText(pgList.get(0).getSaga());
                             dataText.setText(pgList.get(0).getStartDate());
+                            hourText.setText(String.valueOf(pgList.get(0).getHour()));
                             actualText.setText(String.valueOf(pgList.get(0).getCurrentProgress()));
                             totalText.setText(String.valueOf(pgList.get(0).getTotal()));
                             int consolePosition = Arrays.stream(getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(pgList.get(0).getPlatform());
@@ -442,6 +444,41 @@ public class ScheduleActivity extends AppCompatActivity {
                         }
                     }, 100);
                 }
+            });
+            AppCompatButton pasteButton = popupView.findViewById(R.id.paste_button);
+            AppCompatButton copyButton = popupView.findViewById(R.id.copy_button);
+
+            if (Constants.getProgressGameCopy() != null) {
+                copyButton.setVisibility(View.INVISIBLE);
+                pasteButton.setVisibility(View.VISIBLE);
+            } else {
+                pasteButton.setVisibility(View.INVISIBLE);
+                copyButton.setVisibility(View.VISIBLE);
+            }
+
+            copyButton.setOnClickListener(w -> {
+                Constants.setProgressGameCopy(new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), "", buyedCheckbox.isChecked(), transitCheckbox.isChecked()));
+                copyButton.setVisibility(View.INVISIBLE);
+                pasteButton.setVisibility(View.VISIBLE);
+            });
+
+            pasteButton.setOnClickListener(w -> {
+                ProgressGame pastePG = Constants.getProgressGameCopy();
+                nameText.setText(pastePG.getName());
+                sagaText.setText(pastePG.getSaga());
+                dataText.setText(pastePG.getStartDate());
+                hourText.setText(String.valueOf(pastePG.getHour()));
+                actualText.setText(String.valueOf(pastePG.getCurrentProgress()));
+                totalText.setText(String.valueOf(pastePG.getTotal()));
+                int pasteConsolePosition = Arrays.stream(getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(pastePG.getPlatform());
+                consoleSpinner.setSelection(pasteConsolePosition);
+                int pastePriorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(pastePG.getPriority());
+                prioritySpinner.setSelection(pastePriorityPosition);
+                buyedCheckbox.setChecked(pastePG.getBuyed());
+                transitCheckbox.setChecked(pastePG.getCheckInTransit());
+                Constants.setProgressGameCopy(new ProgressGame());
+                copyButton.setVisibility(View.VISIBLE);
+                pasteButton.setVisibility(View.INVISIBLE);
             });
             dialog.show();
             return true;
@@ -463,7 +500,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
     public void addCompleteGame(ProgressGame progressGame, String tag) {
 
-        View popupView = createPopUp(progressGame.getBuyed() ? R.layout.popup_database_game : R.layout.popup_buy_game, dialog);
+        View popupView = createPopUp(R.layout.popup_database_game, dialog);
 
         AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
         nameText.setText(progressGame.getName());
@@ -473,26 +510,24 @@ public class ScheduleActivity extends AppCompatActivity {
         int consolePosition = Arrays.stream(getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(progressGame.getPlatform());
         consoleSpinner.setSelection(consolePosition);
         Spinner prioritySpinner = popupView.findViewById(R.id.priority_spinner);
+        int priorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(progressGame.getPriority());
+        prioritySpinner.setSelection(priorityPosition);
+        CheckBox finishedCheckbox = popupView.findViewById(R.id.finished_checkbox);
+        finishedCheckbox.setChecked(Boolean.TRUE);
+        CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
+        transitCheckbox.setChecked(progressGame.getCheckInTransit());
         ImageButton addButton = popupView.findViewById(R.id.add_button);
-        if (progressGame.getBuyed()) {
-            CheckBox finishedCheckbox = popupView.findViewById(R.id.finished_checkbox);
-            finishedCheckbox.setChecked(Boolean.TRUE);
-            addButton.setOnClickListener(x -> {
-                DatabaseGame databaseGame = new DatabaseGame(nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), Boolean.TRUE, Boolean.TRUE);
-                DatabaseActivity.insertOtherGameInDatabaseDBAndCode(null, databaseGame);
+        addButton.setOnClickListener(x -> {
+            DatabaseGame databaseGame = new DatabaseGame(nameText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), Boolean.TRUE, transitCheckbox.isChecked());
+
+            if (progressGame.getBuyed()) {
+                // TODO: operatore ternario sull'activity (?)
+                DatabaseActivity.insertNewGameDatabaseDBAndCode(databaseGame, sagaText.getText().toString());
                 insertOtherGameAndChangeActivity(progressGame.getBuyed(), tag, databaseGame.getName());
-            });
-        } else {
-            int priorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(progressGame.getPriority());
-            prioritySpinner.setSelection(priorityPosition);
-            CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
-            transitCheckbox.setChecked(progressGame.getCheckInTransit());
-            addButton.setOnClickListener(y -> {
-                BuyGame buyGame = new BuyGame(nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), transitCheckbox.isChecked());
-                BuyActivity.insertOtherGameInDatabaseDBAndCode(null, buyGame);
-                insertOtherGameAndChangeActivity(progressGame.getBuyed(), tag, buyGame.getName());
-            });
-        }
+            } else {
+                // BuyActivity.insertNewGameDatabaseDBAndCode(databaseGame, sagaText.getText().toString());
+            }
+        });
         dialog.show();
     }
 
@@ -545,7 +580,7 @@ public class ScheduleActivity extends AppCompatActivity {
             gameButtonList.add(gameButton);
         }
         Constants.setGameButtonList(gameButtonList);
-        List<ProgressGame> progressGameList = Queries.selectStartDB("name");
+        List<ProgressGame> progressGameList = Queries.selectProgressDB("name");
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {

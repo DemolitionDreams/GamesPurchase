@@ -2,9 +2,9 @@ package com.gamespurchase.constant;
 
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.gamespurchase.entities.BuyGame;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
+import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.entities.SagheGame;
 import com.gamespurchase.entities.SerieGame;
 
@@ -14,42 +14,51 @@ import java.util.List;
 
 public class Constants {
 
+    // Variabili Globali per individuare il giorno attuale, la sua codifica e la label attualmente visualizzata
     public static String actualDay = "";
     public static String actualDayCode = "";
     public static String actualList = "";
 
+    // Variabili Globali per l'ordinamento delle liste
     public static String sortBuyGame = "ASC";
     public static String sortListGame = "ASC";
     public static String sortSagheGame = "ASC";
     public static String sortDatabaseGame = "ASC";
 
+    // Variabili Globali per il filetro delle liste
     public static String filterBuyGame = "NO";
     public static String filterSagheGame = "NO";
     public static String filterDatabaseGame = "NO";
 
-    // Variabile globale per recuperare l'ultimo id in tabella
-    public static int maxIdBuyList;
+    // Variabili Globali per recuperare l'ultimo id in tabella
     public static int maxIdStartList;
     public static int maxIdSagheList;
     public static int maxIdDatabaseList;
 
+    // Variabili Globali per le liste di giorni e label
     private static List<String> dayCodeList = Arrays.asList("mon", "tue", "wed", "thu", "fri", "sat", "sun");
     private static List<String> listGameList = Arrays.asList("Try AAA", "Try AA", "AAA", "AA", "A", "Still", "DLC", "Old", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PlayStation Portable", "PlayStation Vita", "Nintendo Switch", "Nintendo Wii", "Nintendo Wii U", "Nintendo 3DS", "Nintendo DS", "Game Boy Advance", "Game Boy Color", "Game Boy", "Xbox 360", "Xbox One", "Xbox Series X", "Graphic Adventure");
 
-    private static List<BuyGame> gameBuyList;
+    // Variabili Globali per recuperare i dati a DB
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
     private static List<ProgressGame> gameStartList;
     private static List<ProgressGame> totalGameStartList;
     private static List<ProgressGame> gameProgressList;
+    private static List<SagheDatabaseGame> gameSagheDatabaseList;
     private static List<DatabaseGame> gameDatabaseList;
     private static List<AppCompatButton> timeButtonList;
     private static List<AppCompatButton> gameButtonList;
 
+    // Variabili Globali per i contatori
     private static int counterStartGame;
+    private static int counterSagheDatabaseGame;
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
     private static HashMap<String, List<ProgressGame>> startGameMap = new HashMap<>();
+
+    // Variabile per copia/incolla
+    private static ProgressGame progressGameCopy;
 
     public static String getActualDay() {
         return actualDay;
@@ -131,14 +140,6 @@ public class Constants {
         Constants.filterDatabaseGame = filterDatabaseGame;
     }
 
-    public static int getMaxIdBuyList() {
-        return maxIdBuyList;
-    }
-
-    public static void setMaxIdBuyList(int maxIdBuyList) {
-        Constants.maxIdBuyList = maxIdBuyList;
-    }
-
     public static int getMaxIdStartList() {
         return maxIdStartList;
     }
@@ -177,14 +178,6 @@ public class Constants {
 
     public static void setListGameList(List<String> listGameList) {
         Constants.listGameList = listGameList;
-    }
-
-    public static List<BuyGame> getGameBuyList() {
-        return gameBuyList;
-    }
-
-    public static void setGameBuyList(List<BuyGame> gameBuyList) {
-        Constants.gameBuyList = gameBuyList;
     }
 
     public static List<SerieGame> getGameSerieList() {
@@ -227,6 +220,14 @@ public class Constants {
         Constants.gameProgressList = gameProgressList;
     }
 
+    public static List<SagheDatabaseGame> getGameSagheDatabaseList() {
+        return gameSagheDatabaseList;
+    }
+
+    public static void setGameSagheDatabaseList(List<SagheDatabaseGame> gameSagheDatabaseList) {
+        Constants.gameSagheDatabaseList = gameSagheDatabaseList;
+    }
+
     public static List<DatabaseGame> getGameDatabaseList() {
         return gameDatabaseList;
     }
@@ -267,6 +268,14 @@ public class Constants {
         Constants.counterBuyGame = counterBuyGame;
     }
 
+    public static int getCounterSagheDatabaseGame() {
+        return counterSagheDatabaseGame;
+    }
+
+    public static void setCounterSagheDatabaseGame(int counterSagheDatabaseGame) {
+        Constants.counterSagheDatabaseGame = counterSagheDatabaseGame;
+    }
+
     public static HashMap<String, Integer> getCounterDatabaseGame() {
         return counterDatabaseGame;
     }
@@ -281,5 +290,13 @@ public class Constants {
 
     public static void setStartGameMap(HashMap<String, List<ProgressGame>> startGameMap) {
         Constants.startGameMap = startGameMap;
+    }
+
+    public static ProgressGame getProgressGameCopy() {
+        return progressGameCopy;
+    }
+
+    public static void setProgressGameCopy(ProgressGame progressGameCopy) {
+        Constants.progressGameCopy = progressGameCopy;
     }
 }

@@ -1,48 +1,8 @@
 package com.gamespurchase.adapter;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
+public class GameBuyRecyclerAdapter{ //extends RecyclerView.Adapter<GameBuyRecyclerAdapter.BuyViewHolder> {
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.gamespurchase.R;
-import com.gamespurchase.activities.BuyActivity;
-import com.gamespurchase.classes.Queries;
-import com.gamespurchase.constant.Constants;
-import com.gamespurchase.entities.BuyGame;
-import com.gamespurchase.entities.DatabaseGame;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.database.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
-import lombok.Data;
-
-public class GameBuyRecyclerAdapter extends RecyclerView.Adapter<GameBuyRecyclerAdapter.BuyViewHolder> {
-
-    Dialog dialog;
+   /* Dialog dialog;
     Context context;
     Queries queries;
     View buyActivityView;
@@ -217,7 +177,7 @@ public class GameBuyRecyclerAdapter extends RecyclerView.Adapter<GameBuyRecycler
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         return popupView;
-    }
+    }*/
 }
 
 

@@ -14,6 +14,7 @@
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_main.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_popup.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_rectangular.xml" value="0.1205" />
+        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_rectangular_big.xml" value="0.116" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_rectangular_counter.xml" value="0.147" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_schedule.xml" value="0.3325" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/drawable/custom_shape_time.xml" value="0.3325" />
@@ -36,14 +37,15 @@
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/delete_database_game.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/finished_spinner_default_value.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_buy_view.xml" value="0.4" />
-        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_database_view.xml" value="1.0" />
+        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_database_view.xml" value="0.30299089726918077" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_progress_view.xml" value="0.4" />
+        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_saghe_database_view.xml" value="0.4" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_saghe_view.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/game_serie_view.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/modify_popup_layout.xml" value="0.178125" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup.xml" value="0.14285714285714285" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_add_database_game.xml" value="0.1403985507246377" />
-        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_buy_game.xml" value="0.264" />
+        <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_buy_game.xml" value="0.1" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_change_hour.xml" value="0.72" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_database_game.xml" value="0.264" />
         <entry key="..\:/Users/naant/AndroidStudioProjects/GamesPurchase/app/src/main/res/layout/popup_delete_database_game.xml" value="0.264" />

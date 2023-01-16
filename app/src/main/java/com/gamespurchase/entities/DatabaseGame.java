@@ -6,23 +6,23 @@ public class DatabaseGame {
 
     private String name;
 
-    private String saga;
-
     private String platform;
 
-    private Boolean buyed;
+    private String priority;
 
     private Boolean finished;
+
+    private Boolean checkInTransit;
 
     public DatabaseGame() {
     }
 
-    public DatabaseGame(String name, String saga, String platform, Boolean buyed, Boolean finished) {
+    public DatabaseGame(String name, String platform, String priority, Boolean finished, Boolean checkInTransit) {
         this.name = name;
-        this.saga = saga;
         this.platform = platform;
-        this.buyed = buyed;
+        this.priority = priority;
         this.finished = finished;
+        this.checkInTransit = checkInTransit;
     }
 
     public String getId() {
@@ -41,14 +41,6 @@ public class DatabaseGame {
         this.name = name;
     }
 
-    public String getSaga() {
-        return saga;
-    }
-
-    public void setSaga(String saga) {
-        this.saga = saga;
-    }
-
     public String getPlatform() {
         return platform;
     }
@@ -57,10 +49,12 @@ public class DatabaseGame {
         this.platform = platform;
     }
 
-    public Boolean getBuyed() { return buyed; }
+    public String getPriority() {
+        return priority;
+    }
 
-    public void setBuyed(Boolean buyed) {
-        this.buyed = buyed;
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     public Boolean getFinished() {
@@ -69,5 +63,13 @@ public class DatabaseGame {
 
     public void setFinished(Boolean finished) {
         this.finished = finished;
+    }
+
+    public Boolean getCheckInTransit() {
+        return checkInTransit;
+    }
+
+    public void setCheckInTransit(Boolean checkInTransit) {
+        this.checkInTransit = checkInTransit;
     }
 }

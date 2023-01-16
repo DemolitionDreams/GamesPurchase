@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:background="@drawable/custom_shape_popup">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/copy_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignEnd="@+id/name_text"
+        android:background="@drawable/icon_copy" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/paste_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/copy_button"
+        android:background="@drawable/icon_paste"
+        android:visibility="invisible"/>
+
     <AutoCompleteTextView
         android:id="@+id/name_text"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/copy_button"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
@@ -152,34 +170,20 @@
             android:id="@+id/console_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
             android:contextClickable="true"
             android:entries="@array/Console"
             android:prompt="@string/consoleDefault"
             android:spinnerMode="dialog" />
 
         <Spinner
-            android:id="@+id/label_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/console_spinner"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:entries="@array/Label"
-            android:prompt="@string/labelDefault"
-            android:spinnerMode="dialog"
-            android:textAlignment="center" />
-
-        <Spinner
             android:id="@+id/priority_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
             android:layout_toRightOf="@+id/console_spinner"
             android:entries="@array/Priority"
             android:prompt="@string/priorityDefault"
             android:spinnerMode="dialog"
-            android:textAlignment="textStart" />
+            android:textAlignment="center" />
 
     </RelativeLayout>
 
@@ -209,29 +213,54 @@
 
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/update_button"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+    <RelativeLayout
+        android:id="@+id/button_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/checkbox_relative_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/custom_shape_aggiungi_button" />
+        android:layout_marginBottom="10dp">
 
-    <TextView
-        android:id="@+id/update_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/update_button"
-        android:layout_alignTop="@+id/update_button"
-        android:layout_alignEnd="@+id/update_button"
-        android:layout_alignBottom="@+id/update_button"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="Aggiorna"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
+        <ImageButton
+            android:id="@+id/update_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/custom_shape_aggiungi_button" />
 
+        <TextView
+            android:id="@+id/update_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/update_button"
+            android:layout_alignTop="@+id/update_button"
+            android:layout_alignEnd="@+id/update_button"
+            android:layout_alignBottom="@+id/update_button"
+            android:gravity="center"
+            android:text="Aggiorna"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/reset_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/update_button"
+            android:background="@drawable/custom_shape_aggiungi_button" />
+
+        <TextView
+            android:id="@+id/reset_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/reset_button"
+            android:layout_alignTop="@+id/reset_button"
+            android:layout_alignEnd="@+id/reset_button"
+            android:layout_alignBottom="@+id/reset_button"
+            android:gravity="center"
+            android:text="Reset"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </RelativeLayout>

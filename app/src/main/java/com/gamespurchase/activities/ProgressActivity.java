@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
-import com.gamespurchase.adapter.GameStartRecyclerAdapter;
+import com.gamespurchase.adapter.GameProgressRecyclerAdapter;
 import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.ProgressGame;
@@ -45,15 +45,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class StartActivity extends AppCompatActivity {
+public class ProgressActivity extends AppCompatActivity {
 
     Dialog dialog;
-    GameStartRecyclerAdapter gameStartRecyclerAdapter;
+    GameProgressRecyclerAdapter gameStartRecyclerAdapter;
     ViewGroup rootView;
 
     // Richiama Queries.DELETE
     public void removedItemFromStartDBAndCode(ProgressGame progressGame) {
-        Queries.deleteStartDB(progressGame);
+        Queries.deleteProgressDB(progressGame);
         Optional<ProgressGame> optGame = Constants.getGameStartList().stream().filter(x -> x.getName().equals(progressGame.getName())).findAny();
         if (optGame.isPresent()) {
             Constants.getGameStartList().remove(progressGame);
@@ -71,8 +71,8 @@ public class StartActivity extends AppCompatActivity {
             progressGame.setId(String.valueOf(Constants.maxIdStartList));
             Log.i("GamesPurchase", "ID Aggiunto " + progressGame.getLabel());
         }
-        Queries.insertUpdateStartDB(progressGame);
-        List<ProgressGame> progressGameList = Queries.filterStartDB("name", "label", progressGame.getLabel());
+        Queries.insertUpdateProgressDB(progressGame);
+        List<ProgressGame> progressGameList = Queries.filterProgressDB("name", "label", progressGame.getLabel());
         Log.i("GamesPurchase", "Label filtrata " + progressGame.getLabel());
 
         Handler handler = new Handler();
@@ -85,7 +85,7 @@ public class StartActivity extends AppCompatActivity {
 
     public void onClickOpenAddStartGamePopup(View view) {
 
-        View popupView = createPopUp(R.layout.popup_start_game);
+        View popupView = createPopUp(R.layout.popup_progress_game);
         addAutoCompleteVoice(popupView, R.id.saga_text);
         TextView addButton = popupView.findViewById(R.id.update_text_view);
         addButton.setText("Aggiungi");
@@ -107,9 +107,9 @@ public class StartActivity extends AppCompatActivity {
     public void addAutoCompleteVoice(View view, int id){
         AutoCompleteTextView sagaAutoComplete = view.findViewById(id);
         List<String> autoCompleteVoice = new ArrayList<>();
-        Constants.getGameDatabaseList().forEach(g -> {
-            if (!autoCompleteVoice.contains(g.getSaga())) {
-                autoCompleteVoice.add(g.getSaga());
+        Constants.getGameSagheDatabaseList().forEach(g -> {
+            if (!autoCompleteVoice.contains(g.getName())) {
+                autoCompleteVoice.add(g.getName());
             }
         });
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, autoCompleteVoice);
@@ -233,7 +233,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void onClickReturn(View view) {
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_progress);
         setFilterAndSortButton();
         selectListByLabel(Constants.getActualList());
     }
@@ -285,7 +285,7 @@ public class StartActivity extends AppCompatActivity {
 
     // Creazione Pop Up
     private View createPopUp(int id) {
-        dialog = new Dialog(StartActivity.this);
+        dialog = new Dialog(ProgressActivity.this);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(id, null);
         dialog.setContentView(popupView);
@@ -330,7 +330,7 @@ public class StartActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.game_start);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        gameStartRecyclerAdapter = new GameStartRecyclerAdapter(progressGameList, this, rootView);
+        gameStartRecyclerAdapter = new GameProgressRecyclerAdapter(progressGameList, this, rootView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(gameStartRecyclerAdapter);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -384,7 +384,7 @@ public class StartActivity extends AppCompatActivity {
 
     public HashMap<String, List<ProgressGame>> selectAllStartDB() {
         HashMap<String, List<ProgressGame>> startGameMap = new HashMap<>();
-        List<ProgressGame> progressGameList = Queries.selectStartDB("name");
+        List<ProgressGame> progressGameList = Queries.selectProgressDB("name");
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -404,7 +404,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_progress);
         rootView = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
         Constants.setSortListGame("DESC");

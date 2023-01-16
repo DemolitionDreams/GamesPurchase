@@ -22,8 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
-import com.gamespurchase.activities.StartActivity;
-import com.gamespurchase.classes.Queries;
+import com.gamespurchase.activities.ProgressActivity;
 import com.gamespurchase.entities.ProgressGame;
 import com.google.firebase.database.annotations.NotNull;
 
@@ -32,15 +31,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class GameStartRecyclerAdapter extends RecyclerView.Adapter<GameStartRecyclerAdapter.StartViewHolder> {
+public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgressRecyclerAdapter.ProgressViewHolder> {
 
     Dialog dialog;
     Context context;
-    Queries queries;
     View progressActivityView;
     List<ProgressGame> progressGameList;
 
-    public GameStartRecyclerAdapter(List<ProgressGame> progressGameList, Context context, View progressActivityView){
+    public GameProgressRecyclerAdapter(List<ProgressGame> progressGameList, Context context, View progressActivityView){
         this.progressGameList = progressGameList;
         this.context = context;
         this.progressActivityView = progressActivityView;
@@ -50,23 +48,23 @@ public class GameStartRecyclerAdapter extends RecyclerView.Adapter<GameStartRecy
 
     @NonNull
     @Override
-    public StartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProgressViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.game_progress_view, parent, false);
         TextView nameText = relativeLayout.findViewById(R.id.name_text);
         TextView hourText = relativeLayout.findViewById(R.id.hour_text);
         ImageView priorityImage = relativeLayout.findViewById(R.id.priority_image);
 
-        return new StartViewHolder(relativeLayout, nameText, hourText, priorityImage);
+        return new ProgressViewHolder(relativeLayout, nameText, hourText, priorityImage);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StartViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProgressViewHolder holder, int position) {
 
         holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                View popupView = createPopUp(R.layout.popup_start_game);
+                View popupView = createPopUp(R.layout.popup_progress_game);
                 AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
                 AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
                 Spinner consoleSpinner = popupView.findViewById(R.id.console_spinner);
@@ -96,7 +94,7 @@ public class GameStartRecyclerAdapter extends RecyclerView.Adapter<GameStartRecy
                 ImageButton updateButton = popupView.findViewById(R.id.update_button);
                 updateButton.setOnClickListener(v -> {
                     ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyedCheckbox.isChecked(), transitCheckbox.isChecked());
-                    StartActivity.insertNewGameStartDBAndCode(holder.getAdapterPosition(), progressGame, progressActivityView);
+                    ProgressActivity.insertNewGameStartDBAndCode(holder.getAdapterPosition(), progressGame, progressActivityView);
                     dialog.dismiss();
                     notifyItemChanged(holder.getAdapterPosition());
                 });
@@ -162,14 +160,14 @@ public class GameStartRecyclerAdapter extends RecyclerView.Adapter<GameStartRecy
         return progressGameList == null ? 0 : progressGameList.size();
     }
 
-    protected static final class StartViewHolder extends RecyclerView.ViewHolder{
+    protected static final class ProgressViewHolder extends RecyclerView.ViewHolder{
 
         private RelativeLayout relativeLayout;
         private TextView nameText;
         private TextView hourText;
         private ImageView priorityImage;
 
-        public StartViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView hourText, ImageView priorityImage){
+        public ProgressViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView hourText, ImageView priorityImage){
 
             super(relativeLayout);
             this.nameText = nameText;

@@ -4,44 +4,32 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
-import com.gamespurchase.activities.DatabaseActivity;
-import com.gamespurchase.classes.Queries;
 import com.gamespurchase.entities.DatabaseGame;
 import com.google.firebase.database.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDatabaseRecyclerAdapter.DatabaseViewHolder> {
 
     Dialog dialog;
     Context context;
-    Queries queries;
-    View databaseActivityView;
     List<DatabaseGame> gameDatabaseList;
 
-    public GameDatabaseRecyclerAdapter(List<DatabaseGame> gameDatabaseList, Context context, View databaseActivityView){
+    public GameDatabaseRecyclerAdapter(List<DatabaseGame> gameDatabaseList, Context context){
         this.gameDatabaseList = gameDatabaseList;
         this.context = context;
-        this.databaseActivityView = databaseActivityView;
     }
 
     public List<DatabaseGame> getGameDatabaseList() {
@@ -54,18 +42,16 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
 
         RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.game_database_view, parent, false);
         TextView nameText = relativeLayout.findViewById(R.id.name_text);
-        ImageView sagaImage = relativeLayout.findViewById(R.id.saga_image);
         ImageView platformImage = relativeLayout.findViewById(R.id.platform_image);
         ImageView finishedImage = relativeLayout.findViewById(R.id.finished_image);
-        ImageView notFinishedImage = relativeLayout.findViewById(R.id.not_finished_image);
 
-        return new DatabaseViewHolder(relativeLayout, nameText, sagaImage, platformImage, finishedImage, notFinishedImage);
+        return new DatabaseViewHolder(relativeLayout, nameText, platformImage, finishedImage);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DatabaseViewHolder holder, int position) {
 
-        holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        /*holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 View popupView = createPopUp(R.layout.popup_database_game);
@@ -99,36 +85,22 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
                 dialog.show();
                 return true;
             }
-        });
+        });*/
 
         holder.nameText.setText(gameDatabaseList.get(holder.getAdapterPosition()).getName());
-
-        String saga = gameDatabaseList.get(holder.getAdapterPosition()).getSaga().toLowerCase(Locale.ROOT);
-        String imageSagaResource = "com.gamespurchase:drawable/icon_" + saga;
-        imageSagaResource = imageSagaResource.replace(" ", "_");
-        if(saga.equals("pokémon")){
-            imageSagaResource = "com.gamespurchase:drawable/icon_pokemon";
-        }
-        if(saga.equals("assassin's creed")){
-            imageSagaResource = "com.gamespurchase:drawable/icon_assassins_creed";
-        }
-        if(saga.equals("asterix & obelix")){
-            imageSagaResource = "com.gamespurchase:drawable/icon_asterix_e_obelix";
-        }
-        int idSagaResource = context.getResources().getIdentifier(imageSagaResource, null, null);
-        holder.sagaImage.setImageResource(idSagaResource);
 
         String imagePlatformResource = "com.gamespurchase:drawable/icon_" + gameDatabaseList.get(holder.getAdapterPosition()).getPlatform().toLowerCase(Locale.ROOT);
         int idPlatformResource = context.getResources().getIdentifier(imagePlatformResource, null, null);
         holder.platformImage.setImageResource(idPlatformResource);
 
-        if(gameDatabaseList.get(holder.getAdapterPosition()).getFinished()){
-            holder.finishedImage.setVisibility(View.VISIBLE);
-            holder.notFinishedImage.setVisibility(View.INVISIBLE);
-        } else{
-            holder.notFinishedImage.setVisibility(View.VISIBLE);
-            holder.finishedImage.setVisibility(View.INVISIBLE);
-        }
+        int idFinishResource = context.getResources().getIdentifier(gameDatabaseList.get(holder.getAdapterPosition()).getFinished() ? "com.gamespurchase:drawable/icon_finished" : "com.gamespurchase:drawable/icon_not_finished", null, null);
+        holder.finishedImage.setImageResource(idFinishResource);
+    }
+
+    public void updateData(List<DatabaseGame> databaseGameList) {
+        gameDatabaseList.clear();
+        gameDatabaseList.addAll(databaseGameList);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -141,19 +113,15 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
 
         private RelativeLayout relativeLayout;
         private TextView nameText;
-        private ImageView sagaImage;
         private ImageView platformImage;
         private ImageView finishedImage;
-        private ImageView notFinishedImage;
 
-        public DatabaseViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, ImageView sagaImage, ImageView platformImage, ImageView finishedImage, ImageView notFinishedImage){
+        public DatabaseViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, ImageView platformImage, ImageView finishedImage){
 
             super(relativeLayout);
             this.nameText = nameText;
-            this.sagaImage = sagaImage;
             this.platformImage = platformImage;
             this.finishedImage = finishedImage;
-            this.notFinishedImage = notFinishedImage;
             this.relativeLayout = relativeLayout;
         }
     }
