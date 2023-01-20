@@ -44,8 +44,6 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
         this.progressActivityView = progressActivityView;
     }
 
-    public List<ProgressGame> getProgressGameList() { return progressGameList; }
-
     @NonNull
     @Override
     public ProgressViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -61,84 +59,81 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
     @Override
     public void onBindViewHolder(@NonNull ProgressViewHolder holder, int position) {
 
-        holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                View popupView = createPopUp(R.layout.popup_progress_game);
-                AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
-                AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
-                Spinner consoleSpinner = popupView.findViewById(R.id.console_spinner);
-                Spinner prioritySpinner = popupView.findViewById(R.id.priority_spinner);
-                Spinner labelSpinner = popupView.findViewById(R.id.label_spinner);
-                TextView dataText = popupView.findViewById(R.id.data_edit_text);
-                TextView actualText = popupView.findViewById(R.id.actual_edit_text);
-                TextView totalText = popupView.findViewById(R.id.total_edit_text);
-                TextView hourText = popupView.findViewById(R.id.hour_edit_text);
-                CheckBox buyedCheckbox = popupView.findViewById(R.id.buyed_checkbox);
-                CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
+        holder.relativeLayout.setOnLongClickListener(view -> {
+            View popupView = createPopUp(R.layout.popup_progress_game);
+            AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
+            AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
+            Spinner consoleSpinner = popupView.findViewById(R.id.console_spinner);
+            Spinner prioritySpinner = popupView.findViewById(R.id.priority_spinner);
+            Spinner labelSpinner = popupView.findViewById(R.id.label_spinner);
+            TextView dataText = popupView.findViewById(R.id.data_edit_text);
+            TextView actualText = popupView.findViewById(R.id.actual_edit_text);
+            TextView totalText = popupView.findViewById(R.id.total_edit_text);
+            TextView hourText = popupView.findViewById(R.id.hour_edit_text);
+            CheckBox buyedCheckbox = popupView.findViewById(R.id.buyed_checkbox);
+            CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
 
-                nameText.setText(progressGameList.get(holder.getAdapterPosition()).getName());
-                sagaText.setText(progressGameList.get(holder.getAdapterPosition()).getSaga());
-                int consolePosition = Arrays.stream(context.getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getPlatform());
-                consoleSpinner.setSelection(consolePosition);
-                int priorityPosition = Arrays.stream(context.getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getPriority());
-                prioritySpinner.setSelection(priorityPosition);
-                int labelPosition = Arrays.stream(context.getResources().getStringArray(R.array.Label)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getLabel());
-                labelSpinner.setSelection(labelPosition);
-                dataText.setText(progressGameList.get(holder.getAdapterPosition()).getStartDate());
-                actualText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getCurrentProgress()));
-                totalText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getTotal()));
-                hourText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getHour()));
-                buyedCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getBuyed());
-                transitCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getCheckInTransit());
-                ImageButton updateButton = popupView.findViewById(R.id.update_button);
-                updateButton.setOnClickListener(v -> {
-                    ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyedCheckbox.isChecked(), transitCheckbox.isChecked());
-                    ProgressActivity.insertNewGameStartDBAndCode(holder.getAdapterPosition(), progressGame, progressActivityView);
-                    dialog.dismiss();
-                    notifyItemChanged(holder.getAdapterPosition());
-                });
-                actualText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            nameText.setText(progressGameList.get(holder.getAdapterPosition()).getName());
+            sagaText.setText(progressGameList.get(holder.getAdapterPosition()).getSaga());
+            int consolePosition = Arrays.stream(context.getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getPlatform());
+            consoleSpinner.setSelection(consolePosition);
+            int priorityPosition = Arrays.stream(context.getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getPriority());
+            prioritySpinner.setSelection(priorityPosition);
+            int labelPosition = Arrays.stream(context.getResources().getStringArray(R.array.Label)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getLabel());
+            labelSpinner.setSelection(labelPosition);
+            dataText.setText(progressGameList.get(holder.getAdapterPosition()).getStartDate());
+            actualText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getCurrentProgress()));
+            totalText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getTotal()));
+            hourText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getHour()));
+            buyedCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getBuyed());
+            transitCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getCheckInTransit());
+            ImageButton updateButton = popupView.findViewById(R.id.update_button);
+            updateButton.setOnClickListener(v -> {
+                ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyedCheckbox.isChecked(), transitCheckbox.isChecked());
+                ProgressActivity.insertNewGameStartDBAndCode(progressGame);
+                dialog.dismiss();
+                notifyItemChanged(holder.getAdapterPosition());
+            });
+            actualText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    }
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    }
+                }
 
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        if (!TextUtils.isEmpty(totalText.getText()) && !TextUtils.isEmpty(actualText.getText()) && !totalText.getText().toString().equals("0")) {
-                            if (Integer.parseInt(actualText.getText().toString()) >= Integer.parseInt(totalText.getText().toString())) {
-                                actualText.setText(String.valueOf(Integer.parseInt(totalText.getText().toString()) - 1));
-                            }
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (!TextUtils.isEmpty(totalText.getText()) && !TextUtils.isEmpty(actualText.getText()) && !totalText.getText().toString().equals("0")) {
+                        if (Integer.parseInt(actualText.getText().toString()) >= Integer.parseInt(totalText.getText().toString())) {
+                            actualText.setText(String.valueOf(Integer.parseInt(totalText.getText().toString()) - 1));
                         }
                     }
-                });
-                totalText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+                }
+            });
+            totalText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        if (!TextUtils.isEmpty(totalText.getText()) && !TextUtils.isEmpty(actualText.getText())) {
-                            if (Integer.parseInt(totalText.getText().toString()) <= Integer.parseInt(actualText.getText().toString())) {
-                                totalText.setText(String.valueOf(Integer.parseInt(actualText.getText().toString()) + 1));
-                            }
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (!TextUtils.isEmpty(totalText.getText()) && !TextUtils.isEmpty(actualText.getText())) {
+                        if (Integer.parseInt(totalText.getText().toString()) <= Integer.parseInt(actualText.getText().toString())) {
+                            totalText.setText(String.valueOf(Integer.parseInt(actualText.getText().toString()) + 1));
                         }
                     }
+                }
 
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                    }
-                });
-                dialog.show();
-                return true;
-            }
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+            dialog.show();
+            return true;
         });
 
         holder.nameText.setText(progressGameList.get(holder.getAdapterPosition()).getName());
@@ -162,10 +157,10 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
 
     protected static final class ProgressViewHolder extends RecyclerView.ViewHolder{
 
-        private RelativeLayout relativeLayout;
-        private TextView nameText;
-        private TextView hourText;
-        private ImageView priorityImage;
+        private final RelativeLayout relativeLayout;
+        private final TextView nameText;
+        private final TextView hourText;
+        private final ImageView priorityImage;
 
         public ProgressViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView hourText, ImageView priorityImage){
 

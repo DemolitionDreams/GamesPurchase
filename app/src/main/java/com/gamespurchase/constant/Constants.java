@@ -23,15 +23,14 @@ public class Constants {
     public static String sortBuyGame = "ASC";
     public static String sortListGame = "ASC";
     public static String sortSagheGame = "ASC";
-    public static String sortDatabaseGame = "ASC";
+    public static String sortDatabaseGame = "DESC";
 
     // Variabili Globali per il filetro delle liste
     public static String filterBuyGame = "NO";
     public static String filterSagheGame = "NO";
-    public static String filterDatabaseGame = "NO";
 
     // Variabili Globali per recuperare l'ultimo id in tabella
-    public static int maxIdStartList;
+    public static int maxIdProgressList;
     public static int maxIdSagheList;
     public static int maxIdDatabaseList;
 
@@ -40,22 +39,23 @@ public class Constants {
     private static List<String> listGameList = Arrays.asList("Try AAA", "Try AA", "AAA", "AA", "A", "Still", "DLC", "Old", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PlayStation Portable", "PlayStation Vita", "Nintendo Switch", "Nintendo Wii", "Nintendo Wii U", "Nintendo 3DS", "Nintendo DS", "Game Boy Advance", "Game Boy Color", "Game Boy", "Xbox 360", "Xbox One", "Xbox Series X", "Graphic Adventure");
 
     // Variabili Globali per recuperare i dati a DB
+    private static List<String> allDayGameProgressList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
-    private static List<ProgressGame> gameStartList;
-    private static List<ProgressGame> totalGameStartList;
-    private static List<ProgressGame> gameProgressList;
+    private static List<ProgressGame> actualLabelGameProgressList;
+    private static List<ProgressGame> allLabelGameProgressList;
+    private static List<ProgressGame> actualDayGameProgressList;
     private static List<SagheDatabaseGame> gameSagheDatabaseList;
     private static List<DatabaseGame> gameDatabaseList;
     private static List<AppCompatButton> timeButtonList;
     private static List<AppCompatButton> gameButtonList;
 
     // Variabili Globali per i contatori
-    private static int counterStartGame;
+    private static int counterProgressGame;
     private static int counterSagheDatabaseGame;
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
-    private static HashMap<String, List<ProgressGame>> startGameMap = new HashMap<>();
+    private static HashMap<String, List<ProgressGame>> scheduledGameMap = new HashMap<>();
 
     // Variabile per copia/incolla
     private static ProgressGame progressGameCopy;
@@ -132,20 +132,12 @@ public class Constants {
         Constants.filterSagheGame = filterSagheGame;
     }
 
-    public static String getFilterDatabaseGame() {
-        return filterDatabaseGame;
+    public static int getMaxIdProgressList() {
+        return maxIdProgressList;
     }
 
-    public static void setFilterDatabaseGame(String filterDatabaseGame) {
-        Constants.filterDatabaseGame = filterDatabaseGame;
-    }
-
-    public static int getMaxIdStartList() {
-        return maxIdStartList;
-    }
-
-    public static void setMaxIdStartList(int maxIdStartList) {
-        Constants.maxIdStartList = maxIdStartList;
+    public static void setMaxIdProgressList(int maxIdProgressList) {
+        Constants.maxIdProgressList = maxIdProgressList;
     }
 
     public static int getMaxIdSagheList() {
@@ -196,28 +188,36 @@ public class Constants {
         Constants.gameSagheList = gameSagheList;
     }
 
-    public static List<ProgressGame> getGameStartList() {
-        return gameStartList;
+    public static List<ProgressGame> getActualLabelGameProgressList() {
+        return actualLabelGameProgressList;
     }
 
-    public static void setGameStartList(List<ProgressGame> gameStartList) {
-        Constants.gameStartList = gameStartList;
+    public static void setActualLabelGameProgressList(List<ProgressGame> actualLabelGameProgressList) {
+        Constants.actualLabelGameProgressList = actualLabelGameProgressList;
     }
 
-    public static List<ProgressGame> getTotalGameStartList() {
-        return totalGameStartList;
+    public static List<ProgressGame> getAllLabelGameProgressList() {
+        return allLabelGameProgressList;
     }
 
-    public static void setTotalGameStartList(List<ProgressGame> totalGameStartList) {
-        Constants.totalGameStartList = totalGameStartList;
+    public static void setAllLabelGameProgressList(List<ProgressGame> allLabelGameProgressList) {
+        Constants.allLabelGameProgressList = allLabelGameProgressList;
     }
 
-    public static List<ProgressGame> getGameProgressList() {
-        return gameProgressList;
+    public static List<ProgressGame> getActualDayGameProgressList() {
+        return actualDayGameProgressList;
     }
 
-    public static void setGameProgressList(List<ProgressGame> gameProgressList) {
-        Constants.gameProgressList = gameProgressList;
+    public static void setActualDayGameProgressList(List<ProgressGame> actualDayGameProgressList) {
+        Constants.actualDayGameProgressList = actualDayGameProgressList;
+    }
+
+    public static List<String> getAllDayGameProgressList() {
+        return allDayGameProgressList;
+    }
+
+    public static void setAllDayGameProgressList(List<String> allDayGameProgressList) {
+        Constants.allDayGameProgressList = allDayGameProgressList;
     }
 
     public static List<SagheDatabaseGame> getGameSagheDatabaseList() {
@@ -252,12 +252,12 @@ public class Constants {
         Constants.gameButtonList = gameButtonList;
     }
 
-    public static int getCounterStartGame() {
-        return counterStartGame;
+    public static int getCounterProgressGame() {
+        return counterProgressGame;
     }
 
-    public static void setCounterStartGame(int counterStartGame) {
-        Constants.counterStartGame = counterStartGame;
+    public static void setCounterProgressGame(int counterProgressGame) {
+        Constants.counterProgressGame = counterProgressGame;
     }
 
     public static HashMap<String, Integer> getCounterBuyGame() {
@@ -284,12 +284,12 @@ public class Constants {
         Constants.counterDatabaseGame = counterDatabaseGame;
     }
 
-    public static HashMap<String, List<ProgressGame>> getStartGameMap() {
-        return startGameMap;
+    public static HashMap<String, List<ProgressGame>> getScheduledGameMap() {
+        return scheduledGameMap;
     }
 
-    public static void setStartGameMap(HashMap<String, List<ProgressGame>> startGameMap) {
-        Constants.startGameMap = startGameMap;
+    public static void setScheduledGameMap(HashMap<String, List<ProgressGame>> scheduledGameMap) {
+        Constants.scheduledGameMap = scheduledGameMap;
     }
 
     public static ProgressGame getProgressGameCopy() {

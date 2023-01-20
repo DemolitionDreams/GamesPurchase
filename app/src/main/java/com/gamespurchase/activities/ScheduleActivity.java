@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -39,6 +38,7 @@ import com.gamespurchase.entities.TimeGame;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +69,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 scheduleGameList.get(0).getPositionAndGame().put(position, progressGame);
                 ScheduleGame scheduleGame = new ScheduleGame(scheduleGameList.get(0).getId(), day, scheduleGameList.get(0).getPositionAndGame());
                 Queries.insertUpdateScheduleDB(scheduleGame);
+                updateAllDayScheduledGameList();
             }
         }, 100);
     }
@@ -76,6 +77,7 @@ public class ScheduleActivity extends AppCompatActivity {
     public void insertScheduleGameInScheduleDBAndCode(ScheduleGame scheduleGame) {
 
         Queries.insertUpdateScheduleDB(scheduleGame);
+        updateAllDayScheduledGameList();
     }
 
     private View createPopUp(int id, Dialog dialog) {
@@ -219,18 +221,14 @@ public class ScheduleActivity extends AppCompatActivity {
                 hourText.setText(newHour.length() == 2 ? newHour : "0" + newHour);
             });
             AppCompatButton moreMinute = popupView.findViewById(R.id.more_minute);
-            moreMinute.setOnClickListener(y -> {
-                minuteText.setText(minuteText.getText().toString().equals("00") ? "30" : "00");
-            });
+            moreMinute.setOnClickListener(y -> minuteText.setText(minuteText.getText().toString().equals("00") ? "30" : "00"));
             AppCompatButton lessMinute = popupView.findViewById(R.id.less_minute);
-            lessMinute.setOnClickListener(y -> {
-                minuteText.setText(minuteText.getText().toString().equals("00") ? "30" : "00");
-            });
+            lessMinute.setOnClickListener(y -> minuteText.setText(minuteText.getText().toString().equals("00") ? "30" : "00"));
             changeButton.setOnClickListener(y -> {
                 String hour = hourText.getText().toString() + ":" + minuteText.getText().toString();
                 insertTimeGameInTimeDB(x.getTag().toString(), hour);
                 Handler handler = new Handler();
-                handler.postDelayed(() -> fillTimeButton(), 50);
+                handler.postDelayed(this::fillTimeButton, 50);
                 dialog.dismiss();
             });
             dialog.show();
@@ -239,7 +237,7 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void createOnClickListener() {
-        Constants.getGameButtonList().forEach(x -> x.setOnClickListener(view -> Constants.getGameProgressList().forEach(y ->
+        Constants.getGameButtonList().forEach(x -> x.setOnClickListener(view -> Constants.getActualDayGameProgressList().forEach(y ->
         {
             if (y.getTotal() == 0) {
                 y.setTotal(y.getCurrentProgress() + 1);
@@ -299,7 +297,7 @@ public class ScheduleActivity extends AppCompatActivity {
     public void addAutoCompleteVoice(View view, int id) {
         AutoCompleteTextView nameAutoComplete = view.findViewById(id);
         List<String> autoCompleteVoice = new ArrayList<>();
-        Constants.getTotalGameStartList().forEach(g -> {
+        Constants.getAllLabelGameProgressList().forEach(g -> {
             if (!autoCompleteVoice.contains(g.getName())) {
                 autoCompleteVoice.add(g.getName());
             }
@@ -311,7 +309,7 @@ public class ScheduleActivity extends AppCompatActivity {
     public void addAutoCompleteSagaVoice(View view, int id) {
         AutoCompleteTextView nameAutoComplete = view.findViewById(id);
         List<String> autoCompleteVoice = new ArrayList<>();
-        Constants.getTotalGameStartList().forEach(g -> {
+        Constants.getAllLabelGameProgressList().forEach(g -> {
             if (!autoCompleteVoice.contains(g.getSaga())) {
                 autoCompleteVoice.add(g.getSaga());
             }
@@ -323,7 +321,7 @@ public class ScheduleActivity extends AppCompatActivity {
     public void createOnLongClickListener() {
         Constants.getGameButtonList().forEach(x -> x.setOnLongClickListener(v -> {
             Dialog dialog = new Dialog(this);
-            ProgressGame progressGame = Constants.getGameProgressList().get(Integer.parseInt(x.getTag().toString().substring(x.getTag().toString().length() - 1)));
+            ProgressGame progressGame = Constants.getActualDayGameProgressList().get(Integer.parseInt(x.getTag().toString().substring(x.getTag().toString().length() - 1)));
             View popupView = createPopUp(R.layout.popup_scheduled_game, dialog);
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
             nameText.setText(progressGame.getName());
@@ -413,37 +411,37 @@ public class ScheduleActivity extends AppCompatActivity {
             resetButton.setOnClickListener(w ->
             {
                 ProgressGame oldProgressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), "", buyedCheckbox.isChecked(), transitCheckbox.isChecked());
-                oldProgressGame.setId(String.valueOf(Constants.getMaxIdStartList() + 1));
+                oldProgressGame.setId(String.valueOf(Constants.getMaxIdProgressList() + 1));
                 oldProgressGame.setLabel("Still");
-                Queries.insertUpdateProgressDB(oldProgressGame);
                 ProgressGame newProgressGame = new ProgressGame(0, 1, 0, "TBS", "TBD", "", "Digital", "LOW", "", Boolean.FALSE, Boolean.FALSE);
                 insertProgressGameInScheduleDBAndCode(Constants.getActualDay(), x.getTag().toString(), newProgressGame);
+                updateAllDayScheduledGameList();
+                if(Collections.frequency(Constants.getAllDayGameProgressList(), oldProgressGame.getName()) == 1){
+                    Queries.insertUpdateProgressDB(oldProgressGame);
+                }
                 Handler handler = new Handler();
                 handler.postDelayed(() -> fillGameButton(rootView), 100);
                 dialog.dismiss();
             });
-            nameText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    List<ProgressGame> pgList = Queries.filterProgressDB("id", "name", nameText.getText().toString());
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> {
-                        if (!pgList.isEmpty()) {
-                            nameText.setText(pgList.get(0).getName());
-                            sagaText.setText(pgList.get(0).getSaga());
-                            dataText.setText(pgList.get(0).getStartDate());
-                            hourText.setText(String.valueOf(pgList.get(0).getHour()));
-                            actualText.setText(String.valueOf(pgList.get(0).getCurrentProgress()));
-                            totalText.setText(String.valueOf(pgList.get(0).getTotal()));
-                            int consolePosition = Arrays.stream(getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(pgList.get(0).getPlatform());
-                            consoleSpinner.setSelection(consolePosition);
-                            int priorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(pgList.get(0).getPriority());
-                            prioritySpinner.setSelection(priorityPosition);
-                            buyedCheckbox.setChecked(pgList.get(0).getBuyed());
-                            transitCheckbox.setChecked(pgList.get(0).getCheckInTransit());
-                        }
-                    }, 100);
-                }
+            nameText.setOnItemClickListener((adapterView, view, i, l) -> {
+                List<ProgressGame> pgList = Queries.filterProgressDB("id", "name", nameText.getText().toString());
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    if (!pgList.isEmpty()) {
+                        nameText.setText(pgList.get(0).getName());
+                        sagaText.setText(pgList.get(0).getSaga());
+                        dataText.setText(pgList.get(0).getStartDate());
+                        hourText.setText(String.valueOf(pgList.get(0).getHour()));
+                        totalText.setText(String.valueOf(pgList.get(0).getTotal()));
+                        actualText.setText(String.valueOf(pgList.get(0).getCurrentProgress()));
+                        int consolePosition1 = Arrays.stream(getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(pgList.get(0).getPlatform());
+                        consoleSpinner.setSelection(consolePosition1);
+                        int priorityPosition1 = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(pgList.get(0).getPriority());
+                        prioritySpinner.setSelection(priorityPosition1);
+                        buyedCheckbox.setChecked(pgList.get(0).getBuyed());
+                        transitCheckbox.setChecked(pgList.get(0).getCheckInTransit());
+                    }
+                }, 100);
             });
             AppCompatButton pasteButton = popupView.findViewById(R.id.paste_button);
             AppCompatButton copyButton = popupView.findViewById(R.id.copy_button);
@@ -451,6 +449,7 @@ public class ScheduleActivity extends AppCompatActivity {
             if (Constants.getProgressGameCopy() != null) {
                 copyButton.setVisibility(View.INVISIBLE);
                 pasteButton.setVisibility(View.VISIBLE);
+
             } else {
                 pasteButton.setVisibility(View.INVISIBLE);
                 copyButton.setVisibility(View.VISIBLE);
@@ -468,15 +467,15 @@ public class ScheduleActivity extends AppCompatActivity {
                 sagaText.setText(pastePG.getSaga());
                 dataText.setText(pastePG.getStartDate());
                 hourText.setText(String.valueOf(pastePG.getHour()));
-                actualText.setText(String.valueOf(pastePG.getCurrentProgress()));
                 totalText.setText(String.valueOf(pastePG.getTotal()));
+                actualText.setText(String.valueOf(pastePG.getCurrentProgress()));
                 int pasteConsolePosition = Arrays.stream(getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(pastePG.getPlatform());
                 consoleSpinner.setSelection(pasteConsolePosition);
                 int pastePriorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(pastePG.getPriority());
                 prioritySpinner.setSelection(pastePriorityPosition);
                 buyedCheckbox.setChecked(pastePG.getBuyed());
                 transitCheckbox.setChecked(pastePG.getCheckInTransit());
-                Constants.setProgressGameCopy(new ProgressGame());
+                Constants.setProgressGameCopy(null);
                 copyButton.setVisibility(View.VISIBLE);
                 pasteButton.setVisibility(View.INVISIBLE);
             });
@@ -544,7 +543,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     String key = "ID".concat(String.valueOf(i));
                     progressGameList.add(gameMap.get(key));
                 }
-                Constants.setGameProgressList(progressGameList);
+                Constants.setActualDayGameProgressList(progressGameList);
                 Constants.getGameButtonList().forEach(x -> {
                     if (gameMap.containsKey(x.getTag())) {
                         x.setText(Objects.requireNonNull(gameMap.get(x.getTag())).getName());
@@ -581,10 +580,21 @@ public class ScheduleActivity extends AppCompatActivity {
         }
         Constants.setGameButtonList(gameButtonList);
         List<ProgressGame> progressGameList = Queries.selectProgressDB("name");
+        updateAllDayScheduledGameList();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> Constants.setAllLabelGameProgressList(progressGameList), 100);
+    }
 
+    private void updateAllDayScheduledGameList(){
+        List<ScheduleGame> scheduleGameList = Queries.selectScheduleDB("name");
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Constants.setTotalGameStartList(progressGameList);
+            List<String> allDayScheduledList = new ArrayList<>();
+            scheduleGameList.forEach(x -> {
+                for(String key : x.getPositionAndGame().keySet()){
+                    allDayScheduledList.add(Objects.requireNonNull(x.getPositionAndGame().get(key)).getName());
+                }});
+            Constants.setAllDayGameProgressList(allDayScheduledList);
         }, 100);
     }
 
@@ -624,7 +634,7 @@ public class ScheduleActivity extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(() -> scheduleGameList.forEach(x -> {
             for (String key : x.getPositionAndGame().keySet()) {
-                if (x.getPositionAndGame().get(key).getName().equals(oldName)) {
+                if (Objects.requireNonNull(x.getPositionAndGame().get(key)).getName().equals(oldName)) {
                     x.getPositionAndGame().put(key, progressGame);
                 }
             }

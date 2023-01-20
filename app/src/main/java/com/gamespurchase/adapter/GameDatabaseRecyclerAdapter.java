@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
@@ -30,10 +31,6 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
     public GameDatabaseRecyclerAdapter(List<DatabaseGame> gameDatabaseList, Context context){
         this.gameDatabaseList = gameDatabaseList;
         this.context = context;
-    }
-
-    public List<DatabaseGame> getGameDatabaseList() {
-        return gameDatabaseList;
     }
 
     @NonNull
@@ -97,12 +94,6 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
         holder.finishedImage.setImageResource(idFinishResource);
     }
 
-    public void updateData(List<DatabaseGame> databaseGameList) {
-        gameDatabaseList.clear();
-        gameDatabaseList.addAll(databaseGameList);
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
 
@@ -135,6 +126,17 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         return popupView;
+    }
+
+    public void createRecyclerAdapter(List<DatabaseGame> databaseGameList, View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.game_database);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter = new GameDatabaseRecyclerAdapter(databaseGameList, context);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(gameDatabaseRecyclerAdapter);
+        //TODO: aggiungerlo
+        //itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 }
 

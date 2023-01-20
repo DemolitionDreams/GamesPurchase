@@ -54,21 +54,21 @@ public class ProgressActivity extends AppCompatActivity {
     // Richiama Queries.DELETE
     public void removedItemFromStartDBAndCode(ProgressGame progressGame) {
         Queries.deleteProgressDB(progressGame);
-        Optional<ProgressGame> optGame = Constants.getGameStartList().stream().filter(x -> x.getName().equals(progressGame.getName())).findAny();
+        Optional<ProgressGame> optGame = Constants.getActualLabelGameProgressList().stream().filter(x -> x.getName().equals(progressGame.getName())).findAny();
         if (optGame.isPresent()) {
-            Constants.getGameStartList().remove(progressGame);
+            Constants.getActualLabelGameProgressList().remove(progressGame);
         }
     }
 
     // Richiama Queries.INSERT
-    public static void insertNewGameStartDBAndCode(Integer position, ProgressGame progressGame, View view) {
-        Optional<ProgressGame> optGame = Constants.getGameStartList().stream().filter(x -> x.getName().equals(progressGame.getName())).findAny();
+    public static void insertNewGameStartDBAndCode(ProgressGame progressGame) {
+        Optional<ProgressGame> optGame = Constants.getActualLabelGameProgressList().stream().filter(x -> x.getName().equals(progressGame.getName())).findAny();
         if (optGame.isPresent()) {
             progressGame.setId(optGame.get().getId());
             Log.i("GamesPurchase", "ID Aggiornato " + progressGame.getLabel());
         } else {
-            Constants.maxIdStartList++;
-            progressGame.setId(String.valueOf(Constants.maxIdStartList));
+            Constants.maxIdProgressList++;
+            progressGame.setId(String.valueOf(Constants.maxIdProgressList));
             Log.i("GamesPurchase", "ID Aggiunto " + progressGame.getLabel());
         }
         Queries.insertUpdateProgressDB(progressGame);
@@ -77,9 +77,9 @@ public class ProgressActivity extends AppCompatActivity {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Constants.getStartGameMap().put(progressGame.getLabel(), progressGameList);
+            Constants.getScheduledGameMap().put(progressGame.getLabel(), progressGameList);
             Log.i("GamesPurchase", "Label modificato " + progressGame.getLabel());
-            Constants.setGameStartList(Constants.getStartGameMap().get(progressGame.getLabel()));
+            Constants.setActualLabelGameProgressList(Constants.getScheduledGameMap().get(progressGame.getLabel()));
         }, 100);
     }
 
@@ -162,10 +162,10 @@ public class ProgressActivity extends AppCompatActivity {
 
         if (!name.isEmpty() && !saga.isEmpty() && !platform.isEmpty()) {
             ProgressGame progressGame = new ProgressGame(Integer.parseInt(actual), Integer.parseInt(total), Integer.parseInt(hour), data, name, saga, platform, priority, label, buyedCheckbox.isChecked(), transitCheckbox.isChecked());
-            insertNewGameStartDBAndCode(null, progressGame, rootView);
+            insertNewGameStartDBAndCode(progressGame);
             Handler handler = new Handler();
             handler.postDelayed(() -> {
-                gameStartRecyclerAdapter.updateData(Constants.getGameStartList().stream()
+                gameStartRecyclerAdapter.updateData(Constants.getActualLabelGameProgressList().stream()
                         .sorted(Comparator.comparing(ProgressGame::getName)).collect(Collectors.toList()));
                 selectListByLabel(progressGame.getLabel());
             }, 100);
@@ -219,10 +219,10 @@ public class ProgressActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<ProgressGame> filterList = Constants.getGameStartList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(textInputLayout.getEditText().getText().toString().toLowerCase(Locale.ROOT))).collect(Collectors.toList());
+                List<ProgressGame> filterList = Constants.getActualLabelGameProgressList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(textInputLayout.getEditText().getText().toString().toLowerCase(Locale.ROOT))).collect(Collectors.toList());
                 createRecyclerAdapter(filterList);
-                EditText header = rootView.findViewById(R.id.name_text);
-                String newHeader = Constants.getActualList() + " (" + filterList.size() + (filterList.size() == 1 ? " Gioco)" : " Giochi)");
+                TextView header = rootView.findViewById(R.id.number_text);
+                String newHeader = filterList.size() + (filterList.size() == 1 ? " Gioco" : " Giochi");
                 header.setText(newHeader);
             }
 
@@ -256,21 +256,22 @@ public class ProgressActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            ProgressGame progressGame = Constants.getGameStartList().get(viewHolder.getAdapterPosition());
+            ProgressGame progressGame = Constants.getActualLabelGameProgressList().get(viewHolder.getAdapterPosition());
             View popupView = createPopUp(R.layout.popup_delete_database_game);
             TextView textView = popupView.findViewById(R.id.edit_text);
-            textView.setText("Rimuovere " + Constants.getGameStartList().get(viewHolder.getAdapterPosition()).getName() + "?");
+            String newText = "Rimuovere " + Constants.getActualLabelGameProgressList().get(viewHolder.getAdapterPosition()).getName() + "?";
+            textView.setText(newText);
             ImageButton removeButton = popupView.findViewById(R.id.delete_button);
-            removeButton.setOnClickListener(view -> onClickOnlyRemove(Constants.getGameStartList().get(viewHolder.getAdapterPosition()), viewHolder.getAdapterPosition()));
+            removeButton.setOnClickListener(view -> onClickOnlyRemove(Constants.getActualLabelGameProgressList().get(viewHolder.getAdapterPosition()), viewHolder.getAdapterPosition()));
             ImageButton nullifyActionButton = popupView.findViewById(R.id.nullify_button);
-            nullifyActionButton.setOnClickListener(view -> onClickPopupDismiss(viewHolder.getAdapterPosition(), progressGame, rootView));
+            nullifyActionButton.setOnClickListener(view -> onClickPopupDismiss(viewHolder.getAdapterPosition(), progressGame));
             dialog.setCancelable(false);
             dialog.show();
         }
     });
 
-    public void onClickPopupDismiss(int position, ProgressGame progressGame, View view) {
-        insertNewGameStartDBAndCode(position, progressGame, view);
+    public void onClickPopupDismiss(int position, ProgressGame progressGame) {
+        insertNewGameStartDBAndCode(progressGame);
         selectListByLabel(progressGame.getLabel());
         gameStartRecyclerAdapter.notifyItemChanged(position);
         dialog.dismiss();
@@ -296,7 +297,7 @@ public class ProgressActivity extends AppCompatActivity {
 
     private void setSortOrientation(ImageButton sortButton, String oldOrientation, String newOrientation, int id) {
         Constants.sortListGame = newOrientation;
-        List<ProgressGame> gameStartList = Constants.getGameStartList();
+        List<ProgressGame> gameStartList = Constants.getActualLabelGameProgressList();
         if (oldOrientation.equals("ASC")) {
             gameStartList = gameStartList.stream()
                     .sorted(Comparator.comparing(ProgressGame::getName)).collect(Collectors.toList());
@@ -304,8 +305,8 @@ public class ProgressActivity extends AppCompatActivity {
             gameStartList = gameStartList.stream()
                     .sorted(Comparator.comparing(ProgressGame::getName).reversed()).collect(Collectors.toList());
         }
-        Constants.setGameStartList(gameStartList);
-        createRecyclerAdapter(Constants.getGameStartList());
+        Constants.setActualLabelGameProgressList(gameStartList);
+        createRecyclerAdapter(Constants.getActualLabelGameProgressList());
         sortButton.setImageResource(id);
     }
 
@@ -364,22 +365,23 @@ public class ProgressActivity extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
 
-            Constants.setStartGameMap(startDB);
+            Constants.setScheduledGameMap(startDB);
             selectListByLabel(Constants.getActualList());
 
         }, 100);
     }
 
     public void selectListByLabel(String label) {
-        List<ProgressGame> startGameList = Constants.getStartGameMap().get(label);
-        Constants.setGameStartList(startGameList);
-        Constants.setCounterStartGame(Constants.getGameStartList() == null ? 0 : Constants.getGameStartList().size());
+        List<ProgressGame> startGameList = Constants.getScheduledGameMap().get(label);
+        Constants.setActualLabelGameProgressList(startGameList);
+        Constants.setCounterProgressGame(Constants.getActualLabelGameProgressList() == null ? 0 : Constants.getActualLabelGameProgressList().size());
         TextView labelHeader = rootView.findViewById(R.id.label_text);
         TextView numberHeader = rootView.findViewById(R.id.number_text);
-        int dimension = Constants.getCounterStartGame();
+        int dimension = Constants.getCounterProgressGame();
         labelHeader.setText(label);
-        numberHeader.setText(new StringBuilder().append(dimension).append(1 == dimension ? " Gioco" : " Giochi").toString());
-        createRecyclerAdapter(Constants.getGameStartList());
+        String newText = dimension + (1 == dimension ? " Gioco" : " Giochi");
+        numberHeader.setText(newText);
+        createRecyclerAdapter(Constants.getActualLabelGameProgressList());
     }
 
     public HashMap<String, List<ProgressGame>> selectAllStartDB() {
@@ -388,13 +390,13 @@ public class ProgressActivity extends AppCompatActivity {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Constants.setTotalGameStartList(progressGameList);
-            Constants.getTotalGameStartList().forEach(x -> {
+            Constants.setAllLabelGameProgressList(progressGameList);
+            Constants.getAllLabelGameProgressList().forEach(x -> {
                 List<ProgressGame> tempStartGameList = new ArrayList<>();
                 if (startGameMap.containsKey(x.getLabel())) {
                     tempStartGameList = startGameMap.get(x.getLabel());
                 }
-                tempStartGameList.add(x);
+                Objects.requireNonNull(tempStartGameList).add(x);
                 startGameMap.put(x.getLabel(), tempStartGameList);
             });
         }, 100);
@@ -411,6 +413,6 @@ public class ProgressActivity extends AppCompatActivity {
         Constants.setActualList("AAA");
         setGlobalVariables();
         setFilterAndSortButton();
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

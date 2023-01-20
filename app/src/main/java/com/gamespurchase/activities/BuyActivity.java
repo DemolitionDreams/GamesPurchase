@@ -1,24 +1,76 @@
 package com.gamespurchase.activities;
 
+import android.app.Dialog;
+import android.os.Handler;
+import android.util.Log;
+import android.view.ViewGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.gamespurchase.adapter.GameDatabaseRecyclerAdapter;
+import com.gamespurchase.adapter.GameSagaDatabaseRecyclerAdapter;
+import com.gamespurchase.classes.Queries;
+import com.gamespurchase.constant.Constants;
+import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.SagheDatabaseGame;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BuyActivity extends AppCompatActivity {
 
-   /* Dialog dialog;
-    GameBuyRecyclerAdapter gameBuyRecyclerAdapter;
+    Dialog dialog;
     ViewGroup rootView;
+    GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter;
+    GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter;
 
-    // Richiama Queries.DELETE
-    public void removedItemFromBuyDBAndCode(BuyGame buyGame) {
-        Queries.deleteBuyDB(buyGame);
-        Optional<BuyGame> optGame = Constants.getGameBuyList().stream().filter(x -> x.getName().equals(buyGame.getName())).findAny();
-        if (optGame.isPresent()) {
-            Constants.getGameBuyList().remove(buyGame);
+    // Queries.DELETE in DatabaseActivity
+    // Queries.INSERT SagheDatabaseGame in DatabaseActivity
+
+    // Richiama Queries.INSERT
+    public static void insertNewGameDatabaseDBAndCode(DatabaseGame databaseGame, String saga) {
+
+        SagheDatabaseGame sagheDatabaseGame;
+        Optional<SagheDatabaseGame> optSagheGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().equals(saga)).findAny();
+        if (optSagheGame.isPresent()) {
+            Optional<DatabaseGame> optGame = optSagheGame.get().getGamesNotBuy().stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
+            if (optGame.isPresent()) {
+                Log.i("GamesPurchase", "Rimosso " + databaseGame.getName());
+                optSagheGame.get().getGamesNotBuy().remove(optGame.get());
+            }
+            optSagheGame.get().getGamesNotBuy().add(databaseGame);
+            optSagheGame.get().getGamesNotBuy().stream()
+                    .sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList());
+            sagheDatabaseGame = optSagheGame.get();
+            Log.i("GamesPurchase", "Aggiunto " + databaseGame.getName() + " alla saga " + sagheDatabaseGame.getName() + "(ID = " + sagheDatabaseGame.getId() + ") con " + sagheDatabaseGame.getGamesBuy().size() + " giochi comprati");
+        } else {
+            Constants.maxIdDatabaseList++;
+            List<DatabaseGame> buyGames = new ArrayList<>();
+            List<DatabaseGame> notBuyGames = new ArrayList<>();
+            notBuyGames.add(databaseGame);
+            sagheDatabaseGame = new SagheDatabaseGame(String.valueOf(Constants.getMaxIdDatabaseList()), saga, Boolean.TRUE, databaseGame.getFinished() ? Boolean.TRUE : Boolean.FALSE, buyGames, notBuyGames);
+            Log.i("GamesPurchase", "Inserita nuova saga: " + sagheDatabaseGame.getName() + "(ID = " + sagheDatabaseGame.getId() + ") e aggiunto " + databaseGame.getName() + " alla lista buyGames");
         }
-        setCounter(rootView, Constants.getGameBuyList(), Constants.getGameDatabaseList());
+
+        Boolean[] check = DatabaseActivity.checkBuyAllOrFinishAll(sagheDatabaseGame);
+        sagheDatabaseGame.setBuyAll(check[0]);
+        sagheDatabaseGame.setFinishAll(check[1]);
+
+        Queries.insertUpdateDatabaseDB(sagheDatabaseGame);
+        List<SagheDatabaseGame> sagheDatabaseGameList = Queries.selectDatabaseDB("name");
+        Handler handler = new Handler();
+        handler.postDelayed(() ->
+
+        {
+            Constants.setGameSagheDatabaseList(sagheDatabaseGameList);
+            Constants.setCounterSagheDatabaseGame(sagheDatabaseGameList.size());
+        }, 100);
     }
 
-    // Richiama Queries.SELECT
+   /*
     public static <T> List<BuyGame> filterFromBuyDBOrCode(String orderElement, String fieldToCompare, T valueToCompare, String name, String where) {
 
         List<BuyGame> filterList = new ArrayList<>();
@@ -35,70 +87,12 @@ public class BuyActivity extends AppCompatActivity {
 
         return filterList;
     }
+*/
+    // Aggiunge il gioco non acquistato alla lista degli acquistati
+    public void addDeleteItemToDatabaseDB(DatabaseGame databaseGame) {
 
-    // Richiama Queries.INSERT
-    public static void insertNewGameBuyDBAndCode(Integer position, BuyGame buyGame, View view) {
-
-        Optional<BuyGame> optGame = Constants.getGameBuyList().stream().filter(x -> x.getName().equals(buyGame.getName())).findAny();
-        if (optGame.isPresent()) {
-            buyGame.setId(optGame.get().getId());
-        } else {
-            Constants.maxIdBuyList++;
-            buyGame.setId(String.valueOf(Constants.maxIdBuyList));
-        }
-        Queries.insertUpdateBuyDB(buyGame);
-        if(position != null) {
-            Constants.getGameBuyList().set(position, buyGame);
-        } else{
-            Constants.getGameBuyList().add(buyGame);
-        }
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            setCounter(view, Constants.getGameBuyList(), Constants.getGameDatabaseList());
-        }, 500);
-    }
-
-    public static void insertOtherGameInDatabaseDBAndCode(Integer position, BuyGame buyGame) {
-
-        Optional<BuyGame> optGame = Constants.getGameBuyList().stream().filter(x -> x.getName().equals(buyGame.getName())).findAny();
-        if (optGame.isPresent()) {
-            buyGame.setId(optGame.get().getId());
-        } else {
-            Constants.maxIdBuyList++;
-            buyGame.setId(String.valueOf(Constants.maxIdBuyList));
-        }
-        Queries.insertUpdateBuyDB(buyGame);
-        if(position != null) {
-            Constants.getGameBuyList().set(position, buyGame);
-        } else{
-            Constants.getGameBuyList().add(buyGame);
-        }
-    }
-
-    // Divide i giochi in base alla saga
-    private void classifyGame(List<BuyGame> buyGameList) {
-        TreeMap<String, List<String>> classifyMap = new TreeMap<>();
-        for (BuyGame g : buyGameList) {
-
-            if (classifyMap.containsKey(g.getSaga())) {
-                Objects.requireNonNull(classifyMap.get(g.getSaga())).add(g.getName());
-            } else {
-                List<String> newList = new ArrayList<>();
-                newList.add(g.getName());
-                classifyMap.put(g.getSaga(), newList);
-            }
-        }
-        for (Map.Entry<String, List<String>> entry : classifyMap.entrySet()) {
-            Log.i("GamesPurchase", entry.getKey() + " (" + entry.getValue().size() + ") = " + entry.getValue());
-        }
-    }
-
-    // Aggiunge il BuyGame cancellato al DatabaseDB
-    public void addDeleteItemToDatabaseDB(BuyGame buyGame, Boolean finished) {
-
-        DatabaseGame databaseGame = new DatabaseGame(buyGame.getName(), buyGame.getSaga(), buyGame.getPlatform(), Boolean.TRUE, finished);
-        DatabaseActivity.insertOtherGameInDatabaseDBAndCode(null, databaseGame);
+        Optional<SagheDatabaseGame> optSagheGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getGamesNotBuy().contains(databaseGame)).findAny();
+        DatabaseActivity.insertNewGameDatabaseDBAndCode(databaseGame, optSagheGame.get().getName());
     }
 
     public void onClick(View view) {
@@ -336,9 +330,9 @@ public class BuyActivity extends AppCompatActivity {
         if (priorityFilter.getSelectedItem() != null) {
             filterList = filterList.stream().filter(g -> g.getPriority().equals(priorityFilter.getSelectedItem().toString())).collect(Collectors.toList());
         }
-        if(transitFilter.isChecked() && !notTransitFilter.isChecked()){
+        if (transitFilter.isChecked() && !notTransitFilter.isChecked()) {
             filterList = filterList.stream().filter(g -> g.getCheckInTransit().equals(true)).collect(Collectors.toList());
-        } else if(notTransitFilter.isChecked() && !transitFilter.isChecked()){
+        } else if (notTransitFilter.isChecked() && !transitFilter.isChecked()) {
             filterList = filterList.stream().filter(g -> g.getCheckInTransit().equals(false)).collect(Collectors.toList());
         }
         createRecyclerAdapter(filterList);
@@ -418,7 +412,7 @@ public class BuyActivity extends AppCompatActivity {
         });
     }
 
-    public static void setCounter(View view, List<BuyGame> buyGameList, List<DatabaseGame> databaseGameList){
+    public static void setCounter(View view, List<BuyGame> buyGameList, List<DatabaseGame> databaseGameList) {
 
         count(buyGameList, databaseGameList);
 
@@ -440,14 +434,14 @@ public class BuyActivity extends AppCompatActivity {
         lowCounter.setText(lowCounter.getText() + Constants.getCounterBuyGame().get("LOW").toString());
     }
 
-    public void onClickPopupInfoShow(View view){
+    public void onClickPopupInfoShow(View view) {
         View popupView = createPopUp(R.layout.popup_info_saghe);
         TextView sagheTextView = popupView.findViewById(R.id.saghe_text_view);
         sagheTextView.setText(filterBySaga());
         dialog.show();
     }
 
-    private String filterBySaga(){
+    private String filterBySaga() {
         StringBuilder sb = new StringBuilder();
         TreeMap<String, Integer> mapSaga = new TreeMap<>();
         gameBuyRecyclerAdapter.getGameBuyList().forEach(x -> {
@@ -460,7 +454,7 @@ public class BuyActivity extends AppCompatActivity {
         int counter = 0;
         for (String s : mapSaga.keySet()) {
             sb.append(s).append(" - ").append(mapSaga.get(s));
-            if (counter != mapSaga.size() - 1){
+            if (counter != mapSaga.size() - 1) {
                 sb.append(System.getProperty("line.separator"));
             }
             counter++;

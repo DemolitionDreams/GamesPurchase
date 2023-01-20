@@ -28,28 +28,14 @@
         app:srcCompat="@drawable/icon_sort_asc"
         app:tint="@color/black" />
 
-    <ImageButton
-        android:id="@+id/filter_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toStartOf="@id/close_button"
-        android:backgroundTint="#00FFFFFF"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/icon_no_filter"
-        app:tint="@color/black"
-        android:scaleX="0.8"
-        android:scaleY="0.8" />
-
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/return_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_toStartOf="@id/close_button"
-        android:backgroundTint="#00FFFFFF"
         android:onClick="onClickReturn"
         android:visibility="invisible"
-        app:srcCompat="@android:drawable/ic_menu_revert"
-        app:tint="@color/black" />
+        android:background="@drawable/icon_return" />
 
     <ImageButton
         android:id="@+id/close_button"
@@ -92,7 +78,7 @@
         app:srcCompat="@drawable/icon_add" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/game_database"
+        android:id="@+id/game_saghe_database"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/counter_table_layout"

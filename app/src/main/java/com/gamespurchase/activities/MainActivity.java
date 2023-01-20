@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setGlobalVariables() {
         List<ProgressGame> startGameList = Queries.selectProgressDB("id");
-        Constants.setGameStartList(startGameList);
+        Constants.setActualLabelGameProgressList(startGameList);
         //List<BuyGame> buyGameList = Queries.selectBuyDB("id");
         //Constants.setGameBuyList(buyGameList);
         List<SagheDatabaseGame> sagheDatabaseGameList = Queries.selectDatabaseDB("name");
@@ -109,12 +109,12 @@ public class MainActivity extends AppCompatActivity {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Constants.maxIdStartList = Integer.parseInt(startGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
+            Constants.maxIdProgressList = Integer.parseInt(startGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
             //Constants.maxIdBuyList = Integer.parseInt(buyGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
             if (!sagheDatabaseGameList.isEmpty()) {
                 Constants.maxIdDatabaseList = Integer.parseInt(sagheDatabaseGameList.stream().max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
             } else {
-                Constants.maxIdStartList = 0;
+                Constants.maxIdProgressList = 0;
             }
         }, 3000);
     }
