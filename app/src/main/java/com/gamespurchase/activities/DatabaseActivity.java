@@ -55,12 +55,25 @@ public class DatabaseActivity extends AppCompatActivity {
     GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter;
 
     // Richiama Queries.DELETE
-    public void removedItemFromDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame) {
+    public static void removedItemFromDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame) {
         Queries.deleteDatabaseDB(sagheDatabaseGame);
 
         Optional<SagheDatabaseGame> optGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().equals(sagheDatabaseGame.getName())).findAny();
         if (optGame.isPresent()) {
             Constants.getGameSagheDatabaseList().remove(sagheDatabaseGame);
+        }
+    }
+
+    public static void removedDatabaseGameFromSaga(SagheDatabaseGame optSagheGame, String name){
+        Optional<DatabaseGame> optGameBuy = optSagheGame.getGamesBuy().stream().filter(x -> x.getName().equals(name)).findAny();
+        if (optGameBuy.isPresent()) {
+            Log.i("GamesPurchase", "Rimosso dagli acquistati" + name);
+            optSagheGame.getGamesBuy().remove(optGameBuy.get());
+        }
+        Optional<DatabaseGame> optGameNotBuy = optSagheGame.getGamesNotBuy().stream().filter(x -> x.getName().equals(name)).findAny();
+        if (optGameNotBuy.isPresent()) {
+            Log.i("GamesPurchase", "Rimosso dai non acquistati" + name);
+            optSagheGame.getGamesNotBuy().remove(optGameBuy.get());
         }
     }
 
@@ -70,11 +83,7 @@ public class DatabaseActivity extends AppCompatActivity {
         SagheDatabaseGame sagheDatabaseGame;
         Optional<SagheDatabaseGame> optSagheGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().equals(saga)).findAny();
         if (optSagheGame.isPresent()) {
-            Optional<DatabaseGame> optGame = optSagheGame.get().getGamesBuy().stream().filter(x -> x.getName().equals(databaseGame.getName())).findAny();
-            if (optGame.isPresent()) {
-                Log.i("GamesPurchase", "Rimosso dagli acquistati" + databaseGame.getName());
-                optSagheGame.get().getGamesBuy().remove(optGame.get());
-            }
+            removedDatabaseGameFromSaga(optSagheGame.get(), databaseGame.getName());
             optSagheGame.get().getGamesBuy().add(databaseGame);
             optSagheGame.get().getGamesBuy().stream()
                     .sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList());
@@ -429,7 +438,7 @@ public class DatabaseActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.game_saghe_database);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        gameSagaDatabaseRecyclerAdapter = new GameSagaDatabaseRecyclerAdapter(sagheDatabaseGameList, this);
+        gameSagaDatabaseRecyclerAdapter = new GameSagaDatabaseRecyclerAdapter(sagheDatabaseGameList, this, null, new DatabaseActivity());
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(gameSagaDatabaseRecyclerAdapter);
         itemTouchHelper.attachToRecyclerView(recyclerView);

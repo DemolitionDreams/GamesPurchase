@@ -8,17 +8,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
+import com.gamespurchase.activities.BuyActivity;
+import com.gamespurchase.activities.DatabaseActivity;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
@@ -33,13 +37,17 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
 
     Dialog dialog;
     Context context;
+    BuyActivity buyActivity;
+    DatabaseActivity databaseActivity;
     SagheDatabaseViewHolder sagheDatabaseViewHolder;
     List<SagheDatabaseGame> gameSagheDatabaseList;
     GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter;
 
-    public GameSagaDatabaseRecyclerAdapter(List<SagheDatabaseGame> gameSagheDatabaseList, Context context){
+    public GameSagaDatabaseRecyclerAdapter(List<SagheDatabaseGame> gameSagheDatabaseList, Context context, BuyActivity buyActivity, DatabaseActivity databaseActivity){
         this.gameSagheDatabaseList = gameSagheDatabaseList;
         this.context = context;
+        this.buyActivity = buyActivity;
+        this.databaseActivity = databaseActivity;
     }
 
     @NonNull
@@ -64,33 +72,19 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
     @Override
     public void onBindViewHolder(@NonNull SagheDatabaseViewHolder holder, int position) {
 
-       /* holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
+       holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                View popupView = createPopUp(R.layout.popup_database_game);
-                databaseActivity.addAutoCompleteVoice(popupView, R.id.saga_text);
+                View popupView = createPopUp(R.layout.popup_saghe_database_game);
                 AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
-                AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
-                Spinner consoleSpinner = popupView.findViewById(R.id.console_spinner);
-                CheckBox finishedCheckbox = popupView.findViewById(R.id.finished_checkbox);
 
-                nameText.setText(gameDatabaseList.get(holder.getAdapterPosition()).getName());
-                sagaText.setText(gameDatabaseList.get(holder.getAdapterPosition()).getSaga());
-                int position = Arrays.stream(context.getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(gameDatabaseList.get(holder.getAdapterPosition()).getPlatform());
-                consoleSpinner.setSelection(position);
-                finishedCheckbox.setChecked(gameDatabaseList.get(holder.getAdapterPosition()).getFinished());
+                nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
 
-                TextView editTextView = popupView.findViewById(R.id.add_text_view);
-                editTextView.setText("Modifica");
-                ImageButton editButton = popupView.findViewById(R.id.add_button);
+                AppCompatButton editButton = popupView.findViewById(R.id.add_button);
                 editButton.setOnClickListener(v -> {
-                    DatabaseGame databaseGame = new DatabaseGame();
-                    databaseGame.setId(gameDatabaseList.get(holder.getAdapterPosition()).getId());
-                    databaseGame.setName(nameText.getText().toString());
-                    databaseGame.setSaga(sagaText.getText().toString());
-                    databaseGame.setPlatform(consoleSpinner.getSelectedItem().toString());
-                    databaseGame.setFinished(finishedCheckbox.isChecked());
-                    DatabaseActivity.insertNewGameDatabaseDBAndCode(holder.getAdapterPosition(), databaseGame, databaseActivityView);
+                    SagheDatabaseGame newSagheDatabaseGame = gameSagheDatabaseList.get(holder.getAdapterPosition());
+                    newSagheDatabaseGame.setName(nameText.getText().toString());
+                    DatabaseActivity.insertNewGameSagaDatabaseDBAndCode(newSagheDatabaseGame);
                     dialog.dismiss();
                     notifyItemChanged(holder.getAdapterPosition());
                 });
@@ -98,7 +92,7 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
                 dialog.show();
                 return true;
             }
-        });*/
+        });
 
         sagheDatabaseViewHolder = holder;
         holder.nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
@@ -119,7 +113,7 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
                 holder.recyclerView.setVisibility(View.GONE);
                 holder.downImage.setRotation(-90);
             } else {
-                createRecyclerAdapter(gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy(), holder);
+                createRecyclerAdapter(databaseActivity == null ? gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy() : gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy(), holder);
                 holder.recyclerView.setVisibility(View.VISIBLE);
                 holder.downImage.setRotation(0);
             }
@@ -195,7 +189,7 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         RecyclerView recyclerView = sagheDatabaseViewHolder.recyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter = new GameDatabaseRecyclerAdapter(databaseGameList.stream().sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList()), context);
+        GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter = new GameDatabaseRecyclerAdapter(databaseGameList.stream().sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList()), context, buyActivity, databaseActivity);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(gameDatabaseRecyclerAdapter);
         itemTouchHelper.attachToRecyclerView(recyclerView);

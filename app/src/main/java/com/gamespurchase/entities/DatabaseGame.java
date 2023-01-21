@@ -25,6 +25,15 @@ public class DatabaseGame {
         this.checkInTransit = checkInTransit;
     }
 
+    public DatabaseGame(String id, String name, String platform, String priority, Boolean finished, Boolean checkInTransit) {
+        this.id = id;
+        this.name = name;
+        this.platform = platform;
+        this.priority = priority;
+        this.finished = finished;
+        this.checkInTransit = checkInTransit;
+    }
+
     public String getId() {
         return id;
     }
