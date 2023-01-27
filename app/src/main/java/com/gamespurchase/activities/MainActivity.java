@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 break;
             }
-            Queries.insertUpdateProgressDB(pg);
+            //Queries.insertUpdateProgressDB(pg);
             counter++;
             progressGameList.add(pg);
         }
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setGlobalVariables();
     }
 

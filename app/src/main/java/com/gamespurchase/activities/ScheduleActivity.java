@@ -57,7 +57,7 @@ public class ScheduleActivity extends AppCompatActivity {
         TimeGame timeGame = new TimeGame();
         timeGame.setId(id);
         timeGame.setHour(hour);
-        Queries.insertUpdateTimeDB(timeGame);
+        Queries.insertUpdateItemDB(timeGame, timeGame.getId(), Constants.TIMEDB);
     }
 
     public void insertProgressGameInScheduleDBAndCode(String day, String position, ProgressGame progressGame) {

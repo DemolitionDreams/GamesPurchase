@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:layout_toStartOf="@id/sort_button"
         android:backgroundTint="#00FFFFFF"
-        android:onClick="onClick"
+        android:onClick="onClickSearch"
         app:srcCompat="@android:drawable/ic_menu_search"
         app:tint="@color/black" />
 

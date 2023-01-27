@@ -1,53 +1,48 @@
 package com.gamespurchase.adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
 import com.gamespurchase.activities.BuyActivity;
-import com.gamespurchase.activities.DatabaseActivity;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
+import com.gamespurchase.utilities.DatabaseUtility;
 import com.google.firebase.database.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSagaDatabaseRecyclerAdapter.SagheDatabaseViewHolder> {
 
     Dialog dialog;
     Context context;
-    BuyActivity buyActivity;
-    DatabaseActivity databaseActivity;
-    SagheDatabaseViewHolder sagheDatabaseViewHolder;
+    Activity activity;
     List<SagheDatabaseGame> gameSagheDatabaseList;
-    GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter;
 
-    public GameSagaDatabaseRecyclerAdapter(List<SagheDatabaseGame> gameSagheDatabaseList, Context context, BuyActivity buyActivity, DatabaseActivity databaseActivity){
+    public GameSagaDatabaseRecyclerAdapter(List<SagheDatabaseGame> gameSagheDatabaseList, Context context, Activity activity) {
         this.gameSagheDatabaseList = gameSagheDatabaseList;
         this.context = context;
-        this.buyActivity = buyActivity;
-        this.databaseActivity = databaseActivity;
+        this.activity = activity;
     }
 
     @NonNull
@@ -71,30 +66,26 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
 
     @Override
     public void onBindViewHolder(@NonNull SagheDatabaseViewHolder holder, int position) {
+        GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter = this;
+        holder.relativeLayout.setOnLongClickListener(view -> {
+            View popupView = createPopUp(R.layout.popup_saghe_database_game);
+            AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
 
-       holder.relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                View popupView = createPopUp(R.layout.popup_saghe_database_game);
-                AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
+            nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
 
-                nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
+            AppCompatButton editButton = popupView.findViewById(R.id.add_button);
+            editButton.setOnClickListener(v -> {
+                SagheDatabaseGame newSagheDatabaseGame = gameSagheDatabaseList.get(holder.getAdapterPosition());
+                newSagheDatabaseGame.setName(nameText.getText().toString());
+                DatabaseUtility.insertNewGameSagaDatabaseDBAndCode(newSagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+                dialog.dismiss();
+                notifyItemChanged(holder.getAdapterPosition());
+            });
 
-                AppCompatButton editButton = popupView.findViewById(R.id.add_button);
-                editButton.setOnClickListener(v -> {
-                    SagheDatabaseGame newSagheDatabaseGame = gameSagheDatabaseList.get(holder.getAdapterPosition());
-                    newSagheDatabaseGame.setName(nameText.getText().toString());
-                    DatabaseActivity.insertNewGameSagaDatabaseDBAndCode(newSagheDatabaseGame);
-                    dialog.dismiss();
-                    notifyItemChanged(holder.getAdapterPosition());
-                });
-
-                dialog.show();
-                return true;
-            }
+            dialog.show();
+            return true;
         });
 
-        sagheDatabaseViewHolder = holder;
         holder.nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
         String saga = gameSagheDatabaseList.get(holder.getAdapterPosition()).getName().toLowerCase(Locale.ROOT);
         int idSagaResource = context.getResources().getIdentifier(getIdSagaResource(saga), null, null);
@@ -109,11 +100,11 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         holder.finishImage.setImageResource(idFinishResource);
 
         holder.downImage.setOnClickListener(view -> {
-            if(holder.recyclerView.getVisibility() == View.VISIBLE){
+            if (holder.recyclerView.getVisibility() == View.VISIBLE) {
                 holder.recyclerView.setVisibility(View.GONE);
                 holder.downImage.setRotation(-90);
             } else {
-                createRecyclerAdapter(databaseActivity == null ? gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy() : gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy(), holder);
+                createRecyclerAdapter(activity instanceof BuyActivity ? gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy() : gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy(), holder);
                 holder.recyclerView.setVisibility(View.VISIBLE);
                 holder.downImage.setRotation(0);
             }
@@ -126,29 +117,53 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         notifyDataSetChanged();
     }
 
+    public void insertItem(SagheDatabaseGame sagheDatabaseGame) {
+        Constants.getGameSagheDatabaseList().add(sagheDatabaseGame);
+        Constants.getGameSagheDatabaseList().sort(Comparator.comparing(SagheDatabaseGame::getName));
+        gameSagheDatabaseList.add(sagheDatabaseGame);
+        gameSagheDatabaseList.sort(Comparator.comparing(SagheDatabaseGame::getName));
+        notifyItemInserted(gameSagheDatabaseList.indexOf(sagheDatabaseGame));
+    }
+
+    public void updateItemAt(int position, SagheDatabaseGame sagheDatabaseGame) {
+        Optional<SagheDatabaseGame> optGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getId().equals(sagheDatabaseGame.getId())).findAny();
+        if(optGame.isPresent()){
+            int index = Constants.getGameSagheDatabaseList().indexOf(optGame.get());
+            Constants.getGameSagheDatabaseList().set(index, sagheDatabaseGame);
+        }
+        gameSagheDatabaseList.set(position, sagheDatabaseGame);
+        notifyItemChanged(position);
+    }
+
+    public void removeItem(int position, SagheDatabaseGame sagheDatabaseGame) {
+        Constants.getGameSagheDatabaseList().remove(sagheDatabaseGame);
+        gameSagheDatabaseList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     @Override
     public int getItemCount() {
 
         return gameSagheDatabaseList.size();
     }
 
-    protected static final class SagheDatabaseViewHolder extends RecyclerView.ViewHolder{
+    public static final class SagheDatabaseViewHolder extends RecyclerView.ViewHolder {
 
-        private RelativeLayout relativeLayout;
-        private TextView nameText;
-        private TextView actualText;
-        private TextView totalText;
-        private ImageView sagaImage;
-        private ImageView buyedImage;
-        private ImageView finishImage;
-        private ImageView downImage;
-        private RecyclerView recyclerView;
+        private final RelativeLayout relativeLayout;
+        private final TextView nameText;
+        private final TextView actualText;
+        private final TextView totalText;
+        private final ImageView sagaImage;
+        private final ImageView buyedImage;
+        private final ImageView finishImage;
+        private final ImageView downImage;
+        private final RecyclerView recyclerView;
 
         public SagheDatabaseViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView actualText, TextView totalText, ImageView sagaImage, ImageView buyedImage, ImageView finishImage, ImageView downImage, RecyclerView recyclerView) {
 
             super(relativeLayout);
             this.nameText = nameText;
-            this.actualText= actualText;
+            this.actualText = actualText;
             this.totalText = totalText;
             this.sagaImage = sagaImage;
             this.buyedImage = buyedImage;
@@ -160,7 +175,7 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
     }
 
     private View createPopUp(int id) {
-        
+
         dialog = new Dialog(context);
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(id, null);
@@ -173,13 +188,13 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
     private String getIdSagaResource(String saga) {
         String imageSagaResource = "com.gamespurchase:drawable/icon_" + saga;
         imageSagaResource = imageSagaResource.replace(" ", "_");
-        if(saga.equals("pokémon")){
+        if (saga.equals("pokémon")) {
             imageSagaResource = "com.gamespurchase:drawable/icon_pokemon";
         }
-        if(saga.equals("assassin's creed")){
+        if (saga.equals("assassin's creed")) {
             imageSagaResource = "com.gamespurchase:drawable/icon_assassins_creed";
         }
-        if(saga.equals("asterix & obelix")){
+        if (saga.equals("asterix & obelix")) {
             imageSagaResource = "com.gamespurchase:drawable/icon_asterix_e_obelix";
         }
         return imageSagaResource;
@@ -189,42 +204,10 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         RecyclerView recyclerView = sagheDatabaseViewHolder.recyclerView;
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter = new GameDatabaseRecyclerAdapter(databaseGameList.stream().sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList()), context, buyActivity, databaseActivity);
+        GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter = new GameDatabaseRecyclerAdapter(gameSagheDatabaseList.get(sagheDatabaseViewHolder.getAdapterPosition()), databaseGameList.stream().sorted(Comparator.comparing(DatabaseGame::getName)).collect(Collectors.toList()), this, context, activity);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(gameDatabaseRecyclerAdapter);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-
-    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT) {
-
-        @Override
-        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-            return makeMovementFlags(0, ItemTouchHelper.RIGHT);
-        }
-
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-            DatabaseGame databaseGame = gameSagheDatabaseList.get(viewHolder.getAdapterPosition()).getGamesBuy().get(viewHolder.getAdapterPosition());
-            View popupView = createPopUp(R.layout.popup_delete_database_game);
-            TextView textView = popupView.findViewById(R.id.edit_text);
-            String newText = "Rimuovere " + Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition()).getName() + "?";
-            textView.setText(newText);
-            ImageButton removeButton = popupView.findViewById(R.id.delete_button);
-            //removeButton.setOnClickListener(view -> onClickOnlyRemove(Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition()), viewHolder.getAdapterPosition()));
-            ImageButton nullifyActionButton = popupView.findViewById(R.id.nullify_button);
-            Log.i("GamesPurchase", "VIEWHOLDEER " + viewHolder.getAdapterPosition());
-
-            //nullifyActionButton.setOnClickListener(view -> onClickPopupDismiss(viewHolder.getAdapterPosition(), databaseGame));
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-    });
 }
 
 

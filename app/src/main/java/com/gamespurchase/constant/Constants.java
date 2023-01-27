@@ -14,6 +14,12 @@ import java.util.List;
 
 public class Constants {
 
+    // Variabili Globali per i nomi dei Database
+    public static final String TIMEDB = "TimeGame";
+    public static final String SCHEDULEDB = "GamesToSchedule";
+    public static final String PROGRESSDB = "GamesToStart";
+    public static final String DATABASEDB = "GamesToDatabase";
+
     // Variabili Globali per individuare il giorno attuale, la sua codifica e la label attualmente visualizzata
     public static String actualDay = "";
     public static String actualDayCode = "";
