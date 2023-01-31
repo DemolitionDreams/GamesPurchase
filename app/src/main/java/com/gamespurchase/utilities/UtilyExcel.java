@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UtilyExcell {
+public class UtilyExcel {
 
     AssetManager assetManager;
     Workbook workbook;
