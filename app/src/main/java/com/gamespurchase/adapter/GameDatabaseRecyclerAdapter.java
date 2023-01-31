@@ -23,7 +23,10 @@ import com.gamespurchase.R;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.utilities.DatabaseUtility;
+import com.gamespurchase.utilities.Utility;
 import com.google.firebase.database.annotations.NotNull;
+
+import org.apache.poi.hpsf.Util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,9 +64,10 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
 
     @Override
     public void onBindViewHolder(@NonNull DatabaseViewHolder holder, int position) {
+        GameDatabaseRecyclerAdapter gameDatabaseRecyclerAdapter = this;
 
         holder.relativeLayout.setOnLongClickListener(view -> {
-            View popupView = createPopUp(R.layout.popup_database_game);
+            View popupView = Utility.createPopUp(R.layout.popup_database_game, context, dialog);
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
             AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
             Spinner consoleSpinner = popupView.findViewById(R.id.console_spinner);
@@ -126,17 +130,6 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
             this.finishedImage = finishedImage;
             this.relativeLayout = relativeLayout;
         }
-    }
-
-    private View createPopUp(int id) {
-
-        dialog = new Dialog(context);
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(id, null);
-        dialog.setContentView(popupView);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        return popupView;
     }
 }
 

@@ -10,9 +10,6 @@ public class SerieGame {
 
     private List<String> games;
 
-    public SerieGame() {
-    }
-
     public SerieGame(String name, List<String> games) {
         this.name = name;
         this.games = games;
@@ -32,13 +29,5 @@ public class SerieGame {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<String> getGames() {
-        return games;
-    }
-
-    public void setGames(List<String> games) {
-        this.games = games;
     }
 }

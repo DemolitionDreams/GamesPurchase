@@ -5,13 +5,9 @@ import java.util.function.Function;
 
 public class CompareUtility {
 
-    public static enum Nulls {FIRST, LAST}
+    public  enum Nulls {FIRST, LAST}
 
-    ;
-
-    public static enum Order {ASCENDING, DESCENDING}
-
-    ;
+    public  enum Order {ASCENDING, DESCENDING}
 
     /**
      * Return a Comparator of T on a function f(T) -> R

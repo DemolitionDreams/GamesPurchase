@@ -6,16 +6,13 @@ public class DatabaseGame {
 
     private String name;
 
-    private String platform;
+    private final String platform;
 
     private String priority;
 
-    private Boolean finished;
+    private final Boolean finished;
 
-    private Boolean checkInTransit;
-
-    public DatabaseGame() {
-    }
+    private final Boolean checkInTransit;
 
     public DatabaseGame(String name, String platform, String priority, Boolean finished, Boolean checkInTransit) {
         this.name = name;
@@ -54,10 +51,6 @@ public class DatabaseGame {
         return platform;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
     public String getPriority() {
         return priority;
     }
@@ -70,15 +63,7 @@ public class DatabaseGame {
         return finished;
     }
 
-    public void setFinished(Boolean finished) {
-        this.finished = finished;
-    }
-
     public Boolean getCheckInTransit() {
         return checkInTransit;
-    }
-
-    public void setCheckInTransit(Boolean checkInTransit) {
-        this.checkInTransit = checkInTransit;
     }
 }

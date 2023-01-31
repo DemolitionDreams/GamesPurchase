@@ -1,6 +1,5 @@
 package com.gamespurchase.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SagheDatabaseGame {
@@ -13,14 +12,9 @@ public class SagheDatabaseGame {
 
     private Boolean finishAll;
 
-    private List<DatabaseGame> gamesBuy;
+    private final List<DatabaseGame> gamesBuy;
 
-    private List<DatabaseGame> gamesNotBuy;
-
-    public SagheDatabaseGame() {
-        this.gamesBuy = new ArrayList<>();
-        this.gamesNotBuy = new ArrayList<>();
-    }
+    private final List<DatabaseGame> gamesNotBuy;
 
     public SagheDatabaseGame(String id, String name, Boolean buyAll, Boolean finishAll, List<DatabaseGame> gamesBuy, List<DatabaseGame> gamesNotBuy) {
         this.id = id;
@@ -59,15 +53,7 @@ public class SagheDatabaseGame {
         return gamesBuy;
     }
 
-    public void setGamesBuy(List<DatabaseGame> gamesBuy) {
-        this.gamesBuy = gamesBuy;
-    }
-
     public List<DatabaseGame> getGamesNotBuy() {
         return gamesNotBuy;
-    }
-
-    public void setGamesNotBuy(List<DatabaseGame> gamesNotBuy) {
-        this.gamesNotBuy = gamesNotBuy;
     }
 }

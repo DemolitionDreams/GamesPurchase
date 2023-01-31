@@ -3,22 +3,15 @@ package com.gamespurchase.utilities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
 import com.gamespurchase.activities.BuyActivity;
@@ -39,11 +32,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DatabaseUtility {
-
-    // Richiama Queries.DELETE
-    public static void removedItemFromDatabaseDBAndCode(String nameDB, String idElement){
-        Queries.deleteItemDB(nameDB, idElement);
-    }
 
     public void changeBuyOrNotBuy(DatabaseGame databaseGame, Boolean notBuyInBuy, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
 
@@ -78,12 +66,12 @@ public class DatabaseUtility {
         sagheDatabaseGame.setFinishAll(check[1]);
 
         Queries.insertUpdateItemDB(sagheDatabaseGame, sagheDatabaseGame.getId(), Constants.DATABASEDB);
-        gameSagaDatabaseRecyclerAdapter.insertItem(sagheDatabaseGame);
+        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
     }
 
     public static void insertNewGameSagaDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
         Queries.insertUpdateItemDB(sagheDatabaseGame, sagheDatabaseGame.getId(), Constants.DATABASEDB);
-        gameSagaDatabaseRecyclerAdapter.insertItem(sagheDatabaseGame);
+        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
     }
 
     public static void removedDatabaseGameFromSaga(List<DatabaseGame> databaseGameList, String name){
@@ -101,24 +89,35 @@ public class DatabaseUtility {
         for (DatabaseGame dg : sagheDatabaseGame.getGamesBuy()) {
             if (!dg.getFinished()) {
                 check[1] = Boolean.FALSE;
+                break;
             }
         }
         for (DatabaseGame dg : sagheDatabaseGame.getGamesNotBuy()) {
             if (!dg.getFinished()) {
                 check[1] = Boolean.FALSE;
+                break;
             }
         }
-
         return check;
     }
 
     public static <V> void onClickOpenAddDatabaseGamePopup(Context context, Dialog dialog, int id, List<V> gameList, Function<V, String> getterToCompare, Activity activity, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
 
-        View popupView = createPopUp(id, context, dialog);
+        View popupView = Utility.createPopUp(id, context, dialog);
         Utility.addAutoCompleteVoice(context, popupView, R.id.saga_text, gameList, getterToCompare);
         Utility.setEntriesAndDefaultToSpinner(context, R.array.Console, R.layout.console_spinner_default_value, R.id.console_spinner, popupView);
         Utility.setEntriesAndDefaultToSpinner(context, R.array.Priority, R.layout.priority_spinner_default_value, R.id.priority_spinner, popupView);
         popupView.findViewById(R.id.add_button).setOnClickListener(v -> onClickAddDatabaseGame(popupView, dialog, context, activity, gameSagaDatabaseRecyclerAdapter));
+    }
+
+    public static void onClickPopupDismiss(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
+        insertNewGameSagaDatabaseDBAndCode(sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+    }
+
+    public static void onClickOnlyRemove(SagheDatabaseGame sagheDatabaseGame, int position, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
+        Utility.removedItemFromDatabase(Constants.DATABASEDB, sagheDatabaseGame.getId());
+        RecyclerAdapterUtility.removeItem(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter, position, sagheDatabaseGame);
     }
 
     public static void onClickAddDatabaseGame(View popupView, Dialog dialog, Context context, Activity activity, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
@@ -135,17 +134,8 @@ public class DatabaseUtility {
             sagaText.setError(context.getResources().getString(R.string.notEmpty));
         }
 
-        Spinner platformSpinner = popupView.findViewById(R.id.console_spinner);
-        String platform = Utility.checkIfSpinnerIsNull(platformSpinner);
-        if (platform.isEmpty()) {
-            ((TextView) platformSpinner.getSelectedView()).setError(context.getResources().getString(R.string.notNotSelected));
-        }
-
-        Spinner prioritySpinner = popupView.findViewById(R.id.priority_spinner);
-        String priority = Utility.checkIfSpinnerIsNull(prioritySpinner);
-        if (priority.isEmpty()) {
-            ((TextView) prioritySpinner.getSelectedView()).setError(context.getResources().getString(R.string.notNotSelected));
-        }
+        String platform = Utility.checkIfSpinnerIsNull(popupView, R.id.console_spinner, context.getResources().getString(R.string.notNotSelected));
+        String priority = Utility.checkIfSpinnerIsNull(popupView, R.id.priority_spinner, context.getResources().getString(R.string.notNotSelected));
 
         CheckBox finishedCheckbox = popupView.findViewById(R.id.finished_checkbox);
         CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
@@ -155,16 +145,6 @@ public class DatabaseUtility {
             insertNewGameDatabaseDBAndCode(databaseGame, saga, activity, gameSagaDatabaseRecyclerAdapter);
         }
         dialog.dismiss();
-    }
-
-    public static void onClickPopupDismiss(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
-        insertNewGameSagaDatabaseDBAndCode(sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
-        gameSagaDatabaseRecyclerAdapter.insertItem(sagheDatabaseGame);
-    }
-
-    public static void onClickOnlyRemove(SagheDatabaseGame sagheDatabaseGame, int position, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
-        removedItemFromDatabaseDBAndCode(Constants.DATABASEDB, sagheDatabaseGame.getId());
-        gameSagaDatabaseRecyclerAdapter.removeItem(position, sagheDatabaseGame);
     }
 
     public static void onClickSearch(View view, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter){
@@ -187,7 +167,8 @@ public class DatabaseUtility {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 List<SagheDatabaseGame> filterList = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(textInputLayout.getEditText().getText().toString().toLowerCase(Locale.ROOT))).collect(Collectors.toList());
-                gameSagaDatabaseRecyclerAdapter.updateData(filterList);            }
+                RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, filterList, gameSagaDatabaseRecyclerAdapter);
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -195,34 +176,5 @@ public class DatabaseUtility {
         });
     }
 
-    public static void swipeSagheDatabase(Context context, int id, RecyclerView.ViewHolder viewHolder, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter){
-        Dialog dialog = new Dialog(context);
-        SagheDatabaseGame sagheDatabaseGame = Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition());
-        View popupView = createPopUp(id, context, dialog);
-        TextView textView = popupView.findViewById(R.id.edit_text);
-        String newText = "Rimuovere " + Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition()).getName() + "?";
-        textView.setText(newText);
-        ImageButton removeButton = popupView.findViewById(R.id.delete_button);
-        removeButton.setOnClickListener(view -> {
-            DatabaseUtility.onClickOnlyRemove(Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition()), viewHolder.getAdapterPosition(), gameSagaDatabaseRecyclerAdapter);
-            dialog.dismiss();
-        });
-        ImageButton nullifyActionButton = popupView.findViewById(R.id.nullify_button);
-        nullifyActionButton.setOnClickListener(view -> {
-            DatabaseUtility.onClickPopupDismiss(sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
-            dialog.dismiss();
-        });
-        dialog.setCancelable(false);
-        dialog.show();
-    }
-
-    private static View createPopUp(int id, Context context, Dialog dialog) {
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(id, null);
-        dialog.setContentView(popupView);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        return popupView;
-    }
 
 }

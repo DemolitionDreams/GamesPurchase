@@ -31,11 +31,9 @@ public class Queries {
         DB_INSTANCE.getReference(nameDB).orderByChild(orderElement).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
-
                 V game = dataSnapshot.getValue(vClass);
                 gameList.add(game);
                 Log.i("GamesPurchase", "Filtrato elemento da " + nameDB);
-
             }
 
             @Override

@@ -1,5 +1,7 @@
 package com.gamespurchase.utilities;
 
+import android.annotation.SuppressLint;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Comparator;
@@ -9,6 +11,7 @@ import java.util.function.Function;
 
 public class RecyclerAdapterUtility {
 
+    @SuppressLint("NotifyDataSetChanged")
     public static <T, K extends RecyclerView.ViewHolder, V extends RecyclerView.Adapter<K>> void updateData(List<T> gameList, List<T> newGameList, V recyclerAdapter) {
         gameList.clear();
         gameList.addAll(newGameList);
@@ -38,14 +41,4 @@ public class RecyclerAdapterUtility {
         gameList.remove(position);
         recyclerAdapter.notifyItemRemoved(position);
     }
-
-
-
-
-
-
-
-
-
-
 }

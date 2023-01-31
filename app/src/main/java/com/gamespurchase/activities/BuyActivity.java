@@ -16,6 +16,7 @@ import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.utilities.CompareUtility;
 import com.gamespurchase.utilities.DatabaseUtility;
+import com.gamespurchase.utilities.RecyclerAdapterUtility;
 import com.gamespurchase.utilities.Utility;
 
 import java.util.Comparator;
@@ -35,7 +36,7 @@ public class BuyActivity extends AppCompatActivity {
 
     public void onClickReturn(View view) {
         setContentView(R.layout.activity_database);
-        gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList());
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
         Constants.setSortDatabaseGame("DESC");
     }
 
@@ -82,7 +83,7 @@ public class BuyActivity extends AppCompatActivity {
         createRecyclerAdapter(Constants.getGameSagheDatabaseList().stream()
                 .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
         Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getGameSagheDatabaseList());
-        gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList());
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

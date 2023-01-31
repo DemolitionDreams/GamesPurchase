@@ -383,7 +383,7 @@ public class ScheduleActivity extends AppCompatActivity {
             int priorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(progressGame.getPriority());
             prioritySpinner.setSelection(priorityPosition);
             CheckBox buyedCheckbox = popupView.findViewById(R.id.buyed_checkbox);
-            buyedCheckbox.setChecked(progressGame.getBuyed() != null ? progressGame.getBuyed() : false);
+            buyedCheckbox.setChecked(progressGame.getBuy() != null ? progressGame.getBuy() : false);
             CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
             transitCheckbox.setChecked(progressGame.getCheckInTransit() != null ? progressGame.getCheckInTransit() : false);
             ImageButton updateButton = popupView.findViewById(R.id.update_button);
@@ -438,7 +438,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         consoleSpinner.setSelection(consolePosition1);
                         int priorityPosition1 = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(pgList.get(0).getPriority());
                         prioritySpinner.setSelection(priorityPosition1);
-                        buyedCheckbox.setChecked(pgList.get(0).getBuyed());
+                        buyedCheckbox.setChecked(pgList.get(0).getBuy());
                         transitCheckbox.setChecked(pgList.get(0).getCheckInTransit());
                     }
                 }, 100);
@@ -473,7 +473,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 consoleSpinner.setSelection(pasteConsolePosition);
                 int pastePriorityPosition = Arrays.stream(getResources().getStringArray(R.array.Priority)).collect(Collectors.toList()).indexOf(pastePG.getPriority());
                 prioritySpinner.setSelection(pastePriorityPosition);
-                buyedCheckbox.setChecked(pastePG.getBuyed());
+                buyedCheckbox.setChecked(pastePG.getBuy());
                 transitCheckbox.setChecked(pastePG.getCheckInTransit());
                 Constants.setProgressGameCopy(null);
                 copyButton.setVisibility(View.VISIBLE);
@@ -519,10 +519,10 @@ public class ScheduleActivity extends AppCompatActivity {
         addButton.setOnClickListener(x -> {
             DatabaseGame databaseGame = new DatabaseGame(nameText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), Boolean.TRUE, transitCheckbox.isChecked());
 
-            if (progressGame.getBuyed()) {
+            if (progressGame.getBuy()) {
                 // TODO: operatore ternario sull'activity (?)
                 DatabaseActivity.insertNewGameDatabaseDBAndCode(databaseGame, sagaText.getText().toString());
-                insertOtherGameAndChangeActivity(progressGame.getBuyed(), tag, databaseGame.getName());
+                insertOtherGameAndChangeActivity(progressGame.getBuy(), tag, databaseGame.getName());
             } else {
                 // BuyActivity.insertNewGameDatabaseDBAndCode(databaseGame, sagaText.getText().toString());
             }

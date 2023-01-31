@@ -6,12 +6,9 @@ public class ScheduleGame {
 
     private String id;
 
-    private String day;
+    private final String day;
 
-    private HashMap<String, ProgressGame> positionAndGame;
-
-    public ScheduleGame(){
-    }
+    private final HashMap<String, ProgressGame> positionAndGame;
 
     public ScheduleGame(String id, String day, HashMap<String, ProgressGame> positionAndGame) {
         this.id = id;
@@ -31,15 +28,7 @@ public class ScheduleGame {
         return day;
     }
 
-    public void setDay(String day) {
-        this.day = day;
-    }
-
     public HashMap<String, ProgressGame> getPositionAndGame() {
         return positionAndGame;
-    }
-
-    public void setPositionAndGame(HashMap<String, ProgressGame> positionAndGame) {
-        this.positionAndGame = positionAndGame;
     }
 }

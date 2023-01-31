@@ -2,8 +2,6 @@ package com.gamespurchase.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gamespurchase.R;
 import com.gamespurchase.activities.ProgressActivity;
 import com.gamespurchase.entities.ProgressGame;
+import com.gamespurchase.utilities.Utility;
 import com.google.firebase.database.annotations.NotNull;
 
 import java.util.Arrays;
@@ -35,13 +34,11 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
 
     Dialog dialog;
     Context context;
-    View progressActivityView;
-    List<ProgressGame> progressGameList;
+    public List<ProgressGame> progressGameList;
 
-    public GameProgressRecyclerAdapter(List<ProgressGame> progressGameList, Context context, View progressActivityView){
+    public GameProgressRecyclerAdapter(List<ProgressGame> progressGameList, Context context){
         this.progressGameList = progressGameList;
         this.context = context;
-        this.progressActivityView = progressActivityView;
     }
 
     @NonNull
@@ -60,7 +57,7 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
     public void onBindViewHolder(@NonNull ProgressViewHolder holder, int position) {
 
         holder.relativeLayout.setOnLongClickListener(view -> {
-            View popupView = createPopUp(R.layout.popup_progress_game);
+            View popupView = Utility.createPopUp(R.layout.popup_progress_game, context, dialog);
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
             AutoCompleteTextView sagaText = popupView.findViewById(R.id.saga_text);
             Spinner consoleSpinner = popupView.findViewById(R.id.console_spinner);
@@ -70,7 +67,7 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
             TextView actualText = popupView.findViewById(R.id.actual_edit_text);
             TextView totalText = popupView.findViewById(R.id.total_edit_text);
             TextView hourText = popupView.findViewById(R.id.hour_edit_text);
-            CheckBox buyedCheckbox = popupView.findViewById(R.id.buyed_checkbox);
+            CheckBox buyCheckbox = popupView.findViewById(R.id.buyed_checkbox);
             CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
 
             nameText.setText(progressGameList.get(holder.getAdapterPosition()).getName());
@@ -85,12 +82,12 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
             actualText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getCurrentProgress()));
             totalText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getTotal()));
             hourText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getHour()));
-            buyedCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getBuyed());
+            buyCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getBuy());
             transitCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getCheckInTransit());
             ImageButton updateButton = popupView.findViewById(R.id.update_button);
             updateButton.setOnClickListener(v -> {
-                ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyedCheckbox.isChecked(), transitCheckbox.isChecked());
-                ProgressActivity.insertNewGameStartDBAndCode(progressGame);
+                ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyCheckbox.isChecked(), transitCheckbox.isChecked());
+                ProgressActivity.insertNewGameStartDBAndCode(progressGame, this);
                 dialog.dismiss();
                 notifyItemChanged(holder.getAdapterPosition());
             });
@@ -143,12 +140,6 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
         holder.priorityImage.setImageResource(idPriorityResource);
     }
 
-    public void updateData(List<ProgressGame> progressGame) {
-        progressGameList.clear();
-        progressGameList.addAll(progressGame);
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
 
@@ -170,16 +161,5 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
             this.priorityImage = priorityImage;
             this.relativeLayout = relativeLayout;
         }
-    }
-
-    private View createPopUp(int id) {
-        
-        dialog = new Dialog(context);
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(id, null);
-        dialog.setContentView(popupView);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        return popupView;
     }
 }

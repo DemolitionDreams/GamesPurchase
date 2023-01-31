@@ -24,6 +24,7 @@ import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.utilities.DatabaseUtility;
+import com.gamespurchase.utilities.Utility;
 import com.google.firebase.database.annotations.NotNull;
 
 import java.util.Comparator;
@@ -37,7 +38,7 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
     Dialog dialog;
     Context context;
     Activity activity;
-    List<SagheDatabaseGame> gameSagheDatabaseList;
+    public List<SagheDatabaseGame> gameSagheDatabaseList;
 
     public GameSagaDatabaseRecyclerAdapter(List<SagheDatabaseGame> gameSagheDatabaseList, Context context, Activity activity) {
         this.gameSagheDatabaseList = gameSagheDatabaseList;
@@ -67,12 +68,11 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
     @Override
     public void onBindViewHolder(@NonNull SagheDatabaseViewHolder holder, int position) {
         GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter = this;
+
         holder.relativeLayout.setOnLongClickListener(view -> {
-            View popupView = createPopUp(R.layout.popup_saghe_database_game);
+            View popupView = Utility.createPopUp(R.layout.popup_saghe_database_game, context, dialog);
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
-
             nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
-
             AppCompatButton editButton = popupView.findViewById(R.id.add_button);
             editButton.setOnClickListener(v -> {
                 SagheDatabaseGame newSagheDatabaseGame = gameSagheDatabaseList.get(holder.getAdapterPosition());
@@ -111,36 +111,6 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         });
     }
 
-    public void updateData(List<SagheDatabaseGame> sagheDatabaseGameList) {
-        gameSagheDatabaseList.clear();
-        gameSagheDatabaseList.addAll(sagheDatabaseGameList);
-        notifyDataSetChanged();
-    }
-
-    public void insertItem(SagheDatabaseGame sagheDatabaseGame) {
-        Constants.getGameSagheDatabaseList().add(sagheDatabaseGame);
-        Constants.getGameSagheDatabaseList().sort(Comparator.comparing(SagheDatabaseGame::getName));
-        gameSagheDatabaseList.add(sagheDatabaseGame);
-        gameSagheDatabaseList.sort(Comparator.comparing(SagheDatabaseGame::getName));
-        notifyItemInserted(gameSagheDatabaseList.indexOf(sagheDatabaseGame));
-    }
-
-    public void updateItemAt(int position, SagheDatabaseGame sagheDatabaseGame) {
-        Optional<SagheDatabaseGame> optGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getId().equals(sagheDatabaseGame.getId())).findAny();
-        if(optGame.isPresent()){
-            int index = Constants.getGameSagheDatabaseList().indexOf(optGame.get());
-            Constants.getGameSagheDatabaseList().set(index, sagheDatabaseGame);
-        }
-        gameSagheDatabaseList.set(position, sagheDatabaseGame);
-        notifyItemChanged(position);
-    }
-
-    public void removeItem(int position, SagheDatabaseGame sagheDatabaseGame) {
-        Constants.getGameSagheDatabaseList().remove(sagheDatabaseGame);
-        gameSagheDatabaseList.remove(position);
-        notifyItemRemoved(position);
-    }
-
     @Override
     public int getItemCount() {
 
@@ -172,17 +142,6 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
             this.relativeLayout = relativeLayout;
             this.recyclerView = recyclerView;
         }
-    }
-
-    private View createPopUp(int id) {
-
-        dialog = new Dialog(context);
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(id, null);
-        dialog.setContentView(popupView);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        return popupView;
     }
 
     private String getIdSagaResource(String saga) {

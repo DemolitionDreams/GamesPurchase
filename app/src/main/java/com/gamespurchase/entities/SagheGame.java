@@ -8,10 +8,7 @@ public class SagheGame {
 
     private String name;
 
-    private List<SerieGame> serie;
-
-    public SagheGame() {
-    }
+    private final List<SerieGame> serie;
 
     public SagheGame(String name, List<SerieGame> serie) {
         this.name = name;
@@ -36,9 +33,5 @@ public class SagheGame {
 
     public List<SerieGame> getSerie() {
         return serie;
-    }
-
-    public void setSerie(List<SerieGame> serie) {
-        this.serie = serie;
     }
 }

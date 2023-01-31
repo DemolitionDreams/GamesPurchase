@@ -6,7 +6,9 @@ import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.entities.SagheGame;
+import com.gamespurchase.entities.ScheduleGame;
 import com.gamespurchase.entities.SerieGame;
+import com.gamespurchase.entities.TimeGame;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ public class Constants {
 
     // Variabili Globali per l'ordinamento delle liste
     public static String sortBuyGame = "ASC";
-    public static String sortListGame = "ASC";
+    public static String sortProgressGame = "ASC";
     public static String sortSagheGame = "ASC";
     public static String sortDatabaseGame = "DESC";
 
@@ -37,7 +39,6 @@ public class Constants {
 
     // Variabili Globali per recuperare l'ultimo id in tabella
     public static int maxIdProgressList;
-    public static int maxIdSagheList;
     public static int maxIdDatabaseList;
 
     // Variabili Globali per le liste di giorni e label
@@ -48,6 +49,8 @@ public class Constants {
     private static List<String> allDayGameProgressList;
     private static List<SerieGame> gameSerieList;
     private static List<SagheGame> gameSagheList;
+    private static List<ScheduleGame> scheduleGameList;
+    private static List<TimeGame> timeGameList;
     private static List<ProgressGame> actualLabelGameProgressList;
     private static List<ProgressGame> allLabelGameProgressList;
     private static List<ProgressGame> actualDayGameProgressList;
@@ -61,7 +64,7 @@ public class Constants {
     private static int counterSagheDatabaseGame;
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
-    private static HashMap<String, List<ProgressGame>> scheduledGameMap = new HashMap<>();
+    private static HashMap<String, List<ProgressGame>> progressGameMap = new HashMap<>();
 
     // Variabile per copia/incolla
     private static ProgressGame progressGameCopy;
@@ -98,12 +101,12 @@ public class Constants {
         Constants.sortBuyGame = sortBuyGame;
     }
 
-    public static String getSortListGame() {
-        return sortListGame;
+    public static String getSortProgressGame() {
+        return sortProgressGame;
     }
 
-    public static void setSortListGame(String sortListGame) {
-        Constants.sortListGame = sortListGame;
+    public static void setSortProgressGame(String sortProgressGame) {
+        Constants.sortProgressGame = sortProgressGame;
     }
 
     public static String getSortSagheGame() {
@@ -144,14 +147,6 @@ public class Constants {
 
     public static void setMaxIdProgressList(int maxIdProgressList) {
         Constants.maxIdProgressList = maxIdProgressList;
-    }
-
-    public static int getMaxIdSagheList() {
-        return maxIdSagheList;
-    }
-
-    public static void setMaxIdSagheList(int maxIdSagheList) {
-        Constants.maxIdSagheList = maxIdSagheList;
     }
 
     public static int getMaxIdDatabaseList() {
@@ -290,12 +285,12 @@ public class Constants {
         Constants.counterDatabaseGame = counterDatabaseGame;
     }
 
-    public static HashMap<String, List<ProgressGame>> getScheduledGameMap() {
-        return scheduledGameMap;
+    public static HashMap<String, List<ProgressGame>> getProgressGameMap() {
+        return progressGameMap;
     }
 
-    public static void setScheduledGameMap(HashMap<String, List<ProgressGame>> scheduledGameMap) {
-        Constants.scheduledGameMap = scheduledGameMap;
+    public static void setProgressGameMap(HashMap<String, List<ProgressGame>> scheduledGameMap) {
+        Constants.progressGameMap = scheduledGameMap;
     }
 
     public static ProgressGame getProgressGameCopy() {
@@ -304,5 +299,23 @@ public class Constants {
 
     public static void setProgressGameCopy(ProgressGame progressGameCopy) {
         Constants.progressGameCopy = progressGameCopy;
+    }
+
+
+    public static List<ScheduleGame> getScheduleGameList() {
+        return scheduleGameList;
+    }
+
+    public static void setScheduleGameList(List<ScheduleGame> scheduleGameList) {
+        Constants.scheduleGameList = scheduleGameList;
+    }
+
+
+    public static List<TimeGame> getTimeGameList() {
+        return timeGameList;
+    }
+
+    public static void setTimeGameList(List<TimeGame> timeGameList) {
+        Constants.timeGameList = timeGameList;
     }
 }

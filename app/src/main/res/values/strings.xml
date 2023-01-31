@@ -15,6 +15,8 @@
     <string name="add">Aggiungi</string>
     <string name="remove">Rimuovi</string>
     <string name="nullifyAction">Annulla</string>
+    <string name="addText">Aggiungi</string>
+    <string name="tbs">TBS</string>
     <string-array name="Buyed">
         <item>Acquistati</item>
         <item>Non Acquistati</item>

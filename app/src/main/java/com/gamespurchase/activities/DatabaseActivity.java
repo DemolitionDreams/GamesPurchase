@@ -14,8 +14,10 @@ import com.gamespurchase.R;
 import com.gamespurchase.adapter.GameSagaDatabaseRecyclerAdapter;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.SagheDatabaseGame;
+import com.gamespurchase.utilities.ActivityUtility;
 import com.gamespurchase.utilities.CompareUtility;
 import com.gamespurchase.utilities.DatabaseUtility;
+import com.gamespurchase.utilities.RecyclerAdapterUtility;
 import com.gamespurchase.utilities.Utility;
 
 import java.util.Comparator;
@@ -30,12 +32,12 @@ public class DatabaseActivity extends AppCompatActivity {
     GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter;
 
     public void onClickSearch(View view) {
-        DatabaseUtility.onClickSearch(rootView, gameSagaDatabaseRecyclerAdapter);
+        ActivityUtility.onClickSearch(rootView, gameSagaDatabaseRecyclerAdapter, Constants.getGameSagheDatabaseList(), SagheDatabaseGame::getName, gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList);
     }
 
     public void onClickReturn(View view) {
         setContentView(R.layout.activity_database);
-        gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList());
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
         Constants.setSortDatabaseGame("DESC");
     }
 
@@ -57,7 +59,8 @@ public class DatabaseActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            DatabaseUtility.swipeSagheDatabase(DatabaseActivity.this, R.layout.popup_delete_database_game, viewHolder, gameSagaDatabaseRecyclerAdapter);
+            SagheDatabaseGame sagheDatabaseGame = Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition());
+            ActivityUtility.swipeGame(DatabaseActivity.this, R.layout.popup_delete_database_game, viewHolder, gameSagaDatabaseRecyclerAdapter, sagheDatabaseGame, sagheDatabaseGame.getName(), null);
         }
     });
 
@@ -153,7 +156,8 @@ public class DatabaseActivity extends AppCompatActivity {
         createRecyclerAdapter(Constants.getGameSagheDatabaseList().stream()
                 .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
         Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getGameSagheDatabaseList());
-        gameSagaDatabaseRecyclerAdapter.updateData(Constants.getGameSagheDatabaseList());
+        Constants.setSortSagheGame(Constants.getSortSagheGame().equals("ASC") ? "DESC" : "ASC");
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

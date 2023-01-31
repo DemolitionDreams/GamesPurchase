@@ -9,11 +9,6 @@ public class TimeGame {
     public TimeGame() {
     }
 
-    public TimeGame(String id, String time) {
-        this.id = id;
-        this.hour = time;
-    }
-
     public String getId() {
         return id;
     }
