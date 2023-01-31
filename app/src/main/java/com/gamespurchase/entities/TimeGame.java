@@ -9,6 +9,11 @@ public class TimeGame {
     public TimeGame() {
     }
 
+    public TimeGame(String id, String hour){
+        this.id = id;
+        this.hour = hour;
+    }
+
     public String getId() {
         return id;
     }

@@ -3,8 +3,6 @@ package com.gamespurchase.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -12,7 +10,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +32,7 @@ import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.ScheduleGame;
 import com.gamespurchase.entities.TimeGame;
+import com.gamespurchase.utilities.Utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -52,53 +51,44 @@ public class ScheduleActivity extends AppCompatActivity {
     ViewGroup rootView;
     OnSwipeTouchListener onSwipeTouchListener;
 
-    public void insertTimeGameInTimeDB(String id, String hour) {
-
-        TimeGame timeGame = new TimeGame();
-        timeGame.setId(id);
-        timeGame.setHour(hour);
-        Queries.insertUpdateItemDB(timeGame, timeGame.getId(), Constants.TIMEDB);
-    }
-
-    public void insertProgressGameInScheduleDBAndCode(String day, String position, ProgressGame progressGame) {
-
-        List<ScheduleGame> scheduleGameList = Queries.filterScheduleDB("day", "day", day);
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (!scheduleGameList.isEmpty()) {
-                scheduleGameList.get(0).getPositionAndGame().put(position, progressGame);
-                ScheduleGame scheduleGame = new ScheduleGame(scheduleGameList.get(0).getId(), day, scheduleGameList.get(0).getPositionAndGame());
-                Queries.insertUpdateScheduleDB(scheduleGame);
-                updateAllDayScheduledGameList();
-            }
-        }, 100);
-    }
-
     public void insertScheduleGameInScheduleDBAndCode(ScheduleGame scheduleGame) {
-
-        Queries.insertUpdateScheduleDB(scheduleGame);
+        Queries.insertUpdateItemDB(scheduleGame, scheduleGame.getId(), Constants.SCHEDULEDB);
+        Optional<ScheduleGame> optScheduleGame = Constants.getScheduleGameList().stream().filter(x -> x.getId().equals(scheduleGame.getId())).findAny();
+        if(optScheduleGame.isPresent()){
+            Constants.getScheduleGameList().set(Constants.getScheduleGameList().indexOf(optScheduleGame.get()), scheduleGame);
+        } else{
+            Constants.getScheduleGameList().add(scheduleGame);
+        }
         updateAllDayScheduledGameList();
     }
 
-    private View createPopUp(int id, Dialog dialog) {
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(id, null);
-        dialog.setContentView(popupView);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        return popupView;
+    public void insertProgressGameInScheduleDBAndCode(String day, String position, ProgressGame progressGame) {
+        Optional<ScheduleGame> oldScheduleGame = Constants.getScheduleGameList().stream().filter(x -> x.getDay().equals(day)).findAny();
+        if(oldScheduleGame.isPresent()) {
+            oldScheduleGame.get().getPositionAndGame().put(position, progressGame);
+            Queries.insertUpdateItemDB(oldScheduleGame.get(), oldScheduleGame.get().getId(), Constants.SCHEDULEDB);
+        }
+        updateAllDayScheduledGameList();
     }
 
-    private static String changeDay(List<String> dayList, String actualDay, Boolean sum) {
+    private void updateAllDayScheduledGameList(){
+        List<String> allDayScheduledList = new ArrayList<>();
+        Constants.getScheduleGameList().forEach(x -> {
+            for(String key : x.getPositionAndGame().keySet()){
+                allDayScheduledList.add(Objects.requireNonNull(x.getPositionAndGame().get(key)).getName());
+            }});
+        Constants.setAllDayGameProgressList(allDayScheduledList);
+    }
 
-        int oldIndex = Constants.getDayCodeList().indexOf(actualDay);
-        String newDay;
-        if (sum) {
-            newDay = (oldIndex == 6) ? dayList.get(0) : dayList.get(oldIndex + 1);
-        } else {
-            newDay = (oldIndex == 0) ? dayList.get(6) : dayList.get(oldIndex - 1);
-        }
-        return newDay;
+    public void updateAllProgressGame(ProgressGame progressGame, String oldName) {
+        Constants.getScheduleGameList().forEach(x -> {
+            for(String key : x.getPositionAndGame().keySet()){
+                if (Objects.requireNonNull(x.getPositionAndGame().get(key)).getName().equals(oldName)) {
+                    x.getPositionAndGame().put(key, progressGame);
+                }
+            }
+            insertScheduleGameInScheduleDBAndCode(x);
+        });
     }
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
@@ -159,22 +149,12 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         void onSwipeRight() {
-            String actualDayCode = Constants.getActualDayCode();
-            String newDayCode = changeDay(Constants.getDayCodeList(), actualDayCode, Boolean.FALSE);
-            Log.i("GamesPurchase", "Movement Right -> Go to " + actualDayCode.toUpperCase(Locale.ROOT) + " a " + newDayCode.toUpperCase(Locale.ROOT));
-            Constants.setActualDayCode(newDayCode);
-            Constants.setActualDay(retrieveActualDay(newDayCode));
-            fillGameButton(rootView);
+            swipeToDirection(Boolean.FALSE, rootView);
             this.onSwipe.swipeRight();
         }
 
         void onSwipeLeft() {
-            String actualDayCode = Constants.getActualDayCode();
-            String newDayCode = changeDay(Constants.getDayCodeList(), actualDayCode, Boolean.TRUE);
-            Log.i("GamesPurchase", "Movement Left -> Go to " + actualDayCode.toUpperCase(Locale.ROOT) + " a " + newDayCode.toUpperCase(Locale.ROOT));
-            Constants.setActualDayCode(newDayCode);
-            Constants.setActualDay(retrieveActualDay(newDayCode));
-            fillGameButton(rootView);
+            swipeToDirection(Boolean.TRUE, rootView);
             this.onSwipe.swipeLeft();
         }
 
@@ -199,10 +179,18 @@ public class ScheduleActivity extends AppCompatActivity {
         onSwipeListener onSwipe;
     }
 
+    private static void swipeToDirection(Boolean isLeft, View rootView){
+        String actualDayCode = Constants.getActualDayCode();
+        String newDayCode = changeDay(Constants.getDayCodeList(), actualDayCode, isLeft);
+        Constants.setActualDayCode(newDayCode);
+        Constants.setActualDay(retrieveActualDay(newDayCode));
+        fillGameButton(rootView);
+    }
+
     public void createOnClickListenerInTimeButton() {
 
         Constants.getTimeButtonList().forEach(x -> x.setOnLongClickListener(v -> {
-            View popupView = createPopUp(R.layout.popup_change_hour, dialog);
+            View popupView = Utility.createPopUp(R.layout.popup_change_hour, this, dialog);
             TextView hourText = popupView.findViewById(R.id.hour_text_view);
             hourText.setText(x.getText().toString().substring(0, 2));
             TextView minuteText = popupView.findViewById(R.id.minute_text_view);
@@ -226,7 +214,8 @@ public class ScheduleActivity extends AppCompatActivity {
             lessMinute.setOnClickListener(y -> minuteText.setText(minuteText.getText().toString().equals("00") ? "30" : "00"));
             changeButton.setOnClickListener(y -> {
                 String hour = hourText.getText().toString() + ":" + minuteText.getText().toString();
-                insertTimeGameInTimeDB(x.getTag().toString(), hour);
+                TimeGame timeGame = new TimeGame(x.getTag().toString(), hour);
+                Queries.insertUpdateItemDB(timeGame, timeGame.getId(), Constants.TIMEDB);
                 Handler handler = new Handler();
                 handler.postDelayed(this::fillTimeButton, 50);
                 dialog.dismiss();
@@ -235,6 +224,58 @@ public class ScheduleActivity extends AppCompatActivity {
             return false;
         }));
     }
+
+    public void fillTimeButton() {
+        Constants.setTimeGameList(Queries.selectDatabaseDB(Constants.TIMEDB, "hour", TimeGame.class));
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            if (!Constants.getTimeGameList().isEmpty()) {
+                Constants.getTimeButtonList().forEach(x -> x.setText(Constants.getTimeGameList().get(Integer.parseInt(x.getTag().toString())).getHour()));
+            }
+        }, 150);
+    }
+
+    private static String changeDay(List<String> dayList, String actualDay, Boolean sum) {
+        String newDay;
+        int oldIndex = Constants.getDayCodeList().indexOf(actualDay);
+        if (sum) {
+            newDay = (oldIndex == 6) ? dayList.get(0) : dayList.get(oldIndex + 1);
+        } else {
+            newDay = (oldIndex == 0) ? dayList.get(6) : dayList.get(oldIndex - 1);
+        }
+        return newDay;
+    }
+
+    public static String retrieveActualDay(String dayCode) {
+        String day = "";
+        switch (dayCode) {
+            case "mon":
+                day = "Lunedi";
+                break;
+            case "tue":
+                day = "Martedi";
+                break;
+            case "wed":
+                day = "Mercoledi";
+                break;
+            case "thu":
+                day = "Giovedi";
+                break;
+            case "fri":
+                day = "Venerdi";
+                break;
+            case "sat":
+                day = "Sabato";
+                break;
+            case "sun":
+                day = "Domenica";
+                break;
+        }
+        return day;
+    }
+
+
+    // TODO: da sistemare ->
 
     public void createOnClickListener() {
         Constants.getGameButtonList().forEach(x -> x.setOnClickListener(view -> Constants.getActualDayGameProgressList().forEach(y ->
@@ -532,7 +573,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
     public static void fillGameButton(View rView) {
         List<ProgressGame> progressGameList = new ArrayList<>();
-        List<ScheduleGame> scheduleGameList = Queries.filterScheduleDB("id", "id", Constants.getActualDayCode());
+        List<ScheduleGame> scheduleGameList = Queries.filterDatabaseDB("id", "id", Constants.getActualDayCode());
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             AppCompatButton dayButton = rView.findViewById(R.id.day_button);
@@ -549,16 +590,6 @@ public class ScheduleActivity extends AppCompatActivity {
                         x.setText(Objects.requireNonNull(gameMap.get(x.getTag())).getName());
                     }
                 });
-            }
-        }, 150);
-    }
-
-    public void fillTimeButton() {
-        List<TimeGame> timeGameList = Queries.selectTimeDB("id");
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (!timeGameList.isEmpty()) {
-                Constants.getTimeButtonList().forEach(x -> x.setText(timeGameList.get(Integer.parseInt(x.getTag().toString())).getHour()));
             }
         }, 150);
     }
@@ -583,63 +614,6 @@ public class ScheduleActivity extends AppCompatActivity {
         updateAllDayScheduledGameList();
         Handler handler = new Handler();
         handler.postDelayed(() -> Constants.setAllLabelGameProgressList(progressGameList), 100);
-    }
-
-    private void updateAllDayScheduledGameList(){
-        List<ScheduleGame> scheduleGameList = Queries.selectScheduleDB("name");
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            List<String> allDayScheduledList = new ArrayList<>();
-            scheduleGameList.forEach(x -> {
-                for(String key : x.getPositionAndGame().keySet()){
-                    allDayScheduledList.add(Objects.requireNonNull(x.getPositionAndGame().get(key)).getName());
-                }});
-            Constants.setAllDayGameProgressList(allDayScheduledList);
-        }, 100);
-    }
-
-    public static String retrieveActualDay(String dayCode) {
-
-        String day = "";
-
-        switch (dayCode) {
-            case "mon":
-                day = "Lunedi";
-                break;
-            case "tue":
-                day = "Martedi";
-                break;
-            case "wed":
-                day = "Mercoledi";
-                break;
-            case "thu":
-                day = "Giovedi";
-                break;
-            case "fri":
-                day = "Venerdi";
-                break;
-            case "sat":
-                day = "Sabato";
-                break;
-            case "sun":
-                day = "Domenica";
-                break;
-        }
-        return day;
-    }
-
-    public void updateAllProgressGame(ProgressGame progressGame, String oldName) {
-        List<ScheduleGame> scheduleGameList = Queries.selectScheduleDB("id");
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> scheduleGameList.forEach(x -> {
-            for (String key : x.getPositionAndGame().keySet()) {
-                if (Objects.requireNonNull(x.getPositionAndGame().get(key)).getName().equals(oldName)) {
-                    x.getPositionAndGame().put(key, progressGame);
-                }
-            }
-            insertScheduleGameInScheduleDBAndCode(x);
-        }), 100);
     }
 
     @Override

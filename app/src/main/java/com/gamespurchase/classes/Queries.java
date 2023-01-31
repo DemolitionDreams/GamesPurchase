@@ -60,7 +60,7 @@ public class Queries {
     }
 
     // SELECT
-    public static <T, V> List<V> filterScheduleDB(String nameDB, String orderElement, String fieldToCompare, T valueToCompare, Class<V> vClass) {
+    public static <T, V> List<V> filterDatabaseDB(String nameDB, String orderElement, String fieldToCompare, T valueToCompare, Class<V> vClass) {
 
         List<V> gameList = new ArrayList<>();
         InvokeGetterSetter invokeGetterSetter = new InvokeGetterSetter();

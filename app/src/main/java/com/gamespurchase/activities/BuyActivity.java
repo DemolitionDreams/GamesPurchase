@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gamespurchase.R;
 import com.gamespurchase.adapter.GameSagaDatabaseRecyclerAdapter;
 import com.gamespurchase.constant.Constants;
+import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
+import com.gamespurchase.utilities.ActivityUtility;
 import com.gamespurchase.utilities.CompareUtility;
 import com.gamespurchase.utilities.DatabaseUtility;
 import com.gamespurchase.utilities.RecyclerAdapterUtility;
@@ -58,7 +60,8 @@ public class BuyActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            DatabaseUtility.swipeSagheDatabase(BuyActivity.this, R.layout.popup_delete_database_game, viewHolder, gameSagaDatabaseRecyclerAdapter);
+            SagheDatabaseGame sagheDatabaseGame = Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition());
+            ActivityUtility.swipeGame(BuyActivity.this, R.layout.popup_delete_database_game, viewHolder, gameSagaDatabaseRecyclerAdapter, sagheDatabaseGame, sagheDatabaseGame.getName(), null);
         }
     });
 
