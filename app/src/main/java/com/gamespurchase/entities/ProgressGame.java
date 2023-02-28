@@ -20,7 +20,7 @@ public class ProgressGame {
 
     private String priority;
 
-    private Boolean buy;
+    private Boolean buyed;
 
     private Boolean checkInTransit;
 
@@ -39,7 +39,7 @@ public class ProgressGame {
         this.platform = platform;
         this.priority = priority;
         this.label = label;
-        this.buy = buy;
+        this.buyed = buy;
         this.checkInTransit = checkInTransit;
     }
 
@@ -111,12 +111,12 @@ public class ProgressGame {
         this.priority = priority;
     }
 
-    public Boolean getBuy() {
-        return buy;
+    public Boolean getBuyed() {
+        return buyed;
     }
 
-    public void setBuy(Boolean buy) {
-        this.buy = buy;
+    public void setBuyed(Boolean buyed) {
+        this.buyed = buyed;
     }
 
     public Boolean getCheckInTransit() {

@@ -6,13 +6,16 @@ public class DatabaseGame {
 
     private String name;
 
-    private final String platform;
+    private String platform;
 
     private String priority;
 
-    private final Boolean finished;
+    private Boolean finished;
 
-    private final Boolean checkInTransit;
+    private Boolean checkInTransit;
+
+    public DatabaseGame(){
+    }
 
     public DatabaseGame(String name, String platform, String priority, Boolean finished, Boolean checkInTransit) {
         this.name = name;

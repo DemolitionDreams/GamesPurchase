@@ -14,6 +14,7 @@ import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.entities.ScheduleGame;
 import com.gamespurchase.entities.TimeGame;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,9 +25,9 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private void setGlobalVariables() {
-        Constants.setAllLabelGameProgressList(Queries.selectDatabaseDB(Constants.PROGRESSDB,
+        Constants.setAllLabelProgressGameList(Queries.selectDatabaseDB(Constants.PROGRESSDB,
                 "name", ProgressGame.class));
-        Constants.setGameSagheDatabaseList(Queries.selectDatabaseDB(Constants.DATABASEDB,
+        Constants.setSagheDatabaseGameList(Queries.selectDatabaseDB(Constants.DATABASEDB,
                 "name", SagheDatabaseGame.class));
         Constants.setScheduleGameList(Queries.selectDatabaseDB(Constants.SCHEDULEDB,
                 "name", ScheduleGame.class));
@@ -35,30 +36,31 @@ public class MainActivity extends AppCompatActivity {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Constants.maxIdDatabaseList = Constants.getGameSagheDatabaseList().isEmpty()
+            Constants.maxIdDatabaseList = CollectionUtils.isEmpty(Constants.getSagheDatabaseGameList())
                     ? 0
-                    : Integer.parseInt(Constants.getGameSagheDatabaseList().stream()
+                    : Integer.parseInt(Constants.getSagheDatabaseGameList().stream()
                     .max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
-            Constants.maxIdProgressList = Constants.getAllLabelGameProgressList().isEmpty()
+            Constants.maxIdProgressList = CollectionUtils.isEmpty(Constants.getAllLabelProgressGameList())
                     ? 0
-                    : Integer.parseInt(Constants.getAllLabelGameProgressList().stream()
+                    : Integer.parseInt(Constants.getAllLabelProgressGameList().stream()
                     .max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
+        }, 1200);
 
+        handler = new Handler();
+        handler.postDelayed(() -> {
             fillAllLabelGame();
-        }, 200);
+            findViewById(R.id.start_button).setOnClickListener(this::callStartActivity);
+        }, 1200);
     }
 
     public void fillAllLabelGame() {
         HashMap<String, List<ProgressGame>> startGameMap = new HashMap<>();
-        Constants.getAllLabelGameProgressList().forEach(x -> {
-            List<ProgressGame> tempStartGameList = new ArrayList<>();
-            if (startGameMap.containsKey(x.getLabel())) {
-                tempStartGameList = startGameMap.get(x.getLabel());
+        Constants.getAllLabelProgressGameList().forEach(x -> {
+            if (!startGameMap.containsKey(x.getLabel())) {
+                startGameMap.put(x.getLabel(), new ArrayList<>());
             }
-            Objects.requireNonNull(tempStartGameList).add(x);
-            startGameMap.put(x.getLabel(), tempStartGameList);
+            Objects.requireNonNull(startGameMap.get(x.getLabel())).add(x);
         });
-
         Constants.setProgressGameMap(startGameMap);
     }
 

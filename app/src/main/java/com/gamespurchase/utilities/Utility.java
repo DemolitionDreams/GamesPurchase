@@ -125,7 +125,7 @@ public class Utility {
 
     public static View createPopUp(int id, Context context, Dialog dialog) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(id, null);
+        View popupView = layoutInflater.inflate(id, null);
         dialog.setContentView(popupView);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

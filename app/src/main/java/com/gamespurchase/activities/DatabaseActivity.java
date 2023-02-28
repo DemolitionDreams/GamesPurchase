@@ -32,12 +32,12 @@ public class DatabaseActivity extends AppCompatActivity {
     GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter;
 
     public void onClickSearch(View view) {
-        ActivityUtility.onClickSearch(rootView, gameSagaDatabaseRecyclerAdapter, Constants.getGameSagheDatabaseList(), SagheDatabaseGame::getName, gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList);
+        ActivityUtility.onClickSearch(rootView, gameSagaDatabaseRecyclerAdapter, Constants.getSagheDatabaseGameList(), SagheDatabaseGame::getName, gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList);
     }
 
     public void onClickReturn(View view) {
         setContentView(R.layout.activity_database);
-        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), gameSagaDatabaseRecyclerAdapter);
         Constants.setSortDatabaseGame("DESC");
     }
 
@@ -59,14 +59,14 @@ public class DatabaseActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            SagheDatabaseGame sagheDatabaseGame = Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition());
+            SagheDatabaseGame sagheDatabaseGame = Constants.getSagheDatabaseGameList().get(viewHolder.getAdapterPosition());
             ActivityUtility.swipeGame(DatabaseActivity.this, R.layout.popup_delete_database_game, viewHolder, gameSagaDatabaseRecyclerAdapter, sagheDatabaseGame, sagheDatabaseGame.getName(), null);
         }
     });
 
     public void onClickOpenAddDatabaseGamePopup(View view) {
 
-        DatabaseUtility.onClickOpenAddDatabaseGamePopup(this, dialog, R.layout.popup_database_game, Constants.getGameSagheDatabaseList(), SagheDatabaseGame::getName, new DatabaseActivity(), gameSagaDatabaseRecyclerAdapter);
+        DatabaseUtility.onClickOpenAddDatabaseGamePopup(this, dialog, R.layout.popup_database_game, Constants.getSagheDatabaseGameList(), SagheDatabaseGame::getName, new DatabaseActivity(), gameSagaDatabaseRecyclerAdapter);
         dialog.show();
     }
 
@@ -153,11 +153,11 @@ public class DatabaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_database);
         rootView = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
-        createRecyclerAdapter(Constants.getGameSagheDatabaseList().stream()
+        createRecyclerAdapter(Constants.getSagheDatabaseGameList().stream()
                 .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
-        Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getGameSagheDatabaseList());
+        Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getSagheDatabaseGameList());
         Constants.setSortSagheGame(Constants.getSortSagheGame().equals("ASC") ? "DESC" : "ASC");
-        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), gameSagaDatabaseRecyclerAdapter);
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

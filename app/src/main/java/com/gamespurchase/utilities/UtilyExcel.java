@@ -61,7 +61,7 @@ public class UtilyExcel {
                 pg.setSaga(row.getCell(6).getStringCellValue());
                 pg.setPlatform(row.getCell(7).getStringCellValue());
                 pg.setPriority(row.getCell(8).getStringCellValue());
-                pg.setBuy(row.getCell(9).getNumericCellValue() == 1);
+                pg.setBuyed(row.getCell(9).getNumericCellValue() == 1);
                 pg.setCheckInTransit(row.getCell(10).getNumericCellValue() == 1);
             } catch (Exception e) {
                 break;

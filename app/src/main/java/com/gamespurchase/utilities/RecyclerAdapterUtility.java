@@ -1,8 +1,11 @@
 package com.gamespurchase.utilities;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.gamespurchase.constant.Constants;
 
 import java.util.Comparator;
 import java.util.List;
@@ -21,9 +24,12 @@ public class RecyclerAdapterUtility {
     public static <T, K extends RecyclerView.ViewHolder, V extends RecyclerView.Adapter<K>> void  insertItem(Comparator<T> getterToCompare, List<T> gameList, List<T> constantGameList, T game, V recyclerAdapter) {
         constantGameList.add(game);
         constantGameList.sort(getterToCompare);
+        Log.i("GamesPurchase", "Dimensioni 5.5 " + Constants.getActualLabelProgressGameList().size());
         gameList.add(game);
         gameList.sort(getterToCompare);
+        Log.i("GamesPurchase", "Dimensioni 5.6 " + Constants.getActualLabelProgressGameList().size());
         recyclerAdapter.notifyItemInserted(gameList.indexOf(game));
+        Log.i("GamesPurchase", "Dimensioni 5.7 " + Constants.getActualLabelProgressGameList().size());
     }
 
     public static <T, K extends RecyclerView.ViewHolder, V extends RecyclerView.Adapter<K>> void  updateItemAt(Function<T, String> getter, List<T> gameList, List<T> constantGameList, V recyclerAdapter, int position, T game) {

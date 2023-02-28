@@ -35,14 +35,14 @@ public class DatabaseUtility {
 
     public void changeBuyOrNotBuy(DatabaseGame databaseGame, Boolean notBuyInBuy, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
 
-        Optional<SagheDatabaseGame> optSagheGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getGamesNotBuy().contains(databaseGame)).findAny();
+        Optional<SagheDatabaseGame> optSagheGame = Constants.getSagheDatabaseGameList().stream().filter(x -> x.getGamesNotBuy().contains(databaseGame)).findAny();
         DatabaseUtility.insertNewGameDatabaseDBAndCode(databaseGame, optSagheGame.get().getName(), notBuyInBuy ? new DatabaseActivity() : new BuyActivity(), gameSagaDatabaseRecyclerAdapter);
     }
 
     public static void insertNewGameDatabaseDBAndCode(DatabaseGame databaseGame, String saga, Activity activity, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
 
         SagheDatabaseGame sagheDatabaseGame;
-        Optional<SagheDatabaseGame> optSagheGame = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().equals(saga)).findAny();
+        Optional<SagheDatabaseGame> optSagheGame = Constants.getSagheDatabaseGameList().stream().filter(x -> x.getName().equals(saga)).findAny();
         if (optSagheGame.isPresent()) {
             removedDatabaseGameFromSaga(optSagheGame.get().getGamesBuy(), databaseGame.getName());
             removedDatabaseGameFromSaga(optSagheGame.get().getGamesNotBuy(), databaseGame.getName());
@@ -66,12 +66,14 @@ public class DatabaseUtility {
         sagheDatabaseGame.setFinishAll(check[1]);
 
         Queries.insertUpdateItemDB(sagheDatabaseGame, sagheDatabaseGame.getId(), Constants.DATABASEDB);
-        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        if(gameSagaDatabaseRecyclerAdapter != null) {
+            RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        }
     }
 
     public static void insertNewGameSagaDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
         Queries.insertUpdateItemDB(sagheDatabaseGame, sagheDatabaseGame.getId(), Constants.DATABASEDB);
-        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
     }
 
     public static void removedDatabaseGameFromSaga(List<DatabaseGame> databaseGameList, String name){
@@ -112,12 +114,12 @@ public class DatabaseUtility {
 
     public static void onClickPopupDismiss(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
         insertNewGameSagaDatabaseDBAndCode(sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
-        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
     }
 
     public static void onClickOnlyRemove(SagheDatabaseGame sagheDatabaseGame, int position, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
         Utility.removedItemFromDatabase(Constants.DATABASEDB, sagheDatabaseGame.getId());
-        RecyclerAdapterUtility.removeItem(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter, position, sagheDatabaseGame);
+        RecyclerAdapterUtility.removeItem(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), gameSagaDatabaseRecyclerAdapter, position, sagheDatabaseGame);
     }
 
     public static void onClickAddDatabaseGame(View popupView, Dialog dialog, Context context, Activity activity, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
@@ -166,7 +168,7 @@ public class DatabaseUtility {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<SagheDatabaseGame> filterList = Constants.getGameSagheDatabaseList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(textInputLayout.getEditText().getText().toString().toLowerCase(Locale.ROOT))).collect(Collectors.toList());
+                List<SagheDatabaseGame> filterList = Constants.getSagheDatabaseGameList().stream().filter(x -> x.getName().toLowerCase(Locale.ROOT).contains(textInputLayout.getEditText().getText().toString().toLowerCase(Locale.ROOT))).collect(Collectors.toList());
                 RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, filterList, gameSagaDatabaseRecyclerAdapter);
             }
 

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gamespurchase.R;
 import com.gamespurchase.adapter.GameSagaDatabaseRecyclerAdapter;
 import com.gamespurchase.constant.Constants;
-import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.utilities.ActivityUtility;
 import com.gamespurchase.utilities.CompareUtility;
@@ -38,7 +37,7 @@ public class BuyActivity extends AppCompatActivity {
 
     public void onClickReturn(View view) {
         setContentView(R.layout.activity_database);
-        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), gameSagaDatabaseRecyclerAdapter);
         Constants.setSortDatabaseGame("DESC");
     }
 
@@ -60,14 +59,14 @@ public class BuyActivity extends AppCompatActivity {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            SagheDatabaseGame sagheDatabaseGame = Constants.getGameSagheDatabaseList().get(viewHolder.getAdapterPosition());
+            SagheDatabaseGame sagheDatabaseGame = Constants.getSagheDatabaseGameList().get(viewHolder.getAdapterPosition());
             ActivityUtility.swipeGame(BuyActivity.this, R.layout.popup_delete_database_game, viewHolder, gameSagaDatabaseRecyclerAdapter, sagheDatabaseGame, sagheDatabaseGame.getName(), null);
         }
     });
 
     public void onClickOpenAddBuyGamePopup(View view) {
 
-        DatabaseUtility.onClickOpenAddDatabaseGamePopup(this, dialog, R.layout.popup_database_game, Constants.getGameSagheDatabaseList(), SagheDatabaseGame::getName, new BuyActivity(), gameSagaDatabaseRecyclerAdapter);
+        DatabaseUtility.onClickOpenAddDatabaseGamePopup(this, dialog, R.layout.popup_database_game, Constants.getSagheDatabaseGameList(), SagheDatabaseGame::getName, new BuyActivity(), gameSagaDatabaseRecyclerAdapter);
         dialog.show();
     }
 
@@ -83,10 +82,10 @@ public class BuyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_buy);
         rootView = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
-        createRecyclerAdapter(Constants.getGameSagheDatabaseList().stream()
+        createRecyclerAdapter(Constants.getSagheDatabaseGameList().stream()
                 .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
-        Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getGameSagheDatabaseList());
-        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getGameSagheDatabaseList(), gameSagaDatabaseRecyclerAdapter);
+        Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getSagheDatabaseGameList());
+        RecyclerAdapterUtility.updateData(gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), gameSagaDatabaseRecyclerAdapter);
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

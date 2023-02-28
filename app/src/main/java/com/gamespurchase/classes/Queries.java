@@ -33,7 +33,7 @@ public class Queries {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
                 V game = dataSnapshot.getValue(vClass);
                 gameList.add(game);
-                Log.i("GamesPurchase", "Filtrato elemento da " + nameDB);
+                //Log.i("GamesPurchase", "Filtrato elemento da " + nameDB);
             }
 
             @Override

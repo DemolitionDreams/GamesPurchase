@@ -10,6 +10,9 @@ public class SerieGame {
 
     private List<String> games;
 
+    public SerieGame() {
+    }
+
     public SerieGame(String name, List<String> games) {
         this.name = name;
         this.games = games;

@@ -6,9 +6,11 @@ public class ScheduleGame {
 
     private String id;
 
-    private final String day;
+    private String day;
 
-    private final HashMap<String, ProgressGame> positionAndGame;
+    private HashMap<String, ProgressGame> positionAndGame;
+
+    public ScheduleGame() {}
 
     public ScheduleGame(String id, String day, HashMap<String, ProgressGame> positionAndGame) {
         this.id = id;

@@ -7,7 +7,7 @@
     <string name="notNotSelected">Seleziona un item</string>
     <string name="consoleDefault">Console</string>
     <string name="priorityDefault">Priority</string>
-    <string name="labelDefault">AAA</string>
+    <string name="labelDefault">Label</string>
     <string name="sagaGame">Saga Gioco</string>
     <string name="nameGame">Nome Gioco</string>
     <string name="finish">Finito?</string>

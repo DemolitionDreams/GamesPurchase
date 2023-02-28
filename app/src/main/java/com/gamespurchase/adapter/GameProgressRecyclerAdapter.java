@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
 import com.gamespurchase.activities.ProgressActivity;
+import com.gamespurchase.activities.ScheduleActivity;
+import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.ProgressGame;
+import com.gamespurchase.utilities.RecyclerAdapterUtility;
 import com.gamespurchase.utilities.Utility;
 import com.google.firebase.database.annotations.NotNull;
 
@@ -33,12 +37,13 @@ import java.util.stream.Collectors;
 public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgressRecyclerAdapter.ProgressViewHolder> {
 
     Dialog dialog;
-    Context context;
+    public Context context;
     public List<ProgressGame> progressGameList;
 
-    public GameProgressRecyclerAdapter(List<ProgressGame> progressGameList, Context context){
+    public GameProgressRecyclerAdapter(List<ProgressGame> progressGameList, Context context, Dialog dialog){
         this.progressGameList = progressGameList;
         this.context = context;
+        this.dialog = dialog;
     }
 
     @NonNull
@@ -55,7 +60,6 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
 
     @Override
     public void onBindViewHolder(@NonNull ProgressViewHolder holder, int position) {
-
         holder.relativeLayout.setOnLongClickListener(view -> {
             View popupView = Utility.createPopUp(R.layout.popup_progress_game, context, dialog);
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
@@ -69,7 +73,7 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
             TextView hourText = popupView.findViewById(R.id.hour_edit_text);
             CheckBox buyCheckbox = popupView.findViewById(R.id.buyed_checkbox);
             CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
-
+Log.i("GamesPurchase", "HolderPosition 1: " + holder.getAdapterPosition());
             nameText.setText(progressGameList.get(holder.getAdapterPosition()).getName());
             sagaText.setText(progressGameList.get(holder.getAdapterPosition()).getSaga());
             int consolePosition = Arrays.stream(context.getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getPlatform());
@@ -82,14 +86,24 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
             actualText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getCurrentProgress()));
             totalText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getTotal()));
             hourText.setText(String.valueOf(progressGameList.get(holder.getAdapterPosition()).getHour()));
-            buyCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getBuy());
+
+            buyCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getBuyed());
             transitCheckbox.setChecked(progressGameList.get(holder.getAdapterPosition()).getCheckInTransit());
             ImageButton updateButton = popupView.findViewById(R.id.update_button);
             updateButton.setOnClickListener(v -> {
+                Log.i("GamesPurchase", "HolderPosition 2: " + holder.getAdapterPosition());
+
+                String oldName = progressGameList.get(holder.getAdapterPosition()).getName();
+                String oldLabel = progressGameList.get(holder.getAdapterPosition()).getLabel();
                 ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyCheckbox.isChecked(), transitCheckbox.isChecked());
-                ProgressActivity.insertNewGameStartDBAndCode(progressGame, this);
+                ProgressActivity.insertNewGameStartDBAndCode(progressGame, oldName, this, false);
+                RecyclerAdapterUtility.updateItemAt(ProgressGame::getName, progressGameList, Constants.getActualLabelProgressGameList(), this, holder.getAdapterPosition(), progressGame);
+                if(!oldLabel.equals(progressGame.getLabel())) {
+                    RecyclerAdapterUtility.removeItem(progressGameList, Constants.getActualLabelProgressGameList(), this, holder.getAdapterPosition(), progressGame);
+                    Constants.getProgressGameMap().get(progressGame.getLabel()).add(progressGame);
+                    ScheduleActivity.fillAllLabelFromLabelMap();
+                }
                 dialog.dismiss();
-                notifyItemChanged(holder.getAdapterPosition());
             });
             actualText.addTextChangedListener(new TextWatcher() {
                 @Override

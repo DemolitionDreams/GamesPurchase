@@ -78,7 +78,7 @@ public class ActivityUtility {
             if(game instanceof SagheDatabaseGame) {
                 DatabaseUtility.onClickPopupDismiss((SagheDatabaseGame) game, (GameSagaDatabaseRecyclerAdapter) recyclerAdapter);
             } else if(game instanceof ProgressGame){
-                ProgressActivity.onClickPopupDismiss((ProgressGame) game, (GameProgressRecyclerAdapter) recyclerAdapter, rootView);
+                ProgressActivity.onClickPopupDismiss((ProgressGame) game, (GameProgressRecyclerAdapter) recyclerAdapter);
             }
             dialog.dismiss();
         });

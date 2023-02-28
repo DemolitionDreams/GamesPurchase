@@ -12,9 +12,11 @@ public class SagheDatabaseGame {
 
     private Boolean finishAll;
 
-    private final List<DatabaseGame> gamesBuy;
+    private List<DatabaseGame> gamesBuy;
 
-    private final List<DatabaseGame> gamesNotBuy;
+    private List<DatabaseGame> gamesNotBuy;
+
+    public SagheDatabaseGame(){}
 
     public SagheDatabaseGame(String id, String name, Boolean buyAll, Boolean finishAll, List<DatabaseGame> gamesBuy, List<DatabaseGame> gamesNotBuy) {
         this.id = id;
