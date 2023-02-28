@@ -64,7 +64,7 @@ public class ProgressActivity extends AppCompatActivity {
 
     public static void onClickPopupDismiss(ProgressGame progressGame, GameProgressRecyclerAdapter gameProgressRecyclerAdapter) {
         insertNewGameStartDBAndCode(progressGame, progressGame.getName(), gameProgressRecyclerAdapter, false);
-        Constants.getProgressGameMap().put(progressGame.getLabel(), Constants.getActualLabelProgressGameList());
+        //Constants.getProgressGameMap().put(progressGame.getLabel(), Constants.getActualLabelProgressGameList());
         RecyclerAdapterUtility.updateData(gameProgressRecyclerAdapter.progressGameList, Constants.getActualLabelProgressGameList(), gameProgressRecyclerAdapter);
     }
 
@@ -78,6 +78,7 @@ public class ProgressActivity extends AppCompatActivity {
         ActivityUtility.onClickSearch(rootView, gameProgressRecyclerAdapter, Constants.getActualLabelProgressGameList(), ProgressGame::getName, gameProgressRecyclerAdapter.progressGameList);
     }
 
+    // TODO: sistemare
     public void onClickReturn(View view) {
         setContentView(R.layout.activity_progress);
         RecyclerAdapterUtility.updateData(gameProgressRecyclerAdapter.progressGameList, Constants.getActualLabelProgressGameList(), gameProgressRecyclerAdapter);
