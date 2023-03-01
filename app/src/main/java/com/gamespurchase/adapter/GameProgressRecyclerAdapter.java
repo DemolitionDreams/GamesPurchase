@@ -73,7 +73,7 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
             TextView hourText = popupView.findViewById(R.id.hour_edit_text);
             CheckBox buyCheckbox = popupView.findViewById(R.id.buyed_checkbox);
             CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
-Log.i("GamesPurchase", "HolderPosition 1: " + holder.getAdapterPosition());
+            Log.i("GamesPurchase", "HolderPosition 1: " + holder.getAdapterPosition());
             nameText.setText(progressGameList.get(holder.getAdapterPosition()).getName());
             sagaText.setText(progressGameList.get(holder.getAdapterPosition()).getSaga());
             int consolePosition = Arrays.stream(context.getResources().getStringArray(R.array.Console)).collect(Collectors.toList()).indexOf(progressGameList.get(holder.getAdapterPosition()).getPlatform());
@@ -97,7 +97,7 @@ Log.i("GamesPurchase", "HolderPosition 1: " + holder.getAdapterPosition());
                 String oldLabel = progressGameList.get(holder.getAdapterPosition()).getLabel();
                 ProgressGame progressGame = new ProgressGame(Integer.parseInt(actualText.getText().toString()), Integer.parseInt(totalText.getText().toString()), Integer.parseInt(hourText.getText().toString()), dataText.getText().toString(), nameText.getText().toString(), sagaText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), labelSpinner.getSelectedItem().toString(), buyCheckbox.isChecked(), transitCheckbox.isChecked());
                 ProgressActivity.insertNewGameStartDBAndCode(progressGame, oldName, this, false);
-                RecyclerAdapterUtility.updateItemAt(ProgressGame::getName, progressGameList, Constants.getActualLabelProgressGameList(), this, holder.getAdapterPosition(), progressGame);
+                RecyclerAdapterUtility.updateItemAt(ProgressGame::getId, progressGameList, Constants.getActualLabelProgressGameList(), this, holder.getAdapterPosition(), progressGame);
                 if(!oldLabel.equals(progressGame.getLabel())) {
                     RecyclerAdapterUtility.removeItem(progressGameList, Constants.getActualLabelProgressGameList(), this, holder.getAdapterPosition(), progressGame);
                     Constants.getProgressGameMap().get(progressGame.getLabel()).add(progressGame);
