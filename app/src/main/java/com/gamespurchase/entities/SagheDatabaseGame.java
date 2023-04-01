@@ -58,4 +58,12 @@ public class SagheDatabaseGame {
     public List<DatabaseGame> getGamesNotBuy() {
         return gamesNotBuy;
     }
+
+    public void setGamesBuy(List<DatabaseGame> gamesBuy) {
+        this.gamesBuy = gamesBuy;
+    }
+
+    public void setGamesNotBuy(List<DatabaseGame> gamesNotBuy) {
+        this.gamesNotBuy = gamesNotBuy;
+    }
 }

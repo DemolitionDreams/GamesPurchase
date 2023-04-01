@@ -332,7 +332,7 @@ public class ScheduleActivity extends AppCompatActivity {
         finishedCheckbox.setChecked(Boolean.TRUE);
         CheckBox transitCheckbox = popupView.findViewById(R.id.transit_checkbox);
         transitCheckbox.setChecked(progressGame.getCheckInTransit());
-        ImageButton addButton = popupView.findViewById(R.id.add_button);
+        AppCompatButton addButton = popupView.findViewById(R.id.add_button);
         addButton.setOnClickListener(x -> {
             DatabaseGame databaseGame = new DatabaseGame(nameText.getText().toString(), consoleSpinner.getSelectedItem().toString(), prioritySpinner.getSelectedItem().toString(), Boolean.TRUE, transitCheckbox.isChecked());
             resetProgressInsertDatabaseGameAndChangeActivity(databaseGame, sagaText.getText().toString(), progressGame.getBuyed(), tag, databaseGame.getName());
@@ -347,6 +347,7 @@ public class ScheduleActivity extends AppCompatActivity {
         DatabaseUtility.insertNewGameDatabaseDBAndCode(databaseGame, saga, buy ? new DatabaseActivity() : new BuyActivity(), null);
         Intent intent = new Intent(this, buy ? DatabaseActivity.class : BuyActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     private static String changeDay(List<String> dayList, String actualDay, Boolean sum) {

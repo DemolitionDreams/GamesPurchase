@@ -2,6 +2,7 @@ package com.gamespurchase.activities;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,6 +20,7 @@ import com.gamespurchase.utilities.CompareUtility;
 import com.gamespurchase.utilities.DatabaseUtility;
 import com.gamespurchase.utilities.RecyclerAdapterUtility;
 import com.gamespurchase.utilities.Utility;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -71,7 +73,7 @@ public class DatabaseActivity extends AppCompatActivity {
     }
 
     private void createRecyclerAdapter(List<SagheDatabaseGame> sagheDatabaseGameList) {
-        List<SagheDatabaseGame> buySagheDatabaseList = sagheDatabaseGameList.stream().filter(x -> !x.getGamesBuy().isEmpty()).collect(Collectors.toList());
+        List<SagheDatabaseGame> buySagheDatabaseList = sagheDatabaseGameList.stream().filter(x -> !CollectionUtils.isEmpty(x.getGamesBuy())).collect(Collectors.toList());
         gameSagaDatabaseRecyclerAdapter = new GameSagaDatabaseRecyclerAdapter(buySagheDatabaseList, this, new DatabaseActivity());
         Utility.createRecyclerAdapter(rootView, R.id.game_saghe_database, this, gameSagaDatabaseRecyclerAdapter, itemTouchHelper);
     }
@@ -153,6 +155,7 @@ public class DatabaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_database);
         rootView = (ViewGroup) ((ViewGroup) this
                 .findViewById(android.R.id.content)).getChildAt(0);
+        Log.i("GamesPurchase", " " + Constants.getSagheDatabaseGameList().size());
         createRecyclerAdapter(Constants.getSagheDatabaseGameList().stream()
                 .sorted(Comparator.comparing(SagheDatabaseGame::getName)).collect(Collectors.toList()));
         Utility.setFilterButton(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), rootView, Constants.sortDatabaseGame, Constants.getSagheDatabaseGameList());

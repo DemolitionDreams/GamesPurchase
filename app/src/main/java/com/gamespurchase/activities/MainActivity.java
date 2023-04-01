@@ -1,9 +1,11 @@
 package com.gamespurchase.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
+            List<SagheDatabaseGame> gg = Constants.getSagheDatabaseGameList();
             Constants.maxIdDatabaseList = CollectionUtils.isEmpty(Constants.getSagheDatabaseGameList())
                     ? 0
                     : Integer.parseInt(Constants.getSagheDatabaseGameList().stream()
@@ -44,12 +47,19 @@ public class MainActivity extends AppCompatActivity {
                     ? 0
                     : Integer.parseInt(Constants.getAllLabelProgressGameList().stream()
                     .max(Comparator.comparingInt(x -> Integer.parseInt(x.getId()))).get().getId());
-        }, 1200);
+        }, 2000);
 
         handler = new Handler();
         handler.postDelayed(() -> {
             fillAllLabelGame();
-            findViewById(R.id.start_button).setOnClickListener(this::callStartActivity);
+            ImageButton startButton = findViewById(R.id.start_button);
+            Drawable gameListEnabled = getResources().getDrawable(R.drawable.icon_game_list);
+            startButton.setBackground(gameListEnabled);
+            startButton.setOnClickListener(this::callStartActivity);
+            ImageButton scheduleButton = findViewById(R.id.schedule_button);
+            Drawable calendarEnabled = getResources().getDrawable(R.drawable.icon_calendar);
+            scheduleButton.setBackground(calendarEnabled);
+            scheduleButton.setOnClickListener(this::callScheduleActivity);
         }, 1200);
     }
 
@@ -117,6 +127,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setGlobalVariables();
+       /* List<DatabaseGame> buy = new ArrayList<>();
+        DatabaseGame b = new DatabaseGame();
+        b.setId("0");
+        b.setName("Bayonetta");
+        b.setPriority("HIGH");
+        b.setPlatform("PS3");
+        b.setFinished(true);
+        b.setCheckInTransit(false);
+        buy.add(b);
+        List<DatabaseGame> noBuy = new ArrayList<>();
+
+        DatabaseGame c = new DatabaseGame();
+        c.setId("1");
+        c.setName("Bayonetta 3");
+        c.setPriority("HIGH");
+        c.setPlatform("Switch");
+        c.setFinished(false);
+        c.setCheckInTransit(false);
+        noBuy.add(c);
+        SagheDatabaseGame s = new SagheDatabaseGame();
+        s.setName("Bayonetta");
+        s.setFinishAll(false);
+        s.setBuyAll(false);
+        s.setGamesBuy(buy);
+        s.setGamesNotBuy(noBuy);
+        s.setId("0");
+        Queries.insertUpdateItemDB(s, s.getId(), Constants.DATABASEDB);
+        */
     }
 
     public void callSagheActivity(View view) {

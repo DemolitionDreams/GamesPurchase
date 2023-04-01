@@ -3,8 +3,6 @@ package com.gamespurchase.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
 import com.gamespurchase.activities.BuyActivity;
-import com.gamespurchase.constant.Constants;
+import com.gamespurchase.activities.DatabaseActivity;
 import com.gamespurchase.entities.DatabaseGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
 import com.gamespurchase.utilities.DatabaseUtility;
 import com.gamespurchase.utilities.Utility;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.firebase.database.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSagaDatabaseRecyclerAdapter.SagheDatabaseViewHolder> {
@@ -51,6 +49,7 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
     public SagheDatabaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.game_saghe_database_view, parent, false);
+        dialog = new Dialog(context);
         TextView nameText = relativeLayout.findViewById(R.id.name_text);
         TextView actualText = relativeLayout.findViewById(R.id.actual_text);
         TextView totalText = relativeLayout.findViewById(R.id.total_text);
@@ -74,12 +73,13 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
             AutoCompleteTextView nameText = popupView.findViewById(R.id.name_text);
             nameText.setText(gameSagheDatabaseList.get(holder.getAdapterPosition()).getName());
             AppCompatButton editButton = popupView.findViewById(R.id.add_button);
+            int index = holder.getAdapterPosition();
             editButton.setOnClickListener(v -> {
-                SagheDatabaseGame newSagheDatabaseGame = gameSagheDatabaseList.get(holder.getAdapterPosition());
+                SagheDatabaseGame newSagheDatabaseGame = gameSagheDatabaseList.get(index);
                 newSagheDatabaseGame.setName(nameText.getText().toString());
-                DatabaseUtility.insertNewGameSagaDatabaseDBAndCode(newSagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+                DatabaseUtility.insertNewGameSagaDatabaseDBAndCode(newSagheDatabaseGame, gameSagaDatabaseRecyclerAdapter, Boolean.FALSE, index);
                 dialog.dismiss();
-                notifyItemChanged(holder.getAdapterPosition());
+                notifyItemChanged(index);
             });
 
             dialog.show();
@@ -92,8 +92,8 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         holder.sagaImage.setImageResource(idSagaResource);
         List<DatabaseGame> buyGames = gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy();
         List<DatabaseGame> notBuyGames = gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy();
-        holder.actualText.setText(String.valueOf(buyGames.isEmpty() ? 0 : buyGames.size()));
-        holder.totalText.setText(String.valueOf((buyGames.isEmpty() ? 0 : buyGames.size()) + (notBuyGames.isEmpty() ? 0 : notBuyGames.size())));
+        holder.actualText.setText(String.valueOf(CollectionUtils.isEmpty(buyGames) ? 0 : buyGames.size()));
+        holder.totalText.setText(String.valueOf((CollectionUtils.isEmpty(buyGames) ? 0 : buyGames.size()) + (CollectionUtils.isEmpty(notBuyGames) ? 0 : notBuyGames.size())));
         int idBuyResource = context.getResources().getIdentifier(gameSagheDatabaseList.get(holder.getAdapterPosition()).getBuyAll() ? "com.gamespurchase:drawable/icon_buyed" : "com.gamespurchase:drawable/icon_not_buyed", null, null);
         holder.buyedImage.setImageResource(idBuyResource);
         int idFinishResource = context.getResources().getIdentifier(gameSagheDatabaseList.get(holder.getAdapterPosition()).getFinishAll() ? "com.gamespurchase:drawable/icon_finished" : "com.gamespurchase:drawable/icon_not_finished", null, null);
@@ -104,7 +104,9 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
                 holder.recyclerView.setVisibility(View.GONE);
                 holder.downImage.setRotation(-90);
             } else {
-                createRecyclerAdapter(activity instanceof BuyActivity ? gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy() : gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy(), holder);
+                if((activity instanceof BuyActivity && !CollectionUtils.isEmpty(gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy())) || (activity instanceof DatabaseActivity && !CollectionUtils.isEmpty(gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy()))) {
+                    createRecyclerAdapter(activity instanceof BuyActivity ? gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy() : gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy(), holder);
+                }
                 holder.recyclerView.setVisibility(View.VISIBLE);
                 holder.downImage.setRotation(0);
             }

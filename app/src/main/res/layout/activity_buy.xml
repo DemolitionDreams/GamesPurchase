@@ -76,7 +76,7 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/search_button"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/search_button"
+        android:layout_toStartOf="@+id/search_button"
         android:visibility="invisible"
         app:errorEnabled="false"
         app:hintEnabled="false">

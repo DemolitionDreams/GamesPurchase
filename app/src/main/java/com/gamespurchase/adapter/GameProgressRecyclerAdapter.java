@@ -54,8 +54,10 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
         TextView nameText = relativeLayout.findViewById(R.id.name_text);
         TextView hourText = relativeLayout.findViewById(R.id.hour_text);
         ImageView priorityImage = relativeLayout.findViewById(R.id.priority_image);
+        ImageView buyImage = relativeLayout.findViewById(R.id.buy_image);
 
-        return new ProgressViewHolder(relativeLayout, nameText, hourText, priorityImage);
+
+        return new ProgressViewHolder(relativeLayout, nameText, hourText, priorityImage, buyImage);
     }
 
     @Override
@@ -153,6 +155,8 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
         String imagePriorityResource = "com.gamespurchase:drawable/icon_" + progressGameList.get(holder.getAdapterPosition()).getPriority().toLowerCase(Locale.ROOT);
         int idPriorityResource = context.getResources().getIdentifier(imagePriorityResource, null, null);
         holder.priorityImage.setImageResource(idPriorityResource);
+
+        holder.buyImage.setImageResource(context.getResources().getIdentifier(progressGameList.get(holder.getAdapterPosition()).getBuyed() ? "com.gamespurchase:drawable/icon_buyed" : "com.gamespurchase:drawable/icon_not_buyed", null, null));
     }
 
     @Override
@@ -167,13 +171,16 @@ public class GameProgressRecyclerAdapter extends RecyclerView.Adapter<GameProgre
         private final TextView nameText;
         private final TextView hourText;
         private final ImageView priorityImage;
+        private final ImageView buyImage;
 
-        public ProgressViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView hourText, ImageView priorityImage){
+
+        public ProgressViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView hourText, ImageView priorityImage, ImageView buyImage){
 
             super(relativeLayout);
             this.nameText = nameText;
             this.hourText = hourText;
             this.priorityImage = priorityImage;
+            this.buyImage = buyImage;
             this.relativeLayout = relativeLayout;
         }
     }

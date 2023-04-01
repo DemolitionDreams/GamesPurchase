@@ -69,4 +69,16 @@ public class DatabaseGame {
     public Boolean getCheckInTransit() {
         return checkInTransit;
     }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
+    public void setCheckInTransit(Boolean checkInTransit) {
+        this.checkInTransit = checkInTransit;
+    }
 }

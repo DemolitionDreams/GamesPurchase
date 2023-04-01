@@ -14,8 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:background="@drawable/icon_calendar"
-        android:onClick="callScheduleActivity" />
+        android:background="@drawable/icon_calendar_disabled" />
 
     <ImageButton
         android:id="@+id/start_button"
@@ -26,7 +25,8 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:background="@drawable/icon_game_list" />
+        android:background="@drawable/icon_game_list_disabled"
+        android:enabled="false" />
 
     <ImageView
         android:id="@+id/characters_image"

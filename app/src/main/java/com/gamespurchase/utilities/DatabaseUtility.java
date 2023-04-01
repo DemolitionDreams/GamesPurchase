@@ -20,7 +20,9 @@ import com.gamespurchase.adapter.GameSagaDatabaseRecyclerAdapter;
 import com.gamespurchase.classes.Queries;
 import com.gamespurchase.constant.Constants;
 import com.gamespurchase.entities.DatabaseGame;
+import com.gamespurchase.entities.ProgressGame;
 import com.gamespurchase.entities.SagheDatabaseGame;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -42,12 +44,16 @@ public class DatabaseUtility {
     public static void insertNewGameDatabaseDBAndCode(DatabaseGame databaseGame, String saga, Activity activity, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
 
         SagheDatabaseGame sagheDatabaseGame;
+        Log.i("GamesPurchase", "DatabaseUtility " + Constants.getSagheDatabaseGameList());
+
         Optional<SagheDatabaseGame> optSagheGame = Constants.getSagheDatabaseGameList().stream().filter(x -> x.getName().equals(saga)).findAny();
         if (optSagheGame.isPresent()) {
+            Log.i("GamesPurchase", "La saga è presente: " + optSagheGame.get().getName());
+
             removedDatabaseGameFromSaga(optSagheGame.get().getGamesBuy(), databaseGame.getName());
             removedDatabaseGameFromSaga(optSagheGame.get().getGamesNotBuy(), databaseGame.getName());
             sagheDatabaseGame = optSagheGame.get();
-            Log.i("GamesPurchase", "Aggiunto " + databaseGame.getName() + " alla saga " + sagheDatabaseGame.getName() + "(ID = " + sagheDatabaseGame.getId() + ") con " + sagheDatabaseGame.getGamesBuy().size() + " giochi comprati");
+            Log.i("GamesPurchase", "Aggiunto " + databaseGame.getName() + " alla saga " + sagheDatabaseGame.getName() + "(ID = " + sagheDatabaseGame.getId() + ") con " + (CollectionUtils.isEmpty(sagheDatabaseGame.getGamesBuy()) ? 0 : sagheDatabaseGame.getGamesBuy().size()) + " giochi comprati");
         } else {
             Constants.maxIdDatabaseList++;
             List<DatabaseGame> buyGames = new ArrayList<>();
@@ -66,21 +72,30 @@ public class DatabaseUtility {
         sagheDatabaseGame.setFinishAll(check[1]);
 
         Queries.insertUpdateItemDB(sagheDatabaseGame, sagheDatabaseGame.getId(), Constants.DATABASEDB);
-        if(gameSagaDatabaseRecyclerAdapter != null) {
+        if (gameSagaDatabaseRecyclerAdapter != null) {
             RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
         }
     }
 
-    public static void insertNewGameSagaDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
+    public static void insertNewGameSagaDatabaseDBAndCode(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter, Boolean isInsert, Integer position) {
         Queries.insertUpdateItemDB(sagheDatabaseGame, sagheDatabaseGame.getId(), Constants.DATABASEDB);
-        RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        if(isInsert) {
+            RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        } else{
+            RecyclerAdapterUtility.updateItemAt(SagheDatabaseGame::getId, gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), gameSagaDatabaseRecyclerAdapter, position, sagheDatabaseGame);
+        }
     }
 
-    public static void removedDatabaseGameFromSaga(List<DatabaseGame> databaseGameList, String name){
-        Optional<DatabaseGame> optGameBuy = databaseGameList.stream().filter(x -> x.getName().equals(name)).findAny();
-        if (optGameBuy.isPresent()) {
-            Log.i("GamesPurchase", "Rimosso " + name);
-            databaseGameList.remove(optGameBuy.get());
+    public static void removedDatabaseGameFromSaga(List<DatabaseGame> databaseGameList, String name) {
+
+        if (!CollectionUtils.isEmpty(databaseGameList)) {
+            Optional<DatabaseGame> optGameBuy = databaseGameList.stream().filter(x -> x.getName().equals(name)).findAny();
+            if (optGameBuy.isPresent()) {
+                Log.i("GamesPurchase", "Rimosso " + name);
+                databaseGameList.remove(optGameBuy.get());
+            }
+        } else {
+            Log.i("GamesPurchase", "La lista dalla quale si vuole rimuovere l'elemento " + name + " non è presente");
         }
     }
 
@@ -88,16 +103,20 @@ public class DatabaseUtility {
         Boolean[] check = new Boolean[2];
         check[0] = sagheDatabaseGame.getGamesNotBuy().isEmpty() ? Boolean.TRUE : Boolean.FALSE;
         check[1] = Boolean.TRUE;
-        for (DatabaseGame dg : sagheDatabaseGame.getGamesBuy()) {
-            if (!dg.getFinished()) {
-                check[1] = Boolean.FALSE;
-                break;
+        if (!CollectionUtils.isEmpty(sagheDatabaseGame.getGamesBuy())) {
+            for (DatabaseGame dg : sagheDatabaseGame.getGamesBuy()) {
+                if (!dg.getFinished()) {
+                    check[1] = Boolean.FALSE;
+                    break;
+                }
             }
         }
-        for (DatabaseGame dg : sagheDatabaseGame.getGamesNotBuy()) {
-            if (!dg.getFinished()) {
-                check[1] = Boolean.FALSE;
-                break;
+        if (!CollectionUtils.isEmpty(sagheDatabaseGame.getGamesNotBuy())) {
+            for (DatabaseGame dg : sagheDatabaseGame.getGamesNotBuy()) {
+                if (!dg.getFinished()) {
+                    check[1] = Boolean.FALSE;
+                    break;
+                }
             }
         }
         return check;
@@ -113,7 +132,7 @@ public class DatabaseUtility {
     }
 
     public static void onClickPopupDismiss(SagheDatabaseGame sagheDatabaseGame, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
-        insertNewGameSagaDatabaseDBAndCode(sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
+        insertNewGameSagaDatabaseDBAndCode(sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter, Boolean.TRUE, null);
         RecyclerAdapterUtility.insertItem(CompareUtility.comparatorOf(SagheDatabaseGame::getName, CompareUtility.Order.ASCENDING, CompareUtility.Nulls.LAST), gameSagaDatabaseRecyclerAdapter.gameSagheDatabaseList, Constants.getSagheDatabaseGameList(), sagheDatabaseGame, gameSagaDatabaseRecyclerAdapter);
     }
 
@@ -149,7 +168,7 @@ public class DatabaseUtility {
         dialog.dismiss();
     }
 
-    public static void onClickSearch(View view, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter){
+    public static void onClickSearch(View view, GameSagaDatabaseRecyclerAdapter gameSagaDatabaseRecyclerAdapter) {
         ImageView orderButton = view.findViewById(R.id.sort_button);
         orderButton.setVisibility(View.INVISIBLE);
         AppCompatButton returnButton = view.findViewById(R.id.return_button);

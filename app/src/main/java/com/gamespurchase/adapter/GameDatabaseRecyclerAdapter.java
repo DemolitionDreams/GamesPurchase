@@ -51,6 +51,7 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
     public DatabaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.game_database_view, parent, false);
+        dialog = new Dialog(context);
         TextView nameText = relativeLayout.findViewById(R.id.name_text);
         ImageView platformImage = relativeLayout.findViewById(R.id.platform_image);
         ImageView finishedImage = relativeLayout.findViewById(R.id.finished_image);
