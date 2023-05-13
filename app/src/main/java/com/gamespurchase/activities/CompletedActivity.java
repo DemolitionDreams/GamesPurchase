@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamespurchase.R;
-import com.gamespurchase.adapter.GameSagheRecyclerAdapter;
+import com.gamespurchase.adapter.GameCompletedRecyclerAdapter;
 import com.gamespurchase.entities.SagheGame;
 import com.gamespurchase.entities.SerieGame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SagheActivity extends AppCompatActivity {
+public class CompletedActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
@@ -30,7 +30,7 @@ public class SagheActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saghe);
+        setContentView(R.layout.activity_completed);
 
         getSupportActionBar().hide();
 
@@ -54,7 +54,7 @@ public class SagheActivity extends AppCompatActivity {
         sagheGameList.add(new SagheGame("Primi", serieGameList2));
         sagheGameList.add(new SagheGame("Secondi", serieGameList3));
 
-        GameSagheRecyclerAdapter gameSagheRecyclerAdapter = new GameSagheRecyclerAdapter(sagheGameList, SagheActivity.this);
+        GameCompletedRecyclerAdapter gameSagheRecyclerAdapter = new GameCompletedRecyclerAdapter(sagheGameList, CompletedActivity.this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(gameSagheRecyclerAdapter);
         gameSagheRecyclerAdapter.notifyDataSetChanged();

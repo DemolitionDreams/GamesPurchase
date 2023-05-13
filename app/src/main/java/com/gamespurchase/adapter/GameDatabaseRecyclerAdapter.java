@@ -54,7 +54,7 @@ public class GameDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameDataba
         dialog = new Dialog(context);
         TextView nameText = relativeLayout.findViewById(R.id.name_text);
         ImageView platformImage = relativeLayout.findViewById(R.id.platform_image);
-        ImageView finishedImage = relativeLayout.findViewById(R.id.finished_image);
+        ImageView finishedImage = relativeLayout.findViewById(R.id.finish_image);
 
         return new DatabaseViewHolder(relativeLayout, nameText, platformImage, finishedImage);
     }

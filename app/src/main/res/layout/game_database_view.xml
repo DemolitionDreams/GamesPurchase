@@ -29,17 +29,16 @@
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:layout_toStartOf="@+id/finished_image"
+        android:layout_toStartOf="@+id/finish_image"
         app:srcCompat="@drawable/icon_ps3" />
 
     <ImageView
-        android:id="@+id/finished_image"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:id="@+id/finish_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:visibility="invisible"
         app:srcCompat="@drawable/icon_finished" />
 
 </RelativeLayout>

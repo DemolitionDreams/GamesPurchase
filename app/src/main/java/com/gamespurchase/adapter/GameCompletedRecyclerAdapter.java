@@ -15,25 +15,25 @@ import com.gamespurchase.entities.SagheGame;
 
 import java.util.List;
 
-public class GameSagheRecyclerAdapter extends RecyclerView.Adapter<GameSagheRecyclerAdapter.ViewHolder> {
+public class GameCompletedRecyclerAdapter extends RecyclerView.Adapter<GameCompletedRecyclerAdapter.ViewHolder> {
 
     Context context;
     List<SagheGame> gameSagheList;
 
-    public GameSagheRecyclerAdapter(List<SagheGame> gameSagheList, Context context){
+    public GameCompletedRecyclerAdapter(List<SagheGame> gameSagheList, Context context){
         this.gameSagheList = gameSagheList;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public GameSagheRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GameCompletedRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.game_saghe_view, null, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GameSagheRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GameCompletedRecyclerAdapter.ViewHolder holder, int position) {
         holder.saghe_name.setText(gameSagheList.get(position).getName());
 
         GameSerieRecyclerAdapter gameSerieRecyclerAdapter = new GameSerieRecyclerAdapter(gameSagheList.get(position).getSerie(), context);

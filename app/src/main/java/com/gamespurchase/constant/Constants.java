@@ -68,6 +68,16 @@ public class Constants {
     private static HashMap<String, Integer> counterBuyGame = new HashMap<>();
     private static HashMap<String, Integer> counterDatabaseGame = new HashMap<>();
 
+    public static HashMap<String, Integer> getCollectionInfoMap() {
+        return collectionInfoMap;
+    }
+
+    public static void setCollectionInfoMap(HashMap<String, Integer> collectionInfoMap) {
+        Constants.collectionInfoMap = collectionInfoMap;
+    }
+
+    private static HashMap<String, Integer> collectionInfoMap = new HashMap<>();
+
     // Variabile per copia/incolla
     private static ProgressGame progressGameCopy;
 

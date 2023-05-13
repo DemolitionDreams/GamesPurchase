@@ -13,13 +13,35 @@
         android:layout_marginRight="5dp"
         android:background="@drawable/custom_shape_rectangular_big">
 
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gif_fire"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@+id/name_text"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/gif_fire"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/image_fire"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@+id/name_text"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/icon_fire"
+            android:visibility="visible"/>
+
         <TextView
             android:id="@+id/name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
-            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/gif_fire"
+            android:layout_marginStart="10dp"
             android:autoSizeMaxTextSize="30sp"
             android:autoSizeMinTextSize="5sp"
             android:autoSizeTextType="uniform"
@@ -81,12 +103,12 @@
 
         <ImageView
             android:id="@+id/finish_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:layout_toStartOf="@+id/down_image"
-            app:srcCompat="@drawable/icon_finished" />
+            app:srcCompat="@drawable/icon_finish_all" />
 
         <ImageView
             android:id="@+id/down_image"

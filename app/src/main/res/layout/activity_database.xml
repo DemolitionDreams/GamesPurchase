@@ -66,75 +66,22 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageButton
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/counter_table_layout"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/custom_shape_add_button"
-        android:onClick="onClickOpenAddDatabaseGamePopup"
-        android:translationZ="2dp"
-        app:srcCompat="@drawable/icon_add" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/game_saghe_database"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/counter_table_layout"
         android:layout_below="@id/search_button"
         android:translationZ="1dp" />
 
-    <TableLayout
-        android:id="@+id/counter_table_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        android:stretchColumns="*"
-        android:layout_alignParentBottom="true">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/total_counter_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:autoSizeMaxTextSize="15sp"
-                android:autoSizeMinTextSize="1sp"
-                android:autoSizeTextType="uniform"
-                android:text="Totali:"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:background="@drawable/custom_shape_rectangular_counter" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/finish_counter_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:autoSizeMaxTextSize="15sp"
-                android:autoSizeMinTextSize="1sp"
-                android:autoSizeTextType="uniform"
-                android:text="Finiti:"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:background="@drawable/custom_shape_rectangular_counter" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/digital_counter_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:autoSizeMaxTextSize="15sp"
-                android:autoSizeMinTextSize="1sp"
-                android:autoSizeTextType="uniform"
-                android:text="Digitali:"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:background="@drawable/custom_shape_rectangular_counter" />
-
-        </TableRow>
-
-    </TableLayout>
+    <ImageButton
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_shape_add_button"
+        android:translationZ="2dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/icon_add"
+        android:onClick="onClickOpenAddDatabaseGamePopup" />
 
 </RelativeLayout>

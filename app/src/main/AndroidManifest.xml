@@ -21,7 +21,7 @@
             android:name=".activities.ScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SagheActivity"
+            android:name=".activities.CompletedActivity"
             android:exported="false" />
         <activity
             android:name=".activities.DatabaseActivity"

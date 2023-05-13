@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSagaDatabaseRecyclerAdapter.SagheDatabaseViewHolder> {
 
     Dialog dialog;
@@ -59,9 +61,12 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         ImageView finishImage = relativeLayout.findViewById(R.id.finish_image);
         ImageView downImage = relativeLayout.findViewById(R.id.down_image);
 
+        ImageView fireImage = relativeLayout.findViewById(R.id.image_fire);
+        GifImageView fireGif = relativeLayout.findViewById(R.id.gif_fire);
+
         RecyclerView recyclerView = relativeLayout.findViewById(R.id.game_database);
 
-        return new SagheDatabaseViewHolder(relativeLayout, nameText, actualText, totalText, sagaImage, buyedImage, finishImage, downImage, recyclerView);
+        return new SagheDatabaseViewHolder(relativeLayout, nameText, actualText, totalText, sagaImage, buyedImage, finishImage, downImage, fireImage, fireGif, recyclerView);
     }
 
     @Override
@@ -92,11 +97,15 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         holder.sagaImage.setImageResource(idSagaResource);
         List<DatabaseGame> buyGames = gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesBuy();
         List<DatabaseGame> notBuyGames = gameSagheDatabaseList.get(holder.getAdapterPosition()).getGamesNotBuy();
-        holder.actualText.setText(String.valueOf(CollectionUtils.isEmpty(buyGames) ? 0 : buyGames.size()));
-        holder.totalText.setText(String.valueOf((CollectionUtils.isEmpty(buyGames) ? 0 : buyGames.size()) + (CollectionUtils.isEmpty(notBuyGames) ? 0 : notBuyGames.size())));
+
+        int buyListSize = CollectionUtils.isEmpty(buyGames) ? 0 : buyGames.size();
+        int notBuyListSize = CollectionUtils.isEmpty(notBuyGames) ? 0 : notBuyGames.size();
+
+        holder.actualText.setText(String.valueOf(activity instanceof BuyActivity ? notBuyListSize : buyListSize));
+        holder.totalText.setText(String.valueOf(buyListSize + notBuyListSize));
         int idBuyResource = context.getResources().getIdentifier(gameSagheDatabaseList.get(holder.getAdapterPosition()).getBuyAll() ? "com.gamespurchase:drawable/icon_buyed" : "com.gamespurchase:drawable/icon_not_buyed", null, null);
         holder.buyedImage.setImageResource(idBuyResource);
-        int idFinishResource = context.getResources().getIdentifier(gameSagheDatabaseList.get(holder.getAdapterPosition()).getFinishAll() ? "com.gamespurchase:drawable/icon_finished" : "com.gamespurchase:drawable/icon_not_finished", null, null);
+        int idFinishResource = context.getResources().getIdentifier(gameSagheDatabaseList.get(holder.getAdapterPosition()).getFinishAll() ? "com.gamespurchase:drawable/icon_finish_all" : "com.gamespurchase:drawable/icon_not_finish_all", null, null);
         holder.finishImage.setImageResource(idFinishResource);
 
         holder.downImage.setOnClickListener(view -> {
@@ -111,6 +120,14 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
                 holder.downImage.setRotation(0);
             }
         });
+
+        if(gameSagheDatabaseList.get(holder.getAdapterPosition()).getFinishAll() && gameSagheDatabaseList.get(holder.getAdapterPosition()).getBuyAll()) {
+            holder.fireImage.setVisibility(View.INVISIBLE);
+            holder.fireGif.setVisibility(View.VISIBLE);
+        } else{
+            holder.fireGif.setVisibility(View.INVISIBLE);
+            holder.fireImage.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -129,9 +146,11 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
         private final ImageView buyedImage;
         private final ImageView finishImage;
         private final ImageView downImage;
+        private final ImageView fireImage;
+        private final GifImageView fireGif;
         private final RecyclerView recyclerView;
 
-        public SagheDatabaseViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView actualText, TextView totalText, ImageView sagaImage, ImageView buyedImage, ImageView finishImage, ImageView downImage, RecyclerView recyclerView) {
+        public SagheDatabaseViewHolder(@NotNull RelativeLayout relativeLayout, TextView nameText, TextView actualText, TextView totalText, ImageView sagaImage, ImageView buyedImage, ImageView finishImage, ImageView downImage, ImageView fireImage, GifImageView gifFire, RecyclerView recyclerView) {
 
             super(relativeLayout);
             this.nameText = nameText;
@@ -141,6 +160,8 @@ public class GameSagaDatabaseRecyclerAdapter extends RecyclerView.Adapter<GameSa
             this.buyedImage = buyedImage;
             this.finishImage = finishImage;
             this.downImage = downImage;
+            this.fireImage = fireImage;
+            this.fireGif = gifFire;
             this.relativeLayout = relativeLayout;
             this.recyclerView = recyclerView;
         }
